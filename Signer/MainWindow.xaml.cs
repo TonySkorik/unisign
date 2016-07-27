@@ -18,8 +18,19 @@ namespace Signer {
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window {
+		private MainViewModel _viewModel = new MainViewModel();
+
 		public MainWindow() {
 			InitializeComponent();
+		}
+
+		private void MainWindow_OnLoaded(object sender, RoutedEventArgs e) {
+			MainGrid.DataContext = _viewModel;
+
+			string[] args = Environment.GetCommandLineArgs();
+			if (!_viewModel.ParseUri(args[1])) {
+				MessageBox.Show("Failed to load uri!");
+			}
 		}
 	}
 }
