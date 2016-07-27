@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Signer.ViewModel;
+using Signer.Model;
+
 namespace Signer {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml

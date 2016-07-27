@@ -4,16 +4,16 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:Signer"
+		xmlns:core="clr-namespace:Signer.CoreModules"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="350" Width="525"
-		Loaded="MainWindow_OnLoaded"
+		Title="MainWindow" 
+		Loaded="MainWindow_OnLoaded" d:DesignHeight="776.609"
 		>
 	<Grid x:Name="MainGrid">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition />
-		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
+			<RowDefinition Height="2*"/>
+			<RowDefinition Height="2*"/>
+			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<TextBox 
 			Grid.Column="0" 
@@ -21,6 +21,23 @@
 			Text="{Binding Path=StartupUri}" 
 			MinHeight="20"
 			MaxHeight="30"
-			MinWidth="100"/>
+			MinWidth="100"
+		/>
+		<!-- core:BrowserBehavior.Html="" to place HTML directly into WebBrowser -->
+		<WebBrowser 
+			Grid.Column="0" 
+			Grid.Row="1"
+		/>
+		<StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical">
+			<GroupBox Header="Signature location">
+				<StackPanel Orientation="Horizontal">
+					<RadioButton Content="Current User" />
+					<RadioButton Content="Local Machine" />
+				</StackPanel>
+			</GroupBox>
+			<Label Content="Signature"></Label>
+			<ComboBox/>
+			<Button Height="40" Width="200" Content="SIGN!"/>
+		</StackPanel>
 	</Grid>
 </Window>

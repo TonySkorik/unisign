@@ -66,8 +66,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainDataModel.cs" />
-    <Compile Include="MainViewModel.cs" />
+    <Compile Include="CoreModules\AnswerProcessor.cs" />
+    <Compile Include="CoreModules\BrowserBehavior.cs" />
+    <Compile Include="Model\MainDataModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -100,6 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Doc\SigningInfo.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Doc\Interop_scheme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

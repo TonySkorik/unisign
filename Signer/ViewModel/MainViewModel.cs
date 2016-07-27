@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Signer {
+namespace Signer.ViewModel {
 	class MainViewModel:INotifyPropertyChanged {
 
 		public event PropertyChangedEventHandler PropertyChanged;
