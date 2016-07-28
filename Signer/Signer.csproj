@@ -40,6 +40,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -66,9 +67,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CoreModules\AnswerProcessor.cs" />
+    <Compile Include="CoreModules\XmlProcessor.cs" />
     <Compile Include="CoreModules\BrowserBehavior.cs" />
-    <Compile Include="Model\MainDataModel.cs" />
+    <Compile Include="DataModel\Enums\SignatureType.cs" />
+    <Compile Include="DataModel\SignatureInfo.cs" />
+    <Compile Include="DataModel\SigningSession.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -102,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestPage.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

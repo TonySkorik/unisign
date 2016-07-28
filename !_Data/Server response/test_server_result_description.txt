@@ -1,0 +1,27 @@
+<SigningInfo id='SIGNED' session_id='12345'>
+	<DocumentToSign>
+		PE1haW4+Cgk8YXBwX2lkPtCg0YPRgdGB0LrQuNC1INCx0YPQutCy0Ys8L2FwcF9pZD4KCTxzZW5kZXJfaWQ+0KHQvdC+0LLQsCDQsdGD0LrQstGLPC9zZW5kZXJfaWQ+Cgk8c2VydmljZV9pZD4xMDAwMTAwNTQ4NTwvc2VydmljZV9pZD4KPC9NYWluPg==
+	</DocumentToSign>
+	<DocumentXsl>
+		PHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjEuMCIgeG1sbnM6eHNsPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0iPgoJPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iL01haW4iPgoJCTxwPjxzdHJvbmc+PHhzbDp2YWx1ZS1vZiBzZWxlY3Q9Ii8vYXBwX2lkIi8+PC9zdHJvbmc+PC9wPgoJCTxwPjx4c2w6dmFsdWUtb2Ygc2VsZWN0PSIvL3NlbmRlcl9pZCIvPjwvcD4KCQk8cD48dT48eHNsOnZhbHVlLW9mIHNlbGVjdD0iLy9zZXJ2aWNlX2lkIi8+PC91PjwvcD4KCTwveHNsOnRlbXBsYXRlPgo8L3hzbDpzdHlsZXNoZWV0Pg==
+	</DocumentXsl>
+	<SignatureInfo>
+		<Type>enveloped</Type>
+		<SmevMode>2</SmevMode>
+		<NodeId></NodeId>
+	</SignatureInfo>
+</SigningInfo>
+
+<Main>
+	<app_id>Русские буквы</app_id>
+	<sender_id>Снова буквы</sender_id>
+	<service_id>10001005485</service_id>
+</Main>
+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="/Main">
+		<p><strong><xsl:value-of select="//app_id"/></strong></p>
+		<p><xsl:value-of select="//sender_id"/></p>
+		<p><u><xsl:value-of select="//service_id"/></u></p>
+	</xsl:template>
+</xsl:stylesheet>

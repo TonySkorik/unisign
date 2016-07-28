@@ -1,43 +1,81 @@
 ﻿<Window x:Class="Signer.MainWindow"
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:local="clr-namespace:Signer"
-		xmlns:core="clr-namespace:Signer.CoreModules"
-		mc:Ignorable="d"
-		Title="MainWindow" 
-		Loaded="MainWindow_OnLoaded" d:DesignHeight="776.609"
-		>
-	<Grid x:Name="MainGrid">
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:Signer"
+	xmlns:core="clr-namespace:Signer.CoreModules"
+	mc:Ignorable="d"
+	Title="UniSign" 
+	Loaded="MainWindow_OnLoaded"
+	FontSize="16" 
+	d:DesignHeight="572.5" 
+	d:DesignWidth="454.5"
+>
+	<Grid x:Name="MainGrid"
+		Height="Auto"	  
+	>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="2*"/>
 			<RowDefinition Height="2*"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-		<TextBox 
+		<TabControl
 			Grid.Column="0" 
-			Grid.Row="0" 
-			Text="{Binding Path=StartupUri}" 
-			MinHeight="20"
-			MaxHeight="30"
-			MinWidth="100"
-		/>
-		<!-- core:BrowserBehavior.Html="" to place HTML directly into WebBrowser -->
-		<WebBrowser 
+			Grid.Row="0" 	
+			BorderThickness="0"
+		>
+			<TabItem Header="Text">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="3*"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<Border 
+						Grid.Row="0" 
+						BorderThickness="1"
+						BorderBrush="Black"
+						
+					>
+						<Border.Effect>
+							<DropShadowEffect ShadowDepth="1"/>
+						</Border.Effect>
+						<WebBrowser core:BrowserBehavior.Html="{Binding Path=HumanRadableDataToSign}"/>	
+					</Border>
+					<Border 
+						Grid.Row="1" 
+						BorderThickness="1"
+						BorderBrush="Black" 
+						Margin="0,5,0,0" 
+					>
+						<Border.Effect>
+							<DropShadowEffect ShadowDepth="1"/>
+						</Border.Effect>
+						<WebBrowser core:BrowserBehavior.Html="{Binding Path=ServerHtmlMessage}"/>	
+					</Border>
+					
+				</Grid>
+			</TabItem>
+			<TabItem Header="XML">
+				<TextBlock Text="{Binding Path=OriginalXmlDataToSign}"/>
+			</TabItem>
+		</TabControl>
+		
+		<StackPanel 
 			Grid.Column="0" 
-			Grid.Row="1"
-		/>
-		<StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical">
-			<GroupBox Header="Signature location">
+			Grid.Row="1" 
+			Orientation="Vertical" 
+			VerticalAlignment="Stretch" 
+			HorizontalAlignment="Stretch"
+		>
+			<GroupBox Header="Храналище сертификатов " Margin="5">
 				<StackPanel Orientation="Horizontal">
-					<RadioButton Content="Current User" />
-					<RadioButton Content="Local Machine" />
+					<RadioButton GroupName="SignatureLocation" Content="Current User" Margin="5"/>
+					<RadioButton GroupName="SignatureLocation" Content="Local Machine" Margin="5" />
 				</StackPanel>
 			</GroupBox>
-			<Label Content="Signature"></Label>
-			<ComboBox/>
-			<Button Height="40" Width="200" Content="SIGN!"/>
+			<Label Content="Сертификат" Padding="0" Margin="5,0,5,2"/>
+			<ComboBox Margin="5,0,5,5"/>
+			<Button Height="40" Content="Подписать" Margin="5"/>
 		</StackPanel>
 	</Grid>
 </Window>

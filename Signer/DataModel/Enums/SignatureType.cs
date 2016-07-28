@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Signer.CoreModules {
-	class AnswerProcessor {
+namespace Signer.DataModel.Enums {
+	enum SignatureType {
+		Enveloped,
+		SideBySide,
+		Detached
 	}
 }
