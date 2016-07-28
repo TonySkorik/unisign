@@ -1,0 +1,74 @@
+
+GET: https://.../?oper=getfile & session_id=12345-45-54545-12
+
+RES:
+<?xml version="1.0" encoding="utf-8" ?>
+<SigningInfo id='SIGNED' session_id='...'>
+	<DocumentToSign>
+		<!-- XML BASE64 (Utf-8) -->
+	</DocumentToSign>
+	<DocumentXsl>
+		<!-- XSLT Stylesheet BASE64 (Utf-8) -->
+	</DocumentXsl>
+	<SignatureInfo>
+
+		<Type>detached|side-by-side|enveloped</Type>
+
+		<SmevMode*>2|3</SmevMode>
+
+		<NodeId*>
+			<!-- Textual node ID or blank or abscent if signature must be placed inside (or side-by-side with) the root -->
+		</NodeId>
+
+	</SignatureInfo>
+
+	<тут ЭП для SIGNED />
+
+</SigningInfo>
+
+
+POST: https://.../?oper=signed & session_id=12345-45-54545-12
+<?xml version="1.0" encoding="utf-8" ?>
+<ResultInfo session_id='...'>
+
+	<SignedDocument>
+		<!-- BASE64 of signed file | base64 sig-file -->
+	</SignedDocument>
+
+</ResultInfo>
+
+RES:
+html for web-view & http-status 200
+||
+err html for web-view & http-status не200 (?)
+
+
+<!--
+
+Требоавния по установленному ПО до запуска:
+	-- .NET 4.6 (халява)
+	-- CryptoPRO CSP (платно)
+	-- CrtyptoPRO .NET (платно)
+
+	++ зарегистрированный unisign: протокол (registry)
+
+	Установку и настройку всего вышеперечисленного может взять на себя установщик данной утилиты (кроме ввода серийника CryptoPRO .NET)
+
+	================================================================================
+
+0) Клик по ссылке вида: <a href="unisign:uuid=12345-45-54545-12">Sign this document</a>.
+1) Запрос по заранее известному URI (https) для получения информации по текущей сессии. -- oper=getfile & session_id=12345-45-54545-12
+2) Информация по текущей сессии приходит в виде XML (SigningInfo.xml).
+3) На основе управляющей информации выбирается режим подписания (Smev2 | Smev3)* (detached | Enveloped | Side-by-side) (ID | No ID).
+4) Исходный XML отображается пользователю в соответствующей вкладке.
+5) Документ для подписания преобразовывается в человекочитаемый вид при помощи XSL Transformation и отображается в дефолтной вкладке.
+6) Пользователь выбирает подпись из найденных на локальной машине или в хранилище текущего пользователя.
+7) Пользователь нажимает большую кнопку ПОДПИСАТЬ!, вводит пассворд к контейнеру закрытого ключа для сертификата.
+
+запоминать выбор чела по хранилищу и по ЭП
+
+8) Подписанный документ отправляется на по тому же урлу, откуда пришла управляющая информация, но, например, oper=signed  & session_id=12345-45-54545-12
+9) На сервере подпись клиента проверяется (вопрос КриптоПРОшникам я задал) и файл сохраняется.
+
+
+-->
