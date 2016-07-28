@@ -56,7 +56,12 @@
 				</Grid>
 			</TabItem>
 			<TabItem Header="XML">
-				<TextBlock Text="{Binding Path=OriginalXmlDataToSign}"/>
+				<Border 
+						BorderThickness="1"
+						BorderBrush="Black" 
+				>
+					<TextBlock Text="{Binding Path=OriginalXmlDataToSign}" Margin="5" />
+				</Border>
 			</TabItem>
 		</TabControl>
 		
