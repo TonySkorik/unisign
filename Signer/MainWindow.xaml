@@ -74,12 +74,29 @@
 		>
 			<GroupBox Header="Храналище сертификатов " Margin="5">
 				<StackPanel Orientation="Horizontal">
-					<RadioButton GroupName="SignatureLocation" Content="Current User" Margin="5"/>
+					<RadioButton GroupName="SignatureLocation" Content="Current User" Margin="5" IsChecked="True"/>
 					<RadioButton GroupName="SignatureLocation" Content="Local Machine" Margin="5" />
 				</StackPanel>
 			</GroupBox>
 			<Label Content="Сертификат" Padding="0" Margin="5,0,5,2"/>
-			<ComboBox Margin="5,0,5,5"/>
+			<ComboBox Margin="5,0,5,5" ItemsSource="{Binding Path=Certificates}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock>
+							<Run 
+								Text="{
+									Binding Path=Subject, 
+									FallbackValue=Выберите сертификат, 
+									TargetNullValue=Выберите сертификат, 
+									StringFormat={}&#10002; {0}
+								}"
+							/> 
+
+						</TextBlock>
+					</DataTemplate>
+
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 			<Button Height="40" Content="Подписать" Margin="5"/>
 		</StackPanel>
 	</Grid>

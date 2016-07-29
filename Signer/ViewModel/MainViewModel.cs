@@ -13,9 +13,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Web;
 
-
+using Signer.CoreModules;
 using Signer.DataModel;
-
 
 namespace Signer.ViewModel {
 	class MainViewModel:INotifyPropertyChanged {
@@ -67,7 +66,12 @@ namespace Signer.ViewModel {
 		}
 
 		#endregion
-		
+
+		public MainViewModel() {
+			Certificates = new ObservableCollection<X509Certificate2>();
+			LoadCertificatesFromStore(SignatureProcessor.StoreType.CurrentUser);
+		}
+
 		public async Task<HttpResponseMessage> GetServerSessionData(string startupArg) {
 
 			//startupArg is like : unisign:session_id=12345-45-54545-12
@@ -109,6 +113,15 @@ namespace Signer.ViewModel {
 			//set viewModel fields
 			OriginalXmlDataToSign = _s.DataToSign;
 			HumanRadableDataToSign = _s.HumanReadableHtml;
+		}
+
+		public void LoadCertificatesFromStore(SignatureProcessor.StoreType storeType) {
+			List<X509Certificate2> certs = SignatureProcessor.GetAllCertificatesFromStore(storeType);
+			Certificates.Clear();
+			Certificates.Add(null);
+			foreach (X509Certificate2 c in certs) {
+				Certificates.Add(c);
+			}
 		}
 	}
 }

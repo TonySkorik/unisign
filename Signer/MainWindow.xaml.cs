@@ -33,8 +33,9 @@ namespace Signer {
 			InitializeComponent();
 		}
 		
-		private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e) {
+		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
 			MainGrid.DataContext = _viewModel;
+
 			string[] args = Environment.GetCommandLineArgs();
 			
 			HttpResponseMessage serverSessionData = await _viewModel.GetServerSessionData(args[1]);

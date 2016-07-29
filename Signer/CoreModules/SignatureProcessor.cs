@@ -75,9 +75,11 @@ namespace Signer.CoreModules {
 	public static class SignatureProcessor {
 
 		#region [SIGN]
-		public enum SigningMode : int { Simple = 1, Smev2 = 2, Smev3 = 3 };
+		public enum SigningMode : int { Simple = 1, Smev2 = 2, Smev3 = 3, Detached = 4 };
+		public enum StoreType : int {LocalMachine = 1, CurrentUser = 2}
 
 		#region [CERTIFICATE] Search
+		#region [BY THUMBPRINT]
 		private static X509Certificate2 _searchCertificateByThumbprint(string certificateThumbprint) {
 			try {
 				certificateThumbprint = Regex.Replace(certificateThumbprint, @"[^\da-zA-z]", string.Empty).ToUpper();
@@ -122,7 +124,22 @@ namespace Signer.CoreModules {
 				throw new Exception($"Unnknown cryptographic exception! Original message : {e.Message}");
 			}
 		}
+		#endregion
 
+		#region [GET ALL CERTS FROM STORAGE]
+
+		public static List<X509Certificate2> GetAllCertificatesFromStore(StoreType storeType) {
+			X509Store store = 
+				storeType == StoreType.CurrentUser? 
+				new X509Store("My", StoreLocation.CurrentUser) 
+				: 
+				new X509Store("My", StoreLocation.LocalMachine);
+			
+			store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly | OpenFlags.MaxAllowed);
+			return store.Certificates.Cast<X509Certificate2>().ToList();
+		}
+
+		#endregion
 		#endregion
 
 		public static string Sign(SigningMode mode, string certificateThumbprint, XmlDocument signThis,bool assignDs, string nodeToSign = "ID_SIGN") {
@@ -159,6 +176,13 @@ namespace Signer.CoreModules {
 				case SigningMode.Smev3:
 					try {
 						signedXmlDoc = SignXmlFileSmev3(signThis, privateKey, certificate, nodeToSign, assignDs);
+					} catch {
+						Console.WriteLine("SIGNING ERROR! Signing failed.");
+					}
+					break;
+				case SigningMode.Detached:
+					try {
+						signedXmlDoc = SignXmlFileDetached(signThis, privateKey, certificate, nodeToSign, assignDs);
 					} catch {
 						Console.WriteLine("SIGNING ERROR! Signing failed.");
 					}
@@ -451,15 +475,24 @@ namespace Signer.CoreModules {
 
 		#endregion
 
+		#region [DETACHED]
+
+		public static XmlDocument SignXmlFileDetached(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate,
+													string signingNodeId, bool assignDs) {
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
-		#region [READ CERTIFICATE]
-		/// <summary>
-		/// Reads certificate to a UnismevData.CertificateInfo struct and returns it if certificate present. 
-		/// If not returns null.
-		/// </summary>
-		/// <param name="signedXml">Target XML for certificate read</param>
-		/// <returns>UnismevData.CertificateInfo?</returns>
+			#endregion
+
+			#region [READ CERTIFICATE]
+			/// <summary>
+			/// Reads certificate to a UnismevData.CertificateInfo struct and returns it if certificate present. 
+			/// If not returns null.
+			/// </summary>
+			/// <param name="signedXml">Target XML for certificate read</param>
+			/// <returns>UnismevData.CertificateInfo?</returns>
 		public static X509Certificate2 ReadCertificateFromXml(XDocument signedXml) {
 			X509Certificate2 cert = null;
 
