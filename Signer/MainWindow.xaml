@@ -79,7 +79,7 @@
 				</StackPanel>
 			</GroupBox>
 			<Label Content="Сертификат" Padding="0" Margin="5,0,5,2"/>
-			<ComboBox Margin="5,0,5,5" ItemsSource="{Binding Path=Certificates}">
+			<ComboBox Margin="5,0,5,5" ItemsSource="{Binding Path=Certificates}" x:Name="CertificatesInSelectedStore">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
 						<TextBlock>

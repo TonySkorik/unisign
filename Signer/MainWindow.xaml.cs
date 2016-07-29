@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,6 +38,7 @@ namespace Signer {
 			MainGrid.DataContext = _viewModel;
 
 			string[] args = Environment.GetCommandLineArgs();
+			//List<X509Certificate2> certs = CertificatesInSelectedStore.Items.Cast<X509Certificate2>().ToList();
 			
 			HttpResponseMessage serverSessionData = await _viewModel.GetServerSessionData(args[1]);
 
