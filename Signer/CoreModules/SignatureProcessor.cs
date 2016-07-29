@@ -88,61 +88,42 @@ namespace Signer.CoreModules {
 				X509Store store =
 					new X509Store("My", StoreLocation.CurrentUser);
 				store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
-				
+
 				X509Certificate2Collection found =
 					compStore.Certificates.Find(
-						X509FindType.FindByThumbprint, 
+						X509FindType.FindByThumbprint,
 //						X509FindType.FindBySerialNumber, 
 						certificateThumbprint,
 						false
-					);
+						);
 
 				if (found.Count == 0) {
 					found = store.Certificates.Find(
-							X509FindType.FindByThumbprint,
+						X509FindType.FindByThumbprint,
 //							X509FindType.FindBySerialNumber,
-							certificateThumbprint,
-							false
+						certificateThumbprint,
+						false
 						);
 					if (found.Count != 0) {
 						// means found in Current User store
 					} else {
-						throw new UnismevData.CertificateSearchException(certificateThumbprint);
+						throw new Exception($"Certificate with thumbprint {certificateThumbprint} not found");
 					}
 				} else {
 					// means found in LocalMachine store
 				}
 
-				if(found.Count == 1) {				
+				if (found.Count == 1) {
 					return found[0];
 				} else {
-					throw new UnismevData.MoreThanOneCertificateException(certificateThumbprint);
+					throw new Exception($"More than one certificate with thumbprint {certificateThumbprint} found!");
 				}
-			} catch(CryptographicException e) {
-				throw new UnismevData.CriticalCryptographicException(e.Message);
+			} catch (CryptographicException e) {
+				throw new Exception($"Unnknown cryptographic exception! Original message : {e.Message}");
 			}
 		}
 
 		#endregion
-
-		public static string Sign(
-			SigningMode mode, 
-			XDocument docToSign, 
-			UnismevData.Signature epOv, 
-			UnismevData.Signature? epChin
-			) 
-		{
-			//XDocument result = new XDocument();
-			string result = Sign(mode, epOv.SigInfo.CertificateThumbprint, docToSign.GetXmlDocument(),epOv.SigInfo.AssignDsPrefix,
-						epOv.ElementId == "" ? null : epOv.ElementId);
-			//TODO: sign document with ep_chin in addition to ep_ov
-//			if (epChin == null) {
-//				
-//			} else {
-//				
-//			}
-			return result;
-		}
 
 		public static string Sign(SigningMode mode, string certificateThumbprint, XmlDocument signThis,bool assignDs, string nodeToSign = "ID_SIGN") {
 			if (nodeToSign == null) {
@@ -479,8 +460,8 @@ namespace Signer.CoreModules {
 		/// </summary>
 		/// <param name="signedXml">Target XML for certificate read</param>
 		/// <returns>UnismevData.CertificateInfo?</returns>
-		public static UnismevData.CertificateInfo? ReadCertificateFromXml(XDocument signedXml) {
-			UnismevData.CertificateInfo? ci = null;
+		public static X509Certificate2 ReadCertificateFromXml(XDocument signedXml) {
+			X509Certificate2 cert = null;
 
 			XElement signatureElement = (
 				from elt in signedXml.Root.Descendants()
@@ -506,14 +487,13 @@ namespace Signer.CoreModules {
 				if (certificateNodeContent == "") {
 					// means signatureInfo appears to be empty
 				} else {
-					X509Certificate2 cert = new X509Certificate2(Encoding.UTF8.GetBytes(certificateNodeContent));
-					ci = new UnismevData.CertificateInfo(cert);
+					cert = new X509Certificate2(Encoding.UTF8.GetBytes(certificateNodeContent));
 				}
 			} else {
 				//means tere is no SenderInformationSystemSignature node
 				// cert = null
 			}
-			return ci;
+			return cert;
 		}
 		/// <summary>
 		/// Returns Json version of certificate if pesent in XML. If not returns null
@@ -521,7 +501,7 @@ namespace Signer.CoreModules {
 		/// <param name="signedXml">Target XML for certificate extraction</param>
 		/// <returns></returns>
 		public static string CertificateToJson(XDocument signedXml) {
-			UnismevData.CertificateInfo? ci = ReadCertificateFromXml(signedXml);
+			X509Certificate2 ci = ReadCertificateFromXml(signedXml);
 			string jsonCert = null;
 			if (ci != null) {
 				//means cerificate present
@@ -548,7 +528,7 @@ namespace Signer.CoreModules {
 			bool ret = false;
 			X509Certificate2 cert = new X509Certificate2();
 			if (verifySignatureOnly) {
-				cert = ReadCertificateFromXml(message.GetXDocument()).Value.Certificate;
+				cert = ReadCertificateFromXml(message.GetXDocument());
 			}
 			XmlDocument xmlDocument = message;
 			//xmlDocument.PreserveWhitespace = true;
