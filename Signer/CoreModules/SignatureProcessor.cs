@@ -142,65 +142,68 @@ namespace Signer.CoreModules {
 		#endregion
 		#endregion
 
-		public static string Sign(SigningMode mode, string certificateThumbprint, XmlDocument signThis,bool assignDs, string nodeToSign = "ID_SIGN") {
-			if (nodeToSign == null) {
-				nodeToSign = "ID_SIGN";
-			}
-			XmlDocument signedXmlDoc = new XmlDocument();
-			X509Certificate2 certificate = _searchCertificateByThumbprint(certificateThumbprint);
-			AsymmetricAlgorithm privateKey;
-			//XmlDocument signThis = docToSign.GetXmlDocument();
+		public static string Sign(SigningMode mode, X509Certificate2 cert, XmlDocument signThis, bool assignDs, string nodeToSign) {
 			
+			XmlDocument signedXmlDoc = new XmlDocument();
+			AsymmetricAlgorithm privateKey;
+
 			try {
-				privateKey = certificate.PrivateKey;
+				privateKey = cert.PrivateKey;
 			} catch {
-				throw new KeyNotFoundException($"Certificate for {certificate.FriendlyName} not found");
+				throw new KeyNotFoundException($"Certificate for {cert.FriendlyName} not found");
 			}
 
-			
 			switch(mode) {
 				case SigningMode.Simple:
 					try {
-						signedXmlDoc = SignXmlFile(signThis, privateKey, certificate);
+						signedXmlDoc = SignXmlFile(signThis, privateKey, cert, nodeToSign);
 					} catch {
 						Console.WriteLine("SIGNING ERROR! Signing failed.");
 					}
 					break;
 				case SigningMode.Smev2:
 					try {
-						signedXmlDoc = SignXmlFileSmev2(signThis, privateKey, certificate);
+						signedXmlDoc = SignXmlFileSmev2(signThis, privateKey, cert);
 					} catch {
 						Console.WriteLine("SIGNING ERROR! Signing failed.");
 					}
 					break;
 				case SigningMode.Smev3:
 					try {
-						signedXmlDoc = SignXmlFileSmev3(signThis, privateKey, certificate, nodeToSign, assignDs);
+						signedXmlDoc = SignXmlFileSmev3(signThis, privateKey, cert, nodeToSign, assignDs);
 					} catch {
 						Console.WriteLine("SIGNING ERROR! Signing failed.");
 					}
 					break;
 				case SigningMode.Detached:
 					try {
-						signedXmlDoc = SignXmlFileDetached(signThis, privateKey, certificate, nodeToSign, assignDs);
+						signedXmlDoc = SignXmlFileDetached(signThis, privateKey, cert, nodeToSign, assignDs);
 					} catch {
 						Console.WriteLine("SIGNING ERROR! Signing failed.");
 					}
 					break;
 			}
-		
+
 			return signedXmlDoc.InnerXml;
+		}
+
+		public static string Sign(SigningMode mode, string certificateThumbprint, XmlDocument signThis,bool assignDs, string nodeToSign = "ID_SIGN") {
+			if (nodeToSign == null) {
+				nodeToSign = "ID_SIGN";
+			}
+			X509Certificate2 certificate = _searchCertificateByThumbprint(certificateThumbprint);
+			return Sign(mode, certificate, signThis, assignDs, nodeToSign);
 		}
 
 		#region [SIMPLE SIGN]
 
-		public static XmlDocument SignXmlFile(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate) {
+		public static XmlDocument SignXmlFile(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate, string nodeId) {
 
 			//----------------------------------------------------------------------------------------------CREATE SIGNED XML
 			SignedXml signedXml = new SignedXml(doc){SigningKey = key};
 			//----------------------------------------------------------------------------------------------REFERNCE
 			Reference reference = new Reference{
-				Uri = "",
+				Uri = nodeId,
 				#pragma warning disable 612
 				DigestMethod = CryptoPro.Sharpei.Xml.CPSignedXml.XmlDsigGost3411UrlObsolete
 				#pragma warning disable 612
@@ -479,6 +482,7 @@ namespace Signer.CoreModules {
 
 		public static XmlDocument SignXmlFileDetached(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate,
 													string signingNodeId, bool assignDs) {
+		//TODO: Detached signature
 			throw new NotImplementedException();
 		}
 

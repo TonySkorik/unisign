@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Signer.CoreModules;
 using Signer.DataModel.Enums;
 
 namespace Signer.DataModel {
@@ -13,8 +14,9 @@ namespace Signer.DataModel {
 		public string NodeId;
 
 		public SignatureInfo(XElement node) {
+			
 			SignatureType.TryParse(node.Descendants("Type").First().Value, true, out SigType);
-
+			
 			//SmevMode = 2;
 			//NodeId = string.Empty;
 

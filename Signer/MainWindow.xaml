@@ -12,6 +12,10 @@
 	d:DesignHeight="572.5" 
 	d:DesignWidth="454.5"
 >
+	<Window.Resources>
+		<core:CertificateToSubjectConverter x:Key="CertificateToSubjConverter"/>	
+	</Window.Resources>
+	
 	<Grid x:Name="MainGrid"
 		Height="Auto"	  
 	>
@@ -79,13 +83,14 @@
 				</StackPanel>
 			</GroupBox>
 			<Label Content="Сертификат" Padding="0" Margin="5,0,5,2"/>
-			<ComboBox Margin="5,0,5,5" ItemsSource="{Binding Path=Certificates}" x:Name="CertificatesInSelectedStore">
+			<ComboBox Margin="5,0,5,5" ItemsSource="{Binding Certificates}" x:Name="SelectedSignatureCert">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
 						<TextBlock>
 							<Run 
 								Text="{
-									Binding Path=Subject, 
+									Binding Path=., 
+									Converter={StaticResource CertificateToSubjConverter},
 									FallbackValue=Выберите сертификат, 
 									TargetNullValue=Выберите сертификат, 
 									StringFormat={}&#10002; {0}
@@ -97,7 +102,7 @@
 
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-			<Button Height="40" Content="Подписать" Margin="5"/>
+			<Button Height="40" Content="Подписать" Margin="5" Click="SignButton_OnClick"/>
 		</StackPanel>
 	</Grid>
 </Window>

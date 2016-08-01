@@ -54,6 +54,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -81,6 +82,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CoreModules\BrowserBehavior.cs" />
+    <Compile Include="CoreModules\Converters.cs" />
     <Compile Include="CoreModules\SignatureProcessor.cs" />
     <Compile Include="DataModel\Enums\SignatureType.cs" />
     <Compile Include="DataModel\SignatureInfo.cs" />

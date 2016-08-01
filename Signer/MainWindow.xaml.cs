@@ -28,10 +28,11 @@ namespace Signer {
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window {
-		private MainViewModel _viewModel = new MainViewModel();
+		private MainViewModel _viewModel;
 		
 		public MainWindow() {
 			InitializeComponent();
+			_viewModel = new MainViewModel();
 		}
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
@@ -44,11 +45,33 @@ namespace Signer {
 
 			if (serverSessionData.IsSuccessStatusCode) {
 				_viewModel.MessageIsError = false;
-				_viewModel.InitSession(await serverSessionData.Content.ReadAsStringAsync());
+				_viewModel.InitSession(await serverSessionData.Content.ReadAsStringAsync(),args[1]);
 			} else {
 				//means server returned not OK or connection timed out
 				_viewModel.MessageIsError = true;
 				_viewModel.ServerHtmlMessage = await serverSessionData.Content.ReadAsStringAsync();
+			}
+			//TODO:Interface changes on error
+		}
+
+		private async void SignButton_OnClick(object sender, RoutedEventArgs e) {
+			if (SelectedSignatureCert.SelectedItem != null) {
+				X509Certificate2 selectedCert = (X509Certificate2) SelectedSignatureCert.SelectedItem;
+				HttpResponseMessage serverResponse = await _viewModel.SendDataBackToServer(_viewModel.SignWithSelectedCert(selectedCert));
+				if (!serverResponse.IsSuccessStatusCode) {
+					_viewModel.MessageIsError = true;
+				}
+
+				_viewModel.ServerHtmlMessage = await serverResponse.Content.ReadAsStringAsync();
+				//TODO:Interface changes due to error
+			} else {
+				//means certificate not selected
+				MessageBox.Show(
+					"Пожалуйста, выберите сертификат подписи!",
+					"Не выбран сертификат подписи",
+					MessageBoxButton.OK,
+					MessageBoxImage.Exclamation
+				);
 			}
 		}
 	}

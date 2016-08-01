@@ -15,6 +15,8 @@ namespace Signer.DataModel {
 
 		#region [P & F]
 
+		public string StartupArg;
+
 		public XDocument ServerSessionMessage;
 		public string SessionId;
 
