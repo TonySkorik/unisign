@@ -488,9 +488,9 @@ namespace Signer.CoreModules {
 
 		#endregion
 
-			#endregion
+		#endregion
 
-			#region [READ CERTIFICATE]
+		#region [READ CERTIFICATE]
 			/// <summary>
 			/// Reads certificate to a UnismevData.CertificateInfo struct and returns it if certificate present. 
 			/// If not returns null.
@@ -561,11 +561,11 @@ namespace Signer.CoreModules {
 			return VerifySignature(xd,verifySignatureOnly);
 		}
 
-		public static bool VerifySignature(XmlDocument message, bool verifySignatureOnly = false) {
+		public static bool VerifySignature(XmlDocument message, bool verifySignatureOnly = false, X509Certificate2 verifyOnThisCert = null) {
 			bool ret = false;
 			X509Certificate2 cert = new X509Certificate2();
 			if (verifySignatureOnly) {
-				cert = ReadCertificateFromXml(message.GetXDocument());
+				cert = verifyOnThisCert ?? ReadCertificateFromXml(message.GetXDocument());
 			}
 			XmlDocument xmlDocument = message;
 			//xmlDocument.PreserveWhitespace = true;

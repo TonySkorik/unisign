@@ -40,5 +40,14 @@ namespace Signer.Properties {
                 return ((string)(this["serverCertificateThumbprint"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("config.xml")]
+        public string publicCfgPath {
+            get {
+                return ((string)(this["publicCfgPath"]));
+            }
+        }
     }
 }

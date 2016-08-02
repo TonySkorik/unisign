@@ -19,7 +19,7 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
-
+using Microsoft.Win32;
 using Signer.ViewModel;
 using Signer.DataModel;
 
@@ -37,6 +37,9 @@ namespace Signer {
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
 			MainGrid.DataContext = _viewModel;
+			if (!_viewModel.ConfigIsGo) {
+				return;
+			}
 
 			string[] args = Environment.GetCommandLineArgs();
 			//List<X509Certificate2> certs = CertificatesInSelectedStore.Items.Cast<X509Certificate2>().ToList();
@@ -54,6 +57,7 @@ namespace Signer {
 			//TODO:Interface changes on error
 		}
 
+		#region [SIGN]
 		private async void SignButton_OnClick(object sender, RoutedEventArgs e) {
 			if (SelectedSignatureCert.SelectedItem != null) {
 				X509Certificate2 selectedCert = (X509Certificate2) SelectedSignatureCert.SelectedItem;
@@ -74,5 +78,33 @@ namespace Signer {
 				);
 			}
 		}
+		#endregion
+
+		#region [MAIN MENU]
+		private void LoadPrivateConfig_OnClick(object sender, RoutedEventArgs e) {
+			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
+				CheckFileExists = true,
+				Multiselect = false,
+				CheckPathExists = true,
+				Filter = "Файлы конфигурации(*.CBIN;*.cbin)|*.CBIN;*.cbin"
+			};
+			dlgOpenFile.ShowDialog();
+			_viewModel.SetConfig(dlgOpenFile.FileName);
+		}
+
+		private void LoadCertificate_OnClick(object sender, RoutedEventArgs e) {
+			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
+				CheckFileExists = true,
+				Multiselect = false,
+				CheckPathExists = true,
+				Filter = "Файлы сертификатов(*.CER;*.cer)|*.CER;*.cer"
+			};
+			dlgOpenFile.ShowDialog();
+			_viewModel.SetCertificate(dlgOpenFile.FileName);
+		}
+		private void ProgramExit_OnClick(object sender, RoutedEventArgs e) {
+			Close();
+		}
+		#endregion
 	}
 }

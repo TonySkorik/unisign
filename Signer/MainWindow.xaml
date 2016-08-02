@@ -9,8 +9,9 @@
 	Title="UniSign" 
 	Loaded="MainWindow_OnLoaded"
 	FontSize="16" 
-	d:DesignHeight="572.5" 
-	d:DesignWidth="454.5"
+	Height="590" 
+	Width="455"
+	
 >
 	<Window.Resources>
 		<core:CertificateToSubjectConverter x:Key="CertificateToSubjConverter"/>	
@@ -20,12 +21,22 @@
 		Height="Auto"	  
 	>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="25"/>
 			<RowDefinition Height="2*"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
+		<Menu FontSize="15">
+			<MenuItem Header="Файл" IsEnabled="{Binding Path=PublicConfigIsGo}">
+				<MenuItem Header="Загрузить личный конфигурационный файл" Click="LoadPrivateConfig_OnClick"/>
+				<MenuItem Header="Загрузить сертификат" Click="LoadCertificate_OnClick"/>
+				<Separator/>
+				<MenuItem Header="Выход" Click="ProgramExit_OnClick"/>
+			</MenuItem>
+			
+		</Menu>
 		<TabControl
 			Grid.Column="0" 
-			Grid.Row="0" 	
+			Grid.Row="1" 	
 			BorderThickness="0"
 		>
 			<TabItem Header="Text">
@@ -71,9 +82,9 @@
 		
 		<StackPanel 
 			Grid.Column="0" 
-			Grid.Row="1" 
+			Grid.Row="2" 
 			Orientation="Vertical" 
-			VerticalAlignment="Stretch" 
+			VerticalAlignment="Center" 
 			HorizontalAlignment="Stretch"
 		>
 			<GroupBox Header="Храналище сертификатов " Margin="5">
@@ -102,7 +113,7 @@
 
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-			<Button Height="40" Content="Подписать" Margin="5" Click="SignButton_OnClick"/>
+			<Button Height="40" Content="Подписать" Margin="5" Click="SignButton_OnClick" IsEnabled="{Binding Path=ConfigIsGo}"/>
 		</StackPanel>
 	</Grid>
 </Window>

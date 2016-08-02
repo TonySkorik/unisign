@@ -8,5 +8,8 @@
     <Setting Name="serverCertificateThumbprint" Type="System.String" Scope="Application">
       <Value Profile="(Default)">8D6079A1AC1215F2E92AA86A5C897C48E15B5782</Value>
     </Setting>
+    <Setting Name="publicCfgPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">config.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

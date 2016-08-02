@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
@@ -14,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Web;
+using System.Windows;
 using System.Xml;
 using Signer.CoreModules;
 using Signer.DataModel;
@@ -34,6 +36,15 @@ namespace Signer.ViewModel {
 		private string _originalXmlDataToSign;
 		private bool _messageIsError;
 		private ObservableCollection<X509Certificate2> _certificates;
+		private bool _configIsGo;
+		private bool _publicConfigIsGo;
+		private XDocument _publicConfig;
+
+		//from binary config
+		private X509Certificate2 _ourCertificate;
+		private Uri _serverUri;
+		private string _serverHttpsCertificateThumbprint;
+		//===============================================
 
 		public string HumanRadableDataToSign {
 			get { return _humanRadableDataToSign; }
@@ -67,22 +78,149 @@ namespace Signer.ViewModel {
 				NotifyPropertyChanged();
 			}
 		}
+		public bool ConfigIsGo {
+			get { return _configIsGo; }
+			set {
+				_configIsGo = value;
+				NotifyPropertyChanged();
+			}
+		}
+		public bool PublicConfigIsGo {
+			get { return _publicConfigIsGo; }
+			set {
+				_publicConfigIsGo = value;
+				NotifyPropertyChanged();
+			}
+		}
 
 		#endregion
 
 		public MainViewModel() {
 			Certificates = new ObservableCollection<X509Certificate2>();
 			LoadCertificatesFromStore(SignatureProcessor.StoreType.CurrentUser);
+			
+			LoadConfig();
 
-			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 |
-															SecurityProtocolType.Tls;
+			if(ConfigIsGo) {
+				//setup our makeshift certificate check procedure
+				System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 |
+																SecurityProtocolType.Tls;
 
-			System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => {
-				X509Certificate2 c = (X509Certificate2)cert;
-				return c.Thumbprint == Signer.Properties.Settings.Default.serverCertificateThumbprint;
-			};
+				System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => {
+					X509Certificate2 c = (X509Certificate2)cert;
+					return c.Thumbprint == _serverHttpsCertificateThumbprint;
+				};
+			}
+		}
+		#region [SET CONFIG & CERT]
+
+		private void _setPathToConfig(string element, string path) {
+			if(File.Exists(path)) {
+				string nearExe = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+											Path.GetFileName(path));
+				File.Copy(path,nearExe,true);
+
+				_publicConfig.Root.Element(element).Value = nearExe;
+			}
+			_publicConfig.Save(Signer.Properties.Settings.Default.publicCfgPath);
 		}
 
+		public void SetConfig(string fname) {
+			_setPathToConfig("CfgBinPath", fname);
+			LoadConfig();
+		}
+
+		public void SetCertificate(string fname) {
+			_setPathToConfig("CertificateFilePath", fname);
+			LoadConfig();
+		}
+		#endregion
+
+		#region [LOAD && CHECK PRIVATE CONFIG]
+		public void LoadConfig() {
+			try {
+				_publicConfig = XDocument.Load(Signer.Properties.Settings.Default.publicCfgPath);
+				PublicConfigIsGo = true;
+				ConfigIsGo = checkConfig(_publicConfig);
+			} catch (Exception e) {
+				ConfigIsGo = false;
+				MessageBox.Show(
+					$"Основной конфигурационный файл не найден или поврежден! Обратитесь к разработчику.\n\n{e.Message}",
+					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+			} finally {
+				ConfigIsGo = false;
+			}
+
+		}
+
+		private bool checkConfig(XDocument cfg) {
+			string binConfigPath = cfg.Root?.Element("CfgBinPath")?.Value;
+			string certFilePath = cfg.Root?.Element("CertificateFilePath")?.Value;
+			
+			//signed (and siphered) binary config
+			if(string.IsNullOrEmpty(binConfigPath)) {
+				MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
+								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			} else {
+				//means htere is a config
+				//check it's signature, but first load our certificate
+				if(string.IsNullOrEmpty(certFilePath)) {
+					MessageBox.Show("Файл сертификата не найден.\nСкачайте новый файл сертификата с корпоративного портала.",
+								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+					return false;
+				} else {
+					//means certificate && config present
+					//check config expiration date
+					X509Certificate2 cert = new X509Certificate2();
+					try {
+						cert.Import(certFilePath);
+						if (cert.NotAfter > DateTime.Now) {
+							//cert ok
+							//check config signature
+
+							//TODO: maybe decompile / decrypt the config  ??
+							string configContents = decryptConfig(binConfigPath);
+
+							XmlDocument xdocConfig = new XmlDocument();
+							xdocConfig.LoadXml(configContents);
+							if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
+								//config signature OK - loading contents
+								XDocument privateConfig = XDocument.Parse(configContents);
+
+								_ourCertificate = cert;
+								_serverUri = new Uri(privateConfig.Root?.Element("GetFileUri")?.Value ?? "");
+								_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("ServerCertificateThumbprint")?.Value ?? "";
+							} else {
+								//signature incorrect
+								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
+									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+								return false;
+							}
+						} else {
+							//cert expired
+							MessageBox.Show("Файл сертификата просрочен.\nСкачайте новый файл сертификата с корпоративного портала.",
+								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+							return false;
+						}
+					} catch (Exception e) {
+						//certificate corrupted
+						MessageBox.Show($"Ошибка загрузки сертификата. Файл поврежден.\nСкачайте новый файл сертификата с корпоративного портала.\n\n{e.Message}",
+								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		private string decryptConfig(string configPath) {
+			//TODO: decrypt config
+			return File.ReadAllText(configPath);
+		}
+		#endregion
+
+		#region [SIGNING SESSION START]
 		public async Task<HttpResponseMessage> GetServerSessionData(string startupArg) {
 
 			//startupArg is like : unisign:session_id=12345-45-54545-12
@@ -92,7 +230,7 @@ namespace Signer.ViewModel {
 				Timeout = new TimeSpan(0,0,0,60)
 			};
 			
-			UriBuilder serverUri = new UriBuilder(Signer.Properties.Settings.Default.getFileUri) {
+			UriBuilder serverUri = new UriBuilder(_serverUri) {
 				Query = $"oper=getfile&{startupUri.PathAndQuery}"
 			};
 
@@ -107,7 +245,9 @@ namespace Signer.ViewModel {
 			OriginalXmlDataToSign = _s.DataToSign;
 			HumanRadableDataToSign = _s.HumanReadableHtml;
 		}
+		#endregion
 
+		#region [SIGNING PORCESS]
 		public void LoadCertificatesFromStore(SignatureProcessor.StoreType storeType) {
 			List<X509Certificate2> certs = SignatureProcessor.GetAllCertificatesFromStore(storeType);
 			Certificates.Clear();
@@ -147,7 +287,9 @@ namespace Signer.ViewModel {
 
 			return SignatureProcessor.Sign(signMode, cert, docToSign, false, _s.SignInfo.NodeId);
 		}
+		#endregion
 
+		#region [SEND DATA BACK TO SRV]
 		public async Task<HttpResponseMessage> SendDataBackToServer(string signedData) {
 			Uri startupUri = new Uri(_s.StartupArg);
 
@@ -155,7 +297,7 @@ namespace Signer.ViewModel {
 				Timeout = new TimeSpan(0, 0, 0, 60)
 			};
 
-			UriBuilder serverUri = new UriBuilder(Signer.Properties.Settings.Default.getFileUri) {
+			UriBuilder serverUri = new UriBuilder(_serverUri) {
 				Query = $"oper=signed&{startupUri.PathAndQuery}"
 			};
 
@@ -164,5 +306,6 @@ namespace Signer.ViewModel {
 
 			return await client.PostAsync(serverUri.Uri,content);
 		}
+		#endregion
 	}
 }
