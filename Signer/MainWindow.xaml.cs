@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,12 @@ namespace Signer {
 		}
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
+			/*
+			string encrypted_bin = "4a1d99e520b2f5404f25b9cee0ca8f30";
+			byte[] encoded = Encoding.UTF8.GetBytes(encrypted_bin);
+			byte[] key = Encoding.UTF8.GetBytes("1223456789012234");
+			*/
+
 			MainGrid.DataContext = _viewModel;
 			if (!_viewModel.ConfigIsGo) {
 				return;
