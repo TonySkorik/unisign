@@ -17,9 +17,12 @@ using System.Xml.Linq;
 using System.Web;
 using System.Windows;
 using System.Xml;
+
 using Signer.CoreModules;
 using Signer.DataModel;
 using Signer.DataModel.Enums;
+
+using SevenZip;
 
 namespace Signer.ViewModel {
 	class MainViewModel:INotifyPropertyChanged {
@@ -299,6 +302,7 @@ namespace Signer.ViewModel {
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
 			} else {
+				decryptConfig(binConfigPath);
 				//means htere is a config
 				//check it's signature, but first load our certificate
 				if(string.IsNullOrEmpty(certFilePath)) {
@@ -351,8 +355,18 @@ namespace Signer.ViewModel {
 		}
 
 		private string decryptConfig(string configPath) {
-			//TODO: decrypt config
-			return File.ReadAllText(configPath);
+			SevenZipExtractor.SetLibraryPath("7z_32.dll");
+			string decrypted = string.Empty;
+			SevenZipExtractor ex = new SevenZipExtractor(configPath,"123");
+			
+			MemoryStream extracted = new MemoryStream();
+			ex.ExtractFile("private_config.xml",extracted);
+			extracted.Position = 0;
+			using (StreamReader sr = new StreamReader(extracted)) {
+				decrypted = sr.ReadToEnd();
+			}
+			extracted.Close();
+			return decrypted;
 		}
 		#endregion
 
