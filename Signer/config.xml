@@ -2,4 +2,9 @@
 <Settings>
 	<CfgBinPath></CfgBinPath>
 	<CertificateFilePath></CertificateFilePath>
+	<CertificateStore></CertificateStore>
+	<WindowWidth></WindowWidth>
+	<WindowHeight></WindowHeight>
+	<WindowLeft></WindowLeft>
+	<WindowTop></WindowTop>
 </Settings>

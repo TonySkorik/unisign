@@ -5,16 +5,24 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:Signer"
 	xmlns:core="clr-namespace:Signer.CoreModules"
+	xmlns:x509Certificates="clr-namespace:System.Security.Cryptography.X509Certificates;assembly=System"
 	mc:Ignorable="d"
 	Title="UniSign" 
 	Loaded="MainWindow_OnLoaded"
+	Closing="MainWindow_OnClosing"
 	FontSize="16" 
-	Height="590" 
-	Width="455"
+	d:DesignHeight="590"
+	d:DesignWidth="455"
+	Height="{Binding Path=WindowHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+	Width="{Binding Path=WindowWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+	Left="{Binding Path=WindowLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+	Top="{Binding Path=WindowTop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 	
+	x:Name="MainUI"
 >
 	<Window.Resources>
-		<core:CertificateToSubjectConverter x:Key="CertificateToSubjConverter"/>	
+		<core:CertificateToSubjectConverter x:Key="CertificateToSubjConverter"/>
+		<core:EnumToBooleanConverter x:Key="EnumToBooleanConvert"/>
 	</Window.Resources>
 	
 	<Grid x:Name="MainGrid"
@@ -89,8 +97,16 @@
 		>
 			<GroupBox Header="Храналище сертификатов " Margin="5">
 				<StackPanel Orientation="Horizontal">
-					<RadioButton GroupName="SignatureLocation" Content="Current User" Margin="5" IsChecked="True"/>
-					<RadioButton GroupName="SignatureLocation" Content="Local Machine" Margin="5" />
+					<RadioButton 
+						Content="Current User" 
+						Margin="5" 
+						IsChecked="{Binding Path=CertificateStore, Converter={StaticResource EnumToBooleanConvert}, ConverterParameter={x:Static x509Certificates:StoreLocation.CurrentUser}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+					/>
+					<RadioButton 
+						Content="Local Machine" 
+						Margin="5" 
+						IsChecked="{Binding Path=CertificateStore, Converter={StaticResource EnumToBooleanConvert}, ConverterParameter={x:Static x509Certificates:StoreLocation.LocalMachine}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+					/>
 				</StackPanel>
 			</GroupBox>
 			<Label Content="Сертификат" Padding="0" Margin="5,0,5,2"/>

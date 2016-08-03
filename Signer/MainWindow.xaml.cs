@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -34,16 +35,13 @@ namespace Signer {
 		public MainWindow() {
 			InitializeComponent();
 			_viewModel = new MainViewModel();
+			
 		}
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
-			/*
-			string encrypted_bin = "4a1d99e520b2f5404f25b9cee0ca8f30";
-			byte[] encoded = Encoding.UTF8.GetBytes(encrypted_bin);
-			byte[] key = Encoding.UTF8.GetBytes("1223456789012234");
-			*/
-
-			MainGrid.DataContext = _viewModel;
+			MainUI.DataContext = _viewModel;
+			
+			//MainGrid.DataContext = _viewModel;
 			if (!_viewModel.ConfigIsGo) {
 				return;
 			}
@@ -62,6 +60,9 @@ namespace Signer {
 				_viewModel.ServerHtmlMessage = await serverSessionData.Content.ReadAsStringAsync();
 			}
 			//TODO:Interface changes on error
+		}
+		private void MainWindow_OnClosing(object sender, CancelEventArgs e) {
+			_viewModel.RewriteConfig();
 		}
 
 		#region [SIGN]
@@ -113,5 +114,6 @@ namespace Signer {
 			Close();
 		}
 		#endregion
+
 	}
 }

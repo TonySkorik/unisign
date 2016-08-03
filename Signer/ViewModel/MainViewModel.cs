@@ -39,12 +39,19 @@ namespace Signer.ViewModel {
 		private bool _configIsGo;
 		private bool _publicConfigIsGo;
 		private XDocument _publicConfig;
+		private StoreLocation _certificateStore;
+		private int _windowHeight;
+		private int _windowWidth;
+		private int _windowLeft;
+		private int _windowTop;
 
 		//from binary config
 		private X509Certificate2 _ourCertificate;
 		private Uri _serverUri;
 		private string _serverHttpsCertificateThumbprint;
 		//===============================================
+
+		#region [FOR DATA BINDING]
 
 		public string HumanRadableDataToSign {
 			get { return _humanRadableDataToSign; }
@@ -92,13 +99,49 @@ namespace Signer.ViewModel {
 				NotifyPropertyChanged();
 			}
 		}
+		public StoreLocation CertificateStore {
+			get { return _certificateStore; }
+			set {
+				_certificateStore = value;
+				NotifyPropertyChanged();
+			}
+		}
+		public int WindowHeight {
+			get { return _windowHeight; }
+			set {
+				_windowHeight = value;
+				NotifyPropertyChanged();
+			}
+		}
+		public int WindowWidth {
+			get { return _windowWidth; }
+			set {
+				_windowWidth = value;
+				NotifyPropertyChanged();
+			}
+		}
+		public int WindowLeft {
+			get { return _windowLeft; }
+			set {
+				_windowLeft = value;
+				NotifyPropertyChanged();
+			}
+		}
+		public int WindowTop {
+			get { return _windowTop; }
+			set {
+				_windowTop = value;
+				NotifyPropertyChanged();
+			}
+		}
+		#endregion
 
 		#endregion
 
 		public MainViewModel() {
 			Certificates = new ObservableCollection<X509Certificate2>();
 			LoadCertificatesFromStore(SignatureProcessor.StoreType.CurrentUser);
-			
+			//CertificateStore = StoreLocation.LocalMachine;
 			LoadConfig();
 
 			if(ConfigIsGo) {
@@ -122,7 +165,34 @@ namespace Signer.ViewModel {
 
 				_publicConfig.Root.Element(element).Value = nearExe;
 			}
+			saveChangesToConfig();
+		}
+
+		public void SetConfigField(string fieldname, string value) {
+			if (!string.IsNullOrEmpty(fieldname) && !string.IsNullOrEmpty(value)) {
+				if (_publicConfig.Root.Elements(fieldname).Any()) {
+					_publicConfig.Root.Element(fieldname).Value = value;
+				} else {
+					throw new Exception("Открытый конфигурационный файл поврежден!");
+				}
+			} else {
+				throw new ArgumentNullException($"Fieldname or value content is null or empty");
+			}
+		}
+
+		private void saveChangesToConfig() {
+			//FileStream cfgLock = new FileStream(Signer.Properties.Settings.Default.publicCfgPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
 			_publicConfig.Save(Signer.Properties.Settings.Default.publicCfgPath);
+			//cfgLock.Close();
+		}
+
+		public void RewriteConfig() {
+			SetConfigField("CertificateStore", CertificateStore.ToString());
+			SetConfigField("WindowHeight", WindowHeight.ToString());
+			SetConfigField("WindowWidth", WindowWidth.ToString());
+			SetConfigField("WindowLeft", WindowLeft.ToString());
+			SetConfigField("WindowTop", WindowTop.ToString());
+			saveChangesToConfig();
 		}
 
 		public void SetConfig(string fname) {
@@ -144,6 +214,7 @@ namespace Signer.ViewModel {
 				ConfigIsGo = checkConfig(_publicConfig);
 			} catch (Exception e) {
 				ConfigIsGo = false;
+				PublicConfigIsGo = false;
 				MessageBox.Show(
 					$"Основной конфигурационный файл не найден или поврежден! Обратитесь к разработчику.\n\n{e.Message}",
 					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -156,7 +227,54 @@ namespace Signer.ViewModel {
 		private bool checkConfig(XDocument cfg) {
 			string binConfigPath = cfg.Root?.Element("CfgBinPath")?.Value;
 			string certFilePath = cfg.Root?.Element("CertificateFilePath")?.Value;
-			
+
+			StoreLocation storeLocation;
+			StoreLocation.TryParse(cfg.Root?.Element("CertificateStore")?.Value,true, out storeLocation);
+			if (storeLocation != 0) {
+				CertificateStore = storeLocation;
+			} else {
+				CertificateStore = StoreLocation.CurrentUser;
+				SetConfigField("CertificateStore", CertificateStore.ToString());
+			}
+
+			#region [set window position and size]
+
+			string lastHeightStr = cfg.Root?.Element("WindowHeight")?.Value;
+			string lastWidthStr = cfg.Root?.Element("WindowWidth")?.Value;
+			string lastLeftStr = cfg.Root?.Element("WindowLeft")?.Value;
+			string lastTopStr = cfg.Root?.Element("WindowTop")?.Value;
+
+			if (!string.IsNullOrEmpty(lastHeightStr)) {
+				WindowHeight = Int32.Parse(lastHeightStr);
+			} else {
+				WindowHeight = 600;
+				SetConfigField("WindowHeight",WindowHeight.ToString());
+			}
+
+			if(!string.IsNullOrEmpty(lastWidthStr)) {
+				WindowWidth = Int32.Parse(lastWidthStr);
+			} else {
+				WindowWidth = 590;
+				SetConfigField("WindowWidth", WindowWidth.ToString());
+			}
+
+			if(!string.IsNullOrEmpty(lastLeftStr)) {
+				WindowLeft = Int32.Parse(lastLeftStr);
+			} else {
+				WindowLeft = 100;
+				SetConfigField("WindowLeft", WindowLeft.ToString());
+			}
+
+			if(!string.IsNullOrEmpty(lastTopStr)) {
+				WindowTop = Int32.Parse(lastTopStr);
+			} else {
+				WindowTop = 20;
+				SetConfigField("WindowTop", WindowTop.ToString());
+			}
+			#endregion
+
+			saveChangesToConfig();
+
 			//signed (and siphered) binary config
 			if(string.IsNullOrEmpty(binConfigPath)) {
 				MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
