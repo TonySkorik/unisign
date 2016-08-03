@@ -3,6 +3,7 @@
 	<CfgBinPath></CfgBinPath>
 	<CertificateFilePath></CertificateFilePath>
 	<CertificateStore></CertificateStore>
+	<CertificateItem></CertificateItem>
 	<WindowWidth></WindowWidth>
 	<WindowHeight></WindowHeight>
 	<WindowLeft></WindowLeft>

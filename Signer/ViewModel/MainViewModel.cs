@@ -44,6 +44,7 @@ namespace Signer.ViewModel {
 		private int _windowWidth;
 		private int _windowLeft;
 		private int _windowTop;
+		private int _certificateItem;
 
 		//from binary config
 		private X509Certificate2 _ourCertificate;
@@ -134,6 +135,14 @@ namespace Signer.ViewModel {
 				NotifyPropertyChanged();
 			}
 		}
+		public int CertificateItem {
+			get { return _certificateItem; }
+			set {
+				_certificateItem = value;
+				NotifyPropertyChanged();
+			}
+		}
+
 		#endregion
 
 		#endregion
@@ -188,6 +197,7 @@ namespace Signer.ViewModel {
 
 		public void RewriteConfig() {
 			SetConfigField("CertificateStore", CertificateStore.ToString());
+			SetConfigField("CertificateItem", CertificateItem.ToString());
 			SetConfigField("WindowHeight", WindowHeight.ToString());
 			SetConfigField("WindowWidth", WindowWidth.ToString());
 			SetConfigField("WindowLeft", WindowLeft.ToString());
@@ -235,6 +245,14 @@ namespace Signer.ViewModel {
 			} else {
 				CertificateStore = StoreLocation.CurrentUser;
 				SetConfigField("CertificateStore", CertificateStore.ToString());
+			}
+
+			string lastCertificateStr = cfg.Root?.Element("CertificateItem")?.Value;
+			if(!string.IsNullOrEmpty(lastCertificateStr)) {
+				CertificateItem = Int32.Parse(lastCertificateStr);
+			} else {
+				CertificateItem = 0;
+				SetConfigField("CertificateItem", CertificateItem.ToString());
 			}
 
 			#region [set window position and size]
