@@ -64,12 +64,12 @@ namespace Signer {
 		private void MainWindow_OnClosing(object sender, CancelEventArgs e) {
 			_viewModel.RewriteConfig();
 		}
-
+		
+		#region [CERT & SIGN]
 		private void CertificateStoreSelect_OnClick(object sender, RoutedEventArgs e) {
 			_viewModel.LoadCertificatesFromStore();
 		}
 
-		#region [SIGN]
 		private async void SignButton_OnClick(object sender, RoutedEventArgs e) {
 			if (SelectedSignatureCert.SelectedItem != null) {
 				X509Certificate2 selectedCert = (X509Certificate2) SelectedSignatureCert.SelectedItem;

@@ -167,6 +167,7 @@ namespace Signer.ViewModel {
 				};
 			}
 		}
+
 		#region [SET CONFIG & CERT]
 
 		private void _setPathToConfig(string element, string path) {
@@ -357,7 +358,7 @@ namespace Signer.ViewModel {
 		}
 
 		private string decryptConfig(string configPath) {
-			SevenZipExtractor.SetLibraryPath("7z_32.dll");
+			SevenZipBase.SetLibraryPath("7z_32.dll");
 			string decrypted = null;
 			SevenZipExtractor ex = new SevenZipExtractor(configPath,"123");
 			
@@ -367,7 +368,7 @@ namespace Signer.ViewModel {
 			} catch {
 				MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
-				return decrypted;
+				return null;
 			}
 			extracted.Position = 0;
 			using (StreamReader sr = new StreamReader(extracted)) {
@@ -378,7 +379,7 @@ namespace Signer.ViewModel {
 		}
 		#endregion
 
-		#region [SIGNING SESSION START]
+		#region [SIGNING SESSION INIT]
 		public async Task<HttpResponseMessage> GetServerSessionData(string startupArg) {
 
 			//startupArg is like : unisign:session_id=12345-45-54545-12
