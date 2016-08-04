@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8" ?> 
 <Settings>
-  <CfgBinPath></CfgBinPath>
-  <CertificateFilePath></CertificateFilePath>
-  <CertificateStore>CurrentUser</CertificateStore>
-  <CertificateItem>0</CertificateItem>
-  <WindowWidth>590</WindowWidth>
-  <WindowHeight>600</WindowHeight>
-  <WindowLeft>100</WindowLeft>
-  <WindowTop>20</WindowTop>
+	<CfgBinPath></CfgBinPath>
+	<CertificateFilePath></CertificateFilePath>
+	<CertificateStore></CertificateStore>
+	<CertificateItem></CertificateItem>
+	<WindowWidth></WindowWidth>
+	<WindowHeight></WindowHeight>
+	<WindowLeft></WindowLeft>
+	<WindowTop></WindowTop>
 </Settings>

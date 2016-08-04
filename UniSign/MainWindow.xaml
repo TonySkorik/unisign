@@ -19,6 +19,7 @@
 	Top="{Binding Path=WindowTop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 	
 	x:Name="MainUI"
+	Icon="pen(48).ico"
 >
 	<Window.Resources>
 		<core:CertificateToSubjectConverter x:Key="CertificateToSubjConverter"/>
@@ -132,7 +133,14 @@
 
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-			<Button Height="40" Content="Подписать" Margin="5" Click="SignButton_OnClick" IsEnabled="{Binding Path=ConfigIsGo}"/>
+			<Button Height="40" Margin="5" Click="SignButton_OnClick" IsEnabled="{Binding Path=ConfigIsGo}">
+				<Button.Content>
+					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+						<Image Source="pen(48).ico" VerticalAlignment="Center"/>
+						<TextBlock Text="Подписать" Margin="10,0,0,0" FontSize="19" VerticalAlignment="Center"/>
+					</StackPanel>
+				</Button.Content>
+			</Button>
 		</StackPanel>
 	</Grid>
 </Window>
