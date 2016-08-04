@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -151,10 +152,9 @@ namespace Signer.ViewModel {
 		#endregion
 
 		public MainViewModel() {
-			Certificates = new ObservableCollection<X509Certificate2>();
-			LoadCertificatesFromStore(SignatureProcessor.StoreType.CurrentUser);
-			//CertificateStore = StoreLocation.LocalMachine;
 			LoadConfig();
+			Certificates = new ObservableCollection<X509Certificate2>();
+			LoadCertificatesFromStore();
 
 			if(ConfigIsGo) {
 				//setup our makeshift certificate check procedure
@@ -318,10 +318,10 @@ namespace Signer.ViewModel {
 						if (cert.NotAfter > DateTime.Now) {
 							//cert ok
 							//check config signature
-
-							//TODO: maybe decompile / decrypt the config  ??
 							string configContents = decryptConfig(binConfigPath);
-
+							if (string.IsNullOrEmpty(configContents)) {
+								return false;
+							}
 							XmlDocument xdocConfig = new XmlDocument();
 							xdocConfig.LoadXml(configContents);
 							if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
@@ -333,6 +333,8 @@ namespace Signer.ViewModel {
 								_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("ServerCertificateThumbprint")?.Value ?? "";
 							} else {
 								//signature incorrect
+								Debug.WriteLine("Invalid Signature");
+
 								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 								return false;
@@ -356,11 +358,17 @@ namespace Signer.ViewModel {
 
 		private string decryptConfig(string configPath) {
 			SevenZipExtractor.SetLibraryPath("7z_32.dll");
-			string decrypted = string.Empty;
+			string decrypted = null;
 			SevenZipExtractor ex = new SevenZipExtractor(configPath,"123");
 			
 			MemoryStream extracted = new MemoryStream();
-			ex.ExtractFile("private_config.xml",extracted);
+			try {
+				ex.ExtractFile("private_config.xml", extracted);
+			} catch {
+				MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
+									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+				return decrypted;
+			}
 			extracted.Position = 0;
 			using (StreamReader sr = new StreamReader(extracted)) {
 				decrypted = sr.ReadToEnd();
@@ -398,13 +406,14 @@ namespace Signer.ViewModel {
 		#endregion
 
 		#region [SIGNING PORCESS]
-		public void LoadCertificatesFromStore(SignatureProcessor.StoreType storeType) {
-			List<X509Certificate2> certs = SignatureProcessor.GetAllCertificatesFromStore(storeType);
+		public void LoadCertificatesFromStore() {
+			int lastSelectedCertItem = CertificateItem;
+			List<X509Certificate2> certs = SignatureProcessor.GetAllCertificatesFromStore(CertificateStore);
 			Certificates.Clear();
-			//Certificates.Add(null);
 			foreach (X509Certificate2 c in certs) {
 				Certificates.Add(c);
 			}
+			CertificateItem = lastSelectedCertItem;
 		}
 
 		public string SignWithSelectedCert(X509Certificate2 cert) {

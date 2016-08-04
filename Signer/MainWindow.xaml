@@ -101,11 +101,14 @@
 						Content="Current User" 
 						Margin="5" 
 						IsChecked="{Binding Path=CertificateStore, Converter={StaticResource EnumToBooleanConvert}, ConverterParameter={x:Static x509Certificates:StoreLocation.CurrentUser}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+						Click="CertificateStoreSelect_OnClick"
 					/>
 					<RadioButton 
 						Content="Local Machine" 
 						Margin="5" 
 						IsChecked="{Binding Path=CertificateStore, Converter={StaticResource EnumToBooleanConvert}, ConverterParameter={x:Static x509Certificates:StoreLocation.LocalMachine}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+						Click="CertificateStoreSelect_OnClick"
+						
 					/>
 				</StackPanel>
 			</GroupBox>

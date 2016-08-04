@@ -11,8 +11,17 @@ using System.Windows.Data;
 namespace Signer.CoreModules {
 	class CertificateToSubjectConverter : IValueConverter {
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-			X509Certificate2 cert = (X509Certificate2) value;
-			if (cert == null) return "Пожалуйста, выберите подпись!";
+			X509Certificate2 cert = null;
+			//cert = (X509Certificate2)value;
+
+			try {
+				cert = (X509Certificate2) value;
+			} catch {
+				//that's for control to not crash upon ObservableCollection.Clear() method
+				return Binding.DoNothing;
+			}
+			
+			if (cert == null) return "Сертификат поврежден";
 			return cert.Subject;
 		}
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {

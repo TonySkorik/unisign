@@ -139,6 +139,12 @@ namespace Signer.CoreModules {
 			return store.Certificates.Cast<X509Certificate2>().ToList();
 		}
 
+		public static List<X509Certificate2> GetAllCertificatesFromStore(StoreLocation storeLocation) {
+			X509Store store = new X509Store("My", storeLocation);
+			store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly | OpenFlags.MaxAllowed);
+			return store.Certificates.Cast<X509Certificate2>().ToList();
+		}
+
 		#endregion
 		#endregion
 

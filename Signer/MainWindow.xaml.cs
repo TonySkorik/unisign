@@ -65,6 +65,10 @@ namespace Signer {
 			_viewModel.RewriteConfig();
 		}
 
+		private void CertificateStoreSelect_OnClick(object sender, RoutedEventArgs e) {
+			_viewModel.LoadCertificatesFromStore();
+		}
+
 		#region [SIGN]
 		private async void SignButton_OnClick(object sender, RoutedEventArgs e) {
 			if (SelectedSignatureCert.SelectedItem != null) {
@@ -115,5 +119,6 @@ namespace Signer {
 		}
 		#endregion
 
+		
 	}
 }
