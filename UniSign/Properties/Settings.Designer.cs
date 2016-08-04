@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Signer.Properties {
+namespace UniSign.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

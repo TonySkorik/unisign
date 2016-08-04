@@ -14,7 +14,7 @@
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="CRC"/>
     <ROW Property="ProductCode" Value="1033:{4F2385A9-EFF4-4895-91EE-D112559F2B74} 1049:{1A5EC7D4-43E2-4BA8-8493-45730199C992} " Type="16"/>
-    <ROW Property="ProductLanguage" Value="1033"/>
+    <ROW Property="ProductLanguage" Value="1049"/>
     <ROW Property="ProductName" Value="UniSign"/>
     <ROW Property="ProductVersion" Value="1.0.0" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
@@ -44,11 +44,13 @@
     <ROW Component="SHORTCUTDIR" ComponentId="{E157CD4F-059B-4DBF-B571-ABD6AA67B916}" Directory_="SHORTCUTDIR" Attributes="0"/>
     <ROW Component="SevenZipSharp.dll" ComponentId="{1F281F50-80E0-4032-858F-E090AF807B5E}" Directory_="APPDIR" Attributes="0" KeyPath="SevenZipSharp.dll"/>
     <ROW Component="Signer.exe" ComponentId="{FA05AFD3-C971-4914-A0C8-92807C86D5EB}" Directory_="APPDIR" Attributes="0" KeyPath="Signer.exe"/>
+    <ROW Component="_" ComponentId="{4ED0E284-75A8-411C-A2AF-6310BFDFFF10}" Directory_="APPDIR" Attributes="4" KeyPath="_"/>
+    <ROW Component="__1" ComponentId="{62C43AAF-D8B5-420D-8C03-0EA08192106E}" Directory_="APPDIR" Attributes="4" KeyPath="__1"/>
     <ROW Component="config.xml" ComponentId="{E3604A38-6E58-441B-B0CC-E0F06874B7A6}" Directory_="APPDIR" Attributes="0" KeyPath="config.xml" Type="0"/>
     <ROW Component="z_32.dll" ComponentId="{0514DA60-AB1E-4269-A0BC-EB49BD2D2563}" Directory_="APPDIR" Attributes="0" KeyPath="z_32.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath CryptoPro.Sharpei.Base.dll CryptoPro.Sharpei.Xml.dll Newtonsoft.Json.dll ProductInformation SHORTCUTDIR SevenZipSharp.dll Signer.exe config.xml z_32.dll"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath CryptoPro.Sharpei.Base.dll CryptoPro.Sharpei.Xml.dll Newtonsoft.Json.dll ProductInformation SHORTCUTDIR SevenZipSharp.dll Signer.exe _ __1 config.xml z_32.dll"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
@@ -62,7 +64,7 @@
     <ROW File="z_32.dll" Component_="z_32.dll" FileName="7z_32.dll" Attributes="0" SourcePath="Compiled\AnyCPU\7z_32.dll" SelfReg="false" NextFile="config.xml"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
-    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="Setup" Languages="en;ru" InstallationType="4" CabsLocation="1" PackageType="1" FilesInsideExe="true" ExtractionFolder="[AppDataFolder][|Manufacturer]\[|ProductName] [|ProductVersion]\install" UseLargeSchema="true"/>
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="Setup" Languages="en;ru" InstallationType="4" CabsLocation="1" PackageType="1" FilesInsideExe="true" ExtractionFolder="[AppDataFolder][|Manufacturer]\[|ProductName] [|ProductVersion]\install" UseLargeSchema="true" ExeName="UniSign_setup_[|ProductVersion]_allCPU"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
     <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
@@ -203,6 +205,8 @@
     <ROW Registry="AI_ExePath" Root="-1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Value="[AI_SETUPEXEPATH]" Component_="AI_ExePath"/>
     <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+    <ROW Registry="_" Root="0" Key="unisign" Value="URL: unisign Protocol" Component_="_"/>
+    <ROW Registry="__1" Root="0" Key="unisign\shell\open\command" Value="&quot;[#Signer.exe]&quot; &quot;%1&quot;" Component_="__1"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
     <ROW Shortcut="Signer.exe" Directory_="SHORTCUTDIR" Name="Signer.exe" Component_="Signer.exe" Target="[#Signer.exe]" Description="Signer.exe" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
@@ -216,7 +220,7 @@
     <ROW UpgradeCode="[|UpgradeCode]" VersionMin="[|ProductVersion]" Attributes="2" ActionProperty="AI_NEWERPRODUCTFOUND"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.PreReqComponent">
-    <ROW PrereqKey="BE1A492345959ED6A4D5ACBD0EC0" DisplayName=".NET Framework 4.5.2" SetupFileUrl="http://www.example.com/netframework.exe" Location="1" ExactSize="69999448" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2, Windows 10 x86" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2, Windows 10 x64" Operator="1" NoUiComLine="/q /norestart" Options="x" MD5="ee01fc4110c73a8e5efc7cabda0f5ff7" TargetName=".NET Framework 4.5.2"/>
+    <ROW PrereqKey="BE1A492345959ED6A4D5ACBD0EC0" DisplayName=".NET Framework 4.5.2" SetupFileUrl="Prerequisites\.NET Framework 4.5.2\NDP452-KB2901907-x86-x64-AllOS-ENU.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2, Windows 10 x86" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2, Windows 10 x64" Operator="1" NoUiComLine="/q /norestart" Options="x" TargetName=".NET Framework 4.5.2\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"/>
     <ATTRIBUTE name="PrereqsOrder" value="BE1A492345959ED6A4D5ACBD0EC0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.PreReqSearchComponent">

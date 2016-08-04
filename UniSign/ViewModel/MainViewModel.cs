@@ -18,14 +18,12 @@ using System.Xml.Linq;
 using System.Web;
 using System.Windows;
 using System.Xml;
-
-using Signer.CoreModules;
-using Signer.DataModel;
-using Signer.DataModel.Enums;
-
 using SevenZip;
+using UniSign.CoreModules;
+using UniSign.DataModel;
+using UniSign.DataModel.Enums;
 
-namespace Signer.ViewModel {
+namespace UniSign.ViewModel {
 	class MainViewModel:INotifyPropertyChanged {
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -195,7 +193,7 @@ namespace Signer.ViewModel {
 
 		private void saveChangesToConfig() {
 			//FileStream cfgLock = new FileStream(Signer.Properties.Settings.Default.publicCfgPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
-			_publicConfig.Save(Signer.Properties.Settings.Default.publicCfgPath);
+			_publicConfig.Save(UniSign.Properties.Settings.Default.publicCfgPath);
 			//cfgLock.Close();
 		}
 
@@ -223,7 +221,7 @@ namespace Signer.ViewModel {
 		#region [LOAD && CHECK PRIVATE CONFIG]
 		public void LoadConfig() {
 			try {
-				_publicConfig = XDocument.Load(Signer.Properties.Settings.Default.publicCfgPath);
+				_publicConfig = XDocument.Load(UniSign.Properties.Settings.Default.publicCfgPath);
 				PublicConfigIsGo = true;
 				ConfigIsGo = checkConfig(_publicConfig);
 			} catch (Exception e) {

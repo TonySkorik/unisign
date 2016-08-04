@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Signer.CoreModules;
-using Signer.DataModel.Enums;
+using UniSign.CoreModules;
+using UniSign.DataModel.Enums;
 
-namespace Signer.DataModel {
+namespace UniSign.DataModel {
 	struct SignatureInfo {
 		public SignatureType SigType;
 		public int SmevMode;

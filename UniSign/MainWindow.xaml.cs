@@ -22,10 +22,10 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
 using Microsoft.Win32;
-using Signer.ViewModel;
-using Signer.DataModel;
+using UniSign.DataModel;
+using UniSign.ViewModel;
 
-namespace Signer {
+namespace UniSign {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>

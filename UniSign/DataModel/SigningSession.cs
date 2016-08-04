@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
-using Signer.DataModel.Enums;
+using UniSign.DataModel.Enums;
 
-namespace Signer.DataModel {
+namespace UniSign.DataModel {
 	class SigningSession {
 
 		#region [P & F]

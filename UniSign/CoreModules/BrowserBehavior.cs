@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Signer.CoreModules {
+namespace UniSign.CoreModules {
 	public static class BrowserBehavior {
 
 		public static readonly DependencyProperty HtmlProperty = DependencyProperty.RegisterAttached(

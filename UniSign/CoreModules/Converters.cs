@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Signer.CoreModules {
+namespace UniSign.CoreModules {
 	class CertificateToSubjectConverter : IValueConverter {
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 			X509Certificate2 cert = null;

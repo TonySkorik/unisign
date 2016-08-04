@@ -19,7 +19,7 @@ using CryptoPro.Sharpei;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
 
-namespace Signer.CoreModules {
+namespace UniSign.CoreModules {
 
 	#region [XDOC <=> XMLDOC] extension methods
 	public static class XdocConversionExtensions {
