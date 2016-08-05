@@ -61,7 +61,6 @@ namespace UniSign {
 				_viewModel.MessageIsError = true;
 				_viewModel.ServerHtmlMessage = await serverSessionData.Content.ReadAsStringAsync();
 			}
-			//TODO:Interface changes on error
 		}
 		private void MainWindow_OnClosing(object sender, CancelEventArgs e) {
 			_viewModel.RewriteConfig();

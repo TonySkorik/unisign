@@ -169,10 +169,12 @@ namespace UniSign.ViewModel {
 			}
 		}
 
+		#region [SET MESSAGE]
 		public void SetErrorMessage(string message) {
 			MessageIsError = true;
 			ServerHtmlMessage = $"<b>Ошибка:</b><br>{message}";
 		}
+		#endregion
 
 		#region [SET CONFIG & CERT]
 
