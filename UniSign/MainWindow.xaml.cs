@@ -93,6 +93,9 @@ namespace UniSign {
 		#endregion
 
 		#region [MAIN MENU]
+		private void SelectInteropCertificate_OnClick(object sender, RoutedEventArgs e) {
+			_viewModel.SelectInteropCertificate();
+		}
 		private void LoadPrivateConfig_OnClick(object sender, RoutedEventArgs e) {
 			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
 				CheckFileExists = true,
@@ -114,11 +117,14 @@ namespace UniSign {
 			dlgOpenFile.ShowDialog();
 			_viewModel.SetCertificate(dlgOpenFile.FileName);
 		}
+
+		private void ReloadConfig_OnClick(object sender, RoutedEventArgs e) {
+			_viewModel.LoadConfig();
+		}
+
 		private void ProgramExit_OnClick(object sender, RoutedEventArgs e) {
 			Close();
 		}
 		#endregion
-
-		
 	}
 }

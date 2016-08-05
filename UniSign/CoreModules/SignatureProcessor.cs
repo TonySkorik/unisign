@@ -556,6 +556,20 @@ namespace UniSign.CoreModules {
 			return jsonCert;
 		}
 
+		public static X509Certificate2 SelectCertificateUI(StoreLocation storeLocation) {
+			X509Store store = new X509Store("MY", storeLocation);
+			store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+			X509Certificate2Collection collection =
+				(X509Certificate2Collection)store.Certificates;
+			
+			X509Certificate2Collection scollection =
+				X509Certificate2UI.SelectFromCollection(collection,
+				"Выбор сертификата",
+				"Выберите сертификат для взаимодействия.",
+				X509SelectionFlag.SingleSelection);
+			return scollection[0];
+		}
+
 		#endregion
 
 		#region [VERIFY]

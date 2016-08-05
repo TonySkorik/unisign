@@ -36,8 +36,12 @@
 		</Grid.RowDefinitions>
 		<Menu FontSize="15">
 			<MenuItem Header="Файл" IsEnabled="{Binding Path=PublicConfigIsGo}">
+				<MenuItem Header="Загрузить сертификат для взаимодействия" Click="SelectInteropCertificate_OnClick"/>
+				<Separator/>
 				<MenuItem Header="Загрузить личный конфигурационный файл" Click="LoadPrivateConfig_OnClick"/>
-				<MenuItem Header="Загрузить сертификат" Click="LoadCertificate_OnClick"/>
+				<MenuItem Header="Загрузить сертификат сервера" Click="LoadCertificate_OnClick"/>
+				<Separator/>
+				<MenuItem Header="Перезагрузить конфигурацию" Click="ReloadConfig_OnClick"/>
 				<Separator/>
 				<MenuItem Header="Выход" Click="ProgramExit_OnClick"/>
 			</MenuItem>

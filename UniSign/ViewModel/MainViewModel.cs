@@ -48,6 +48,8 @@ namespace UniSign.ViewModel {
 		private int _windowTop;
 		private int _certificateItem;
 
+		private string _interopCertificateThumbprint;
+
 		//from binary config
 		private X509Certificate2 _ourCertificate;
 		private Uri _serverUri;
@@ -216,6 +218,17 @@ namespace UniSign.ViewModel {
 			_setPathToConfig("CertificateFilePath", fname);
 			LoadConfig();
 		}
+
+		public bool SelectInteropCertificate() {
+			X509Certificate2 selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.CurrentUser);
+			if (selectedCert != null) {
+				SetConfigField("InteropCertificateThumbprint", selectedCert.Thumbprint);
+				saveChangesToConfig();
+				return true;
+			}
+			return false;
+		}
+
 		#endregion
 
 		#region [LOAD && CHECK PRIVATE CONFIG]
@@ -237,6 +250,20 @@ namespace UniSign.ViewModel {
 		}
 
 		private bool checkConfig(XDocument cfg) {
+
+			string interopCertificateThumb = cfg.Root?.Element("InteropCertificateThumbprint")?.Value;
+			if (string.IsNullOrEmpty(interopCertificateThumb)) {
+				MessageBox.Show(
+					"Не указан сертификат подписи для взаимодействия.\nУкажите сертификат подписи, используя соответствующий пункт меню программы.",
+					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+				bool certSelected = SelectInteropCertificate();
+				if (!certSelected) {
+					return false;
+				}
+			} else {
+				_interopCertificateThumbprint = interopCertificateThumb;
+			}
+
 			string binConfigPath = cfg.Root?.Element("CfgBinPath")?.Value;
 			string certFilePath = cfg.Root?.Element("CertificateFilePath")?.Value;
 
@@ -376,7 +403,7 @@ namespace UniSign.ViewModel {
 			return decrypted;
 		}
 		#endregion
-
+		
 		#region [SIGNING SESSION INIT]
 		public async Task<HttpResponseMessage> GetServerSessionData(string startupArg) {
 
