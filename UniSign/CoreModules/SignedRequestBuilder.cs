@@ -28,7 +28,7 @@ namespace UniSign.CoreModules {
 		public static string GetSignedDataRequest(string sessionId, string signedData, string interopSignatureThumb, StoreLocation interopSignatureStoreLocation) {
 			XDocument ret = XDocument.Parse(UniSign.Properties.Resources.SignedDataRequest);
 			
-			ret.Root.Element("SignedData").Value = signedData;
+			ret.Root.Element("SignedData").Value = Convert.ToBase64String(Encoding.UTF8.GetBytes(signedData));
 			ret.Root.Element("SignedData").Attribute("sessionId").Value = sessionId;
 			ret.Root.Element("SignedData").Attribute("timestamp").Value = DateTime.Now.ToString("s").Replace("T", " ");
 
