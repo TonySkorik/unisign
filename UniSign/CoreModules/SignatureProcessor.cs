@@ -75,10 +75,11 @@ namespace UniSign.CoreModules {
 	public static class SignatureProcessor {
 
 		#region [SIGN]
-		public enum SigningMode : int { Simple = 1, Smev2 = 2, Smev3 = 3, Detached = 4 };
+		public enum SigningMode : int { Simple = 1, Smev2 = 2, Smev3 = 3, Detached = 4, SimpleEnveloped = 5 };
 		public enum StoreType : int {LocalMachine = 1, CurrentUser = 2}
 
 		#region [CERTIFICATE] Search
+
 		#region [BY THUMBPRINT]
 		private static X509Certificate2 _searchCertificateByThumbprint(string certificateThumbprint) {
 			try {
@@ -124,6 +125,21 @@ namespace UniSign.CoreModules {
 				throw new Exception($"Unnknown cryptographic exception! Original message : {e.Message}");
 			}
 		}
+
+		public static X509Certificate2 GetCertificateByThumbprint(string thumbprint, StoreLocation storeLocation) {
+			X509Store compStore =
+					new X509Store("My", storeLocation);
+			compStore.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
+			
+			X509Certificate2Collection found =
+				compStore.Certificates.Find(
+					X509FindType.FindByThumbprint,
+					thumbprint,
+					false
+				);
+			return found.Count > 0 ? found[0] : null;
+		}
+
 		#endregion
 
 		#region [GET ALL CERTS FROM STORAGE]
@@ -146,6 +162,7 @@ namespace UniSign.CoreModules {
 		}
 
 		#endregion
+
 		#endregion
 
 		public static string Sign(SigningMode mode, X509Certificate2 cert, XmlDocument signThis, bool assignDs, string nodeToSign) {
@@ -162,7 +179,14 @@ namespace UniSign.CoreModules {
 			switch(mode) {
 				case SigningMode.Simple:
 					try {
-						signedXmlDoc = SignXmlFile(signThis, privateKey, cert, nodeToSign);
+						signedXmlDoc = SignXmlNode(signThis, privateKey, cert, nodeToSign);
+					} catch {
+						Console.WriteLine("SIGNING ERROR! Signing failed.");
+					}
+					break;
+				case SigningMode.SimpleEnveloped:
+					try {
+						signedXmlDoc = SignXmlFileEnveloped(signThis, privateKey, cert, nodeToSign);
 					} catch {
 						Console.WriteLine("SIGNING ERROR! Signing failed.");
 					}
@@ -201,9 +225,52 @@ namespace UniSign.CoreModules {
 			return Sign(mode, certificate, signThis, assignDs, nodeToSign);
 		}
 
-		#region [SIMPLE SIGN]
+		#region [SIMPLE NODE SIGN]
+		public static XmlDocument SignXmlNode(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate, string nodeId) {
 
-		public static XmlDocument SignXmlFile(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate, string nodeId) {
+			//----------------------------------------------------------------------------------------------CREATE SIGNED XML
+			SignedXml signedXml = new SignedXml(doc) { SigningKey = key };
+			//----------------------------------------------------------------------------------------------REFERNCE
+			Reference reference = new Reference {
+				Uri = nodeId,
+				#pragma warning disable 612
+				DigestMethod = CryptoPro.Sharpei.Xml.CPSignedXml.XmlDsigGost3411UrlObsolete
+				#pragma warning disable 612
+			};
+			
+			XmlDsigExcC14NTransform c14 = new XmlDsigExcC14NTransform();
+			reference.AddTransform(c14);
+
+			// Add the reference to the SignedXml object.
+			signedXml.AddReference(reference);
+			//----------------------------------------------------------------------------------------------SIGNATURE SETUP
+			signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
+			signedXml.SignedInfo.SignatureMethod = CryptoPro.Sharpei.Xml.CPSignedXml.XmlDsigGost3410UrlObsolete;
+			//----------------------------------------------------------------------------------------------KEYINFO
+			KeyInfo keyInfo = new KeyInfo();
+			KeyInfoX509Data X509KeyInfo = new KeyInfoX509Data(certificate);
+			keyInfo.AddClause(X509KeyInfo);
+			signedXml.KeyInfo = keyInfo;
+			//----------------------------------------------------------------------------------------------SIGN DOCUMENT
+			signedXml.ComputeSignature();
+			//----------------------------------------------------------------------------------------------GET XML
+			XmlElement xmlDigitalSignature = signedXml.GetXml();
+			//=============================================================================APPEND SIGNATURE TO DOCUMENT
+			doc.GetElementsByTagName("Signature")[0].InnerXml = "";
+			doc.GetElementsByTagName("Signature")[0].AppendChild(xmlDigitalSignature);
+			/*
+			XmlNode root = doc.SelectSingleNode("/*");
+			root?.AppendChild(doc.ImportNode(xmlDigitalSignature, true));
+			*/
+
+			
+			return doc;
+		}
+		#endregion
+
+		#region [SIMPLE ENVELOPED SIGN]
+
+		public static XmlDocument SignXmlFileEnveloped(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate, string nodeId) {
 
 			//----------------------------------------------------------------------------------------------CREATE SIGNED XML
 			SignedXml signedXml = new SignedXml(doc){SigningKey = key};
@@ -365,10 +432,7 @@ namespace UniSign.CoreModules {
 				tDoc.ImportNode(xmlDigitalSignature.GetElementsByTagName("SignatureValue")[0], true));
 			tDoc.GetElementsByTagName("Signature")[0].PrependChild(
 				tDoc.ImportNode(xmlDigitalSignature.GetElementsByTagName("SignedInfo")[0], true));
-			//----------------------------------------------------------------------------------------------ADD XMLNS ds_
-			XmlElement signatureElement = tDoc.GetElementsByTagName("Signature")[0] as XmlElement;
-			signatureElement?.SetAttribute("xmlns", ds_);
-			//----------------------------------------------------------------------------------------------SAVE SIGNED XML
+			
 			return tDoc;
 		}
 

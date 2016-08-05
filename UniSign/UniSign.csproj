@@ -91,7 +91,7 @@
     <Compile Include="CoreModules\BrowserBehavior.cs" />
     <Compile Include="CoreModules\Converters.cs" />
     <Compile Include="CoreModules\SignatureProcessor.cs" />
-    <Compile Include="CoreModules\XmlBuilder.cs" />
+    <Compile Include="CoreModules\SignedRequestBuilder.cs" />
     <Compile Include="DataModel\Enums\SignatureType.cs" />
     <Compile Include="DataModel\SignatureInfo.cs" />
     <Compile Include="DataModel\SigningSession.cs" />
@@ -137,11 +137,14 @@
     <Content Include="config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="XmlTemplates\SignedDataRequest.xml" />
+    <Resource Include="XmlTemplates\SessionRequest.xml" />
     <None Include="private_config.cbin" />
     <Resource Include="ink%28256%29.ico" />
     <Resource Include="pen%2848%29.ico" />
     <Content Include="TestPage.html" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

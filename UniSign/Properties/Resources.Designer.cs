@@ -59,5 +59,33 @@ namespace UniSign.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt; 
+        ///&lt;SessionRequest&gt;
+        ///	&lt;SessionId Id=&quot;SIGNED_BY_CALLER&quot; timestamp=&quot;&quot;&gt;&lt;/SessionId&gt;
+        ///	&lt;Signature&gt;&lt;/Signature&gt;
+        ///&lt;/SessionRequest&gt;
+        ///.
+        /// </summary>
+        internal static string SessionRequest {
+            get {
+                return ResourceManager.GetString("SessionRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;SignedDataRequest&gt;
+        ///	&lt;SignedData sessionId=&quot;&quot; timestamp=&quot;&quot; Id=&quot;SIGNED_BY_CALLER&quot;&gt;&lt;/SignedData&gt;
+        ///	&lt;Signature&gt;&lt;/Signature&gt;
+        ///&lt;/SignedDataRequest&gt;
+        ///.
+        /// </summary>
+        internal static string SignedDataRequest {
+            get {
+                return ResourceManager.GetString("SignedDataRequest", resourceCulture);
+            }
+        }
     }
 }

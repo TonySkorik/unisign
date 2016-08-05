@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<SessionRequest>
+	<SessionId Id="SIGNED_BY_CALLER" timestamp=""></SessionId>
+	<Signature></Signature>
+</SessionRequest>

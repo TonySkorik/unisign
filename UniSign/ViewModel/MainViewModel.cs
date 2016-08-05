@@ -431,9 +431,8 @@ namespace UniSign.ViewModel {
 			UriBuilder serverUri = new UriBuilder(_serverUri) {
 				Query = $"oper=getfile&{startupUri.PathAndQuery}"
 			};
-
 			
-			HttpContent content = new StringContent(XmlBuilder.GetSessionRequestString(_s.SessionId,_interopCertificateThumbprint,_interopCertificateStoreLocation));
+			HttpContent content = new StringContent(SignedRequestBuilder.GetSessionRequest(_s.SessionId,_interopCertificateThumbprint,_interopCertificateStoreLocation));
 			content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
 
 			return await client.PostAsync(serverUri.Uri,content);
@@ -471,7 +470,7 @@ namespace UniSign.ViewModel {
 					signMode = SignatureProcessor.SigningMode.Detached;
 					break;
 				case SignatureType.Enveloped:
-					signMode = SignatureProcessor.SigningMode.Simple;
+					signMode = SignatureProcessor.SigningMode.SimpleEnveloped;
 					break;
 				case SignatureType.SideBySide:
 					switch(_s.SignInfo.SmevMode) {
@@ -503,10 +502,9 @@ namespace UniSign.ViewModel {
 			UriBuilder serverUri = new UriBuilder(_serverUri) {
 				Query = $"oper=signed&{startupUri.PathAndQuery}"
 			};
-
-
+			
 			//HttpContent content = new StringContent(signedData);
-			HttpContent content = new StringContent(XmlBuilder.GetSignedDataRequestString(signedData, _interopCertificateThumbprint,_interopCertificateStoreLocation));
+			HttpContent content = new StringContent(SignedRequestBuilder.GetSignedDataRequest(_s.SessionId, signedData, _interopCertificateThumbprint,_interopCertificateStoreLocation));
 			content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
 
 			return await client.PostAsync(serverUri.Uri,content);

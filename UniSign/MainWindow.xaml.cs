@@ -39,6 +39,7 @@ namespace UniSign {
 		}
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
+			
 			MainUI.DataContext = _viewModel;
 			
 			//MainGrid.DataContext = _viewModel;
