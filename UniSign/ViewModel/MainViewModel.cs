@@ -220,7 +220,8 @@ namespace UniSign.ViewModel {
 		}
 
 		public bool SelectInteropCertificate() {
-			X509Certificate2 selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.CurrentUser);
+			X509Certificate2 selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.CurrentUser) ??
+											SignatureProcessor.SelectCertificateUI(StoreLocation.LocalMachine);
 			if (selectedCert != null) {
 				SetConfigField("InteropCertificateThumbprint", selectedCert.Thumbprint);
 				saveChangesToConfig();

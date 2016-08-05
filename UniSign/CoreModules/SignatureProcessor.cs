@@ -564,10 +564,11 @@ namespace UniSign.CoreModules {
 			
 			X509Certificate2Collection scollection =
 				X509Certificate2UI.SelectFromCollection(collection,
-				"Выбор сертификата",
+				$"Выбор сертификата. Хранилище : {storeLocation.ToString()}",
 				"Выберите сертификат для взаимодействия.",
 				X509SelectionFlag.SingleSelection);
-			return scollection[0];
+
+			return scollection.Count>0 ? scollection[0] : null;
 		}
 
 		#endregion
