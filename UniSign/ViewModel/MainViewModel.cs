@@ -49,6 +49,7 @@ namespace UniSign.ViewModel {
 		private int _certificateItem;
 
 		private string _interopCertificateThumbprint;
+		private StoreLocation _interopCertificateStoreLocation;
 
 		//from binary config
 		private X509Certificate2 _ourCertificate;
@@ -220,10 +221,19 @@ namespace UniSign.ViewModel {
 		}
 
 		public bool SelectInteropCertificate() {
-			X509Certificate2 selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.CurrentUser) ??
+			X509Certificate2 selectedCert = new X509Certificate2();
+			StoreLocation certificateStore = StoreLocation.CurrentUser;
+			if ((selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.CurrentUser)) == null) {
+				certificateStore = StoreLocation.LocalMachine;
+				selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.LocalMachine);
+			}
+			/*
+			selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.CurrentUser) ??
 											SignatureProcessor.SelectCertificateUI(StoreLocation.LocalMachine);
+			*/
 			if (selectedCert != null) {
 				SetConfigField("InteropCertificateThumbprint", selectedCert.Thumbprint);
+				SetConfigField("InteropCertificateStore", certificateStore.ToString());
 				saveChangesToConfig();
 				return true;
 			}
@@ -260,9 +270,12 @@ namespace UniSign.ViewModel {
 				bool certSelected = SelectInteropCertificate();
 				if (!certSelected) {
 					return false;
+				} else {
+					StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
 				}
 			} else {
 				_interopCertificateThumbprint = interopCertificateThumb;
+				StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
 			}
 
 			string binConfigPath = cfg.Root?.Element("CfgBinPath")?.Value;
@@ -419,7 +432,11 @@ namespace UniSign.ViewModel {
 				Query = $"oper=getfile&{startupUri.PathAndQuery}"
 			};
 
-			return await client.GetAsync(serverUri.Uri);
+			
+			HttpContent content = new StringContent(XmlBuilder.GetSessionRequestString(_s.SessionId,_interopCertificateThumbprint,_interopCertificateStoreLocation));
+			content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
+
+			return await client.PostAsync(serverUri.Uri,content);
 		}
 
 		public void InitSession(string sessionDataString, string startupArg) {
@@ -487,7 +504,9 @@ namespace UniSign.ViewModel {
 				Query = $"oper=signed&{startupUri.PathAndQuery}"
 			};
 
-			HttpContent content = new StringContent(signedData);
+
+			//HttpContent content = new StringContent(signedData);
+			HttpContent content = new StringContent(XmlBuilder.GetSignedDataRequestString(signedData, _interopCertificateThumbprint,_interopCertificateStoreLocation));
 			content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
 
 			return await client.PostAsync(serverUri.Uri,content);
