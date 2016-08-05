@@ -44,6 +44,7 @@ namespace UniSign {
 			
 			//MainGrid.DataContext = _viewModel;
 			if (!_viewModel.ConfigIsGo) {
+				_viewModel.SetErrorMessage("Загрузка конфигурации завершилась ошибкой");
 				return;
 			}
 

@@ -72,7 +72,7 @@
 					</Border>
 					<Border 
 						Grid.Row="1" 
-						BorderThickness="2"
+						BorderThickness="3"
 						BorderBrush="{Binding Path=MessageIsError, Converter={StaticResource BoolToColorConvert}}" 
 						Margin="0,5,0,0" 
 					>

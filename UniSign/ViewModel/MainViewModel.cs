@@ -169,6 +169,11 @@ namespace UniSign.ViewModel {
 			}
 		}
 
+		public void SetErrorMessage(string message) {
+			MessageIsError = true;
+			ServerHtmlMessage = $"<b>Ошибка:</b><br>{message}";
+		}
+
 		#region [SET CONFIG & CERT]
 
 		private void _setPathToConfig(string element, string path) {
