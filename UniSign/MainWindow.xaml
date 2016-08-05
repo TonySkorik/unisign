@@ -24,6 +24,7 @@
 	<Window.Resources>
 		<core:CertificateToSubjectConverter x:Key="CertificateToSubjConverter"/>
 		<core:EnumToBooleanConverter x:Key="EnumToBooleanConvert"/>
+		<core:BoolToColorConverter x:Key="BoolToColorConvert"/>
 	</Window.Resources>
 	
 	<Grid x:Name="MainGrid"
@@ -71,8 +72,8 @@
 					</Border>
 					<Border 
 						Grid.Row="1" 
-						BorderThickness="1"
-						BorderBrush="Black" 
+						BorderThickness="2"
+						BorderBrush="{Binding Path=MessageIsError, Converter={StaticResource BoolToColorConvert}}" 
 						Margin="0,5,0,0" 
 					>
 						<Border.Effect>

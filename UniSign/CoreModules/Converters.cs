@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace UniSign.CoreModules {
 	class CertificateToSubjectConverter : IValueConverter {
@@ -33,6 +34,23 @@ namespace UniSign.CoreModules {
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
 			return value.Equals(true) ? parameter : Binding.DoNothing;
+		}
+	}
+
+	public class BoolToColorConverter : IValueConverter {
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+			if ((bool) value) {
+				return Brushes.Red;
+			} else {
+				return Brushes.Green;
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+			if (((Brush) value).Equals(Brushes.Green)) {
+				return false;
+			}
+			return true;
 		}
 	}
 
