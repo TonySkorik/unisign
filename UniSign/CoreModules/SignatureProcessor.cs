@@ -7,6 +7,7 @@ using exp=System.Linq.Expressions;
 using System.Reflection;
 using System.Resources;
 using System.Security.Cryptography;
+using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Text;
@@ -207,7 +208,7 @@ namespace UniSign.CoreModules {
 					break;
 				case SigningMode.Detached:
 					try {
-						signedXmlDoc = SignXmlFileDetached(signThis, privateKey, cert, nodeToSign, assignDs);
+						return Convert.ToBase64String(SignXmlFileDetached(signThis, privateKey, cert, nodeToSign, assignDs));
 					} catch {
 						Console.WriteLine("SIGNING ERROR! Signing failed.");
 					}
@@ -550,10 +551,15 @@ namespace UniSign.CoreModules {
 
 		#region [DETACHED]
 
-		public static XmlDocument SignXmlFileDetached(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate,
+		public static byte[] SignXmlFileDetached(XmlDocument doc, AsymmetricAlgorithm key, X509Certificate2 certificate,
 													string signingNodeId, bool assignDs) {
-		//TODO: Detached signature
-			throw new NotImplementedException();
+
+			ContentInfo contentInfo = new ContentInfo(Encoding.UTF8.GetBytes(doc.OuterXml));
+			SignedCms signedCms = new SignedCms(contentInfo, true);
+			CmsSigner cmsSigner = new CmsSigner(certificate) {IncludeOption = X509IncludeOption.EndCertOnly};
+			signedCms.ComputeSignature(cmsSigner);
+			//  Кодируем CMS/PKCS #7 подпись сообщения.
+			return signedCms.Encode();
 		}
 
 		#endregion

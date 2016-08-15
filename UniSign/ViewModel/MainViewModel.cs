@@ -268,7 +268,6 @@ namespace UniSign.ViewModel {
 		}
 
 		private bool checkConfig(XDocument cfg) {
-
 			string interopCertificateThumb = cfg.Root?.Element("InteropCertificateThumbprint")?.Value;
 			if (string.IsNullOrEmpty(interopCertificateThumb)) {
 				MessageBox.Show(
@@ -406,7 +405,7 @@ namespace UniSign.ViewModel {
 		private string decryptConfig(string configPath) {
 			SevenZipBase.SetLibraryPath("7z_32.dll");
 			string decrypted = null;
-			SevenZipExtractor ex = new SevenZipExtractor(configPath,"123");
+			SevenZipExtractor ex = new SevenZipExtractor(configPath,UniSign.Properties.Settings.Default.privateConfigUnlockKey);
 			
 			MemoryStream extracted = new MemoryStream();
 			try {

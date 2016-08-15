@@ -25,28 +25,19 @@ namespace UniSign.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://corp.gsen.ru/unisign/api_unisign/server_result.xml")]
-        public string getFileUri {
-            get {
-                return ((string)(this["getFileUri"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8D6079A1AC1215F2E92AA86A5C897C48E15B5782")]
-        public string serverCertificateThumbprint {
-            get {
-                return ((string)(this["serverCertificateThumbprint"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("config.xml")]
         public string publicCfgPath {
             get {
                 return ((string)(this["publicCfgPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("123")]
+        public string privateConfigUnlockKey {
+            get {
+                return ((string)(this["privateConfigUnlockKey"]));
             }
         }
     }

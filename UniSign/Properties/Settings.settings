@@ -1,15 +1,12 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Signer.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UniSign.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="getFileUri" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://corp.gsen.ru/unisign/api_unisign/server_result.xml</Value>
-    </Setting>
-    <Setting Name="serverCertificateThumbprint" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">8D6079A1AC1215F2E92AA86A5C897C48E15B5782</Value>
-    </Setting>
     <Setting Name="publicCfgPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">config.xml</Value>
+    </Setting>
+    <Setting Name="privateConfigUnlockKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">123</Value>
     </Setting>
   </Settings>
 </SettingsFile>
