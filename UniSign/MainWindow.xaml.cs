@@ -44,7 +44,7 @@ namespace UniSign {
 			
 			//MainGrid.DataContext = _viewModel;
 			if (!_viewModel.ConfigIsGo) {
-				_viewModel.SetErrorMessage("Загрузка конфигурации завершилась ошибкой");
+				//_viewModel.PrependMessage("Загрузка конфигурации завершилась ошибкой");
 				return;
 			}
 
@@ -96,6 +96,7 @@ namespace UniSign {
 		#region [MAIN MENU]
 		private void SelectInteropCertificate_OnClick(object sender, RoutedEventArgs e) {
 			_viewModel.SelectInteropCertificate();
+			_viewModel.LoadConfig();
 		}
 		private void LoadPrivateConfig_OnClick(object sender, RoutedEventArgs e) {
 			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
@@ -106,6 +107,7 @@ namespace UniSign {
 			};
 			dlgOpenFile.ShowDialog();
 			_viewModel.SetConfig(dlgOpenFile.FileName);
+			_viewModel.LoadConfig();
 		}
 
 		private void LoadCertificate_OnClick(object sender, RoutedEventArgs e) {
@@ -117,6 +119,7 @@ namespace UniSign {
 			};
 			dlgOpenFile.ShowDialog();
 			_viewModel.SetCertificate(dlgOpenFile.FileName);
+			_viewModel.LoadConfig();
 		}
 
 		private void ReloadConfig_OnClick(object sender, RoutedEventArgs e) {

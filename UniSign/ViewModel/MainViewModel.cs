@@ -158,6 +158,7 @@ namespace UniSign.ViewModel {
 			LoadCertificatesFromStore();
 
 			if(ConfigIsGo) {
+				
 				//setup our makeshift certificate check procedure
 				System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 |
 																SecurityProtocolType.Tls;
@@ -169,10 +170,23 @@ namespace UniSign.ViewModel {
 			}
 		}
 
-		#region [SET MESSAGE]
+		#region [SET / CLEAR / EDIT SERVER (ERROR) MESSAGE]
 		public void SetErrorMessage(string message) {
 			MessageIsError = true;
 			ServerHtmlMessage = $"<b>Ошибка:</b><br>{message}";
+		}
+
+		public void ClearError(string message = "OK") {
+			MessageIsError = false;
+			ServerHtmlMessage = $"<b>{message}</b>";
+		}
+
+		public void PrependMessage(string messageToPrepend) {
+			ServerHtmlMessage = string.Concat(messageToPrepend,"<br><br>",ServerHtmlMessage);
+		}
+
+		public void AppendMessage(string messageToAppend) {
+			ServerHtmlMessage = string.Concat(ServerHtmlMessage, "<br><br>", messageToAppend);
 		}
 		#endregion
 
@@ -258,6 +272,7 @@ namespace UniSign.ViewModel {
 			} catch (Exception e) {
 				ConfigIsGo = false;
 				PublicConfigIsGo = false;
+				AppendMessage("Основной конфигурационный файл не найден или поврежден!");
 				MessageBox.Show(
 					$"Основной конфигурационный файл не найден или поврежден! Обратитесь к разработчику.\n\n{e.Message}",
 					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -268,40 +283,16 @@ namespace UniSign.ViewModel {
 		}
 
 		private bool checkConfig(XDocument cfg) {
-			string interopCertificateThumb = cfg.Root?.Element("InteropCertificateThumbprint")?.Value;
-			if (string.IsNullOrEmpty(interopCertificateThumb)) {
-				MessageBox.Show(
-					"Не указан сертификат подписи для взаимодействия.\nУкажите сертификат подписи, используя соответствующий пункт меню программы.",
-					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
-				bool certSelected = SelectInteropCertificate();
-				if (!certSelected) {
-					return false;
-				} else {
-					StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
-				}
-			} else {
-				_interopCertificateThumbprint = interopCertificateThumb;
-				StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
-			}
-
 			string binConfigPath = cfg.Root?.Element("CfgBinPath")?.Value;
 			string certFilePath = cfg.Root?.Element("CertificateFilePath")?.Value;
 
 			StoreLocation storeLocation;
-			StoreLocation.TryParse(cfg.Root?.Element("CertificateStore")?.Value,true, out storeLocation);
-			if (storeLocation != 0) {
+			StoreLocation.TryParse(cfg.Root?.Element("CertificateStore")?.Value, true, out storeLocation);
+			if(storeLocation != 0) {
 				CertificateStore = storeLocation;
 			} else {
 				CertificateStore = StoreLocation.CurrentUser;
 				SetConfigField("CertificateStore", CertificateStore.ToString());
-			}
-
-			string lastCertificateStr = cfg.Root?.Element("CertificateItem")?.Value;
-			if(!string.IsNullOrEmpty(lastCertificateStr)) {
-				CertificateItem = Int32.Parse(lastCertificateStr);
-			} else {
-				CertificateItem = 0;
-				SetConfigField("CertificateItem", CertificateItem.ToString());
 			}
 
 			#region [set window position and size]
@@ -311,11 +302,11 @@ namespace UniSign.ViewModel {
 			string lastLeftStr = cfg.Root?.Element("WindowLeft")?.Value;
 			string lastTopStr = cfg.Root?.Element("WindowTop")?.Value;
 
-			if (!string.IsNullOrEmpty(lastHeightStr)) {
+			if(!string.IsNullOrEmpty(lastHeightStr)) {
 				WindowHeight = Int32.Parse(lastHeightStr);
 			} else {
 				WindowHeight = 600;
-				SetConfigField("WindowHeight",WindowHeight.ToString());
+				SetConfigField("WindowHeight", WindowHeight.ToString());
 			}
 
 			if(!string.IsNullOrEmpty(lastWidthStr)) {
@@ -340,12 +331,38 @@ namespace UniSign.ViewModel {
 			}
 			#endregion
 
+			string lastCertificateStr = cfg.Root?.Element("CertificateItem")?.Value;
+			if(!string.IsNullOrEmpty(lastCertificateStr)) {
+				CertificateItem = Int32.Parse(lastCertificateStr);
+			} else {
+				CertificateItem = 0;
+				SetConfigField("CertificateItem", CertificateItem.ToString());
+			}
+
+			string interopCertificateThumb = cfg.Root?.Element("InteropCertificateThumbprint")?.Value;
+			if (string.IsNullOrEmpty(interopCertificateThumb)) {
+				MessageBox.Show(
+					"Не указан сертификат подписи для взаимодействия.\nУкажите сертификат подписи, используя соответствующий пункт меню программы.",
+					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+				SetErrorMessage("Не указан сертификат подписи для взаимодействия");
+				bool certSelected = SelectInteropCertificate();
+				if (!certSelected) {
+					return false;
+				} else {
+					StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
+				}
+			} else {
+				_interopCertificateThumbprint = interopCertificateThumb;
+				StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
+			}
+
 			saveChangesToConfig();
 
 			//signed (and siphered) binary config
 			if(string.IsNullOrEmpty(binConfigPath)) {
 				MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+				SetErrorMessage("Личный конфигурационный файл не найден");
 				return false;
 			} else {
 				decryptConfig(binConfigPath);
@@ -354,6 +371,7 @@ namespace UniSign.ViewModel {
 				if(string.IsNullOrEmpty(certFilePath)) {
 					MessageBox.Show("Файл сертификата не найден.\nСкачайте новый файл сертификата с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+					SetErrorMessage("Файл сертификата не найден");
 					return false;
 				} else {
 					//means certificate && config present
@@ -377,24 +395,27 @@ namespace UniSign.ViewModel {
 								_ourCertificate = cert;
 								_serverUri = new Uri(privateConfig.Root?.Element("GetFileUri")?.Value ?? "");
 								_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("ServerCertificateThumbprint")?.Value ?? "";
+								ClearError("Конфигурационный файл успешно загружен");
 							} else {
 								//signature incorrect
 								Debug.WriteLine("Invalid Signature");
-
 								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+								SetErrorMessage("Личный конфигурационный файл поврежден");
 								return false;
 							}
 						} else {
 							//cert expired
 							MessageBox.Show("Файл сертификата просрочен.\nСкачайте новый файл сертификата с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+							SetErrorMessage("Файл сертификата просрочен");
 							return false;
 						}
 					} catch (Exception e) {
 						//certificate corrupted
 						MessageBox.Show($"Ошибка загрузки сертификата. Файл поврежден.\nСкачайте новый файл сертификата с корпоративного портала.\n\n{e.Message}",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+						SetErrorMessage("Ошибка загрузки сертификата");
 						return false;
 					}
 				}
@@ -413,6 +434,7 @@ namespace UniSign.ViewModel {
 			} catch {
 				MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+				SetErrorMessage("Личный конфигурационный файл поврежден");
 				return null;
 			}
 			extracted.Position = 0;

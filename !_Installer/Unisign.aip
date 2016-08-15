@@ -15,7 +15,7 @@
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="CRC"/>
     <ROW Property="ProductCode" Value="1033:{9E7577FE-C771-4290-B91B-4BF02A0728BB} " Type="16"/>
-    <ROW Property="ProductLanguage" Value="1049"/>
+    <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="UniSign"/>
     <ROW Property="ProductVersion" Value="1.1.0" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
