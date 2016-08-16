@@ -96,7 +96,7 @@ namespace UniSign {
 		#region [MAIN MENU]
 		private void SelectInteropCertificate_OnClick(object sender, RoutedEventArgs e) {
 			_viewModel.SelectInteropCertificate();
-			//_viewModel.LoadConfig();
+			_viewModel.LoadConfig(); // because SelectInteropCertificate() doesn't call LoadConfig upon completion
 		}
 		private void LoadPrivateConfig_OnClick(object sender, RoutedEventArgs e) {
 			OpenFileDialog dlgOpenFile = new OpenFileDialog() {

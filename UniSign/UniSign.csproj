@@ -77,7 +77,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="utility">
+    <Reference Include="utility, Version=1.0.0.0, Culture=ru-RU, PublicKeyToken=305f03342bc0f197, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\utility\bin\Debug\utility.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />

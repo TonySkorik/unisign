@@ -257,7 +257,7 @@ namespace UniSign.ViewModel {
 				SetConfigField("InteropCertificateThumbprint", selectedCert.Thumbprint);
 				SetConfigField("InteropCertificateStore", certificateStore.ToString());
 				saveChangesToConfig();
-				LoadConfig();
+				//LoadConfig();
 				return true;
 			}
 			return false;
@@ -398,8 +398,8 @@ namespace UniSign.ViewModel {
 
 							XDocument privateConfig = XDocument.Parse(configContents);
 							_ourCertificate = cert;
-							_serverUri = new Uri(privateConfig.Root?.Element("GetFileUri")?.Value ?? "");
-							_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("ServerCertificateThumbprint")?.Value ?? "";
+							_serverUri = new Uri(privateConfig.Root?.Element("Server").Element("GetFileUri")?.Value ?? "");
+							_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("Server").Element("CertificateThumbprint")?.Value ?? "";
 							ClearError("Конфигурационный файл успешно загружен");
 							/*
 							if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
