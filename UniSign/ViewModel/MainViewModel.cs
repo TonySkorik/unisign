@@ -257,6 +257,7 @@ namespace UniSign.ViewModel {
 				SetConfigField("InteropCertificateThumbprint", selectedCert.Thumbprint);
 				SetConfigField("InteropCertificateStore", certificateStore.ToString());
 				saveChangesToConfig();
+				LoadConfig();
 				return true;
 			}
 			return false;
@@ -392,6 +393,15 @@ namespace UniSign.ViewModel {
 							}
 							XmlDocument xdocConfig = new XmlDocument();
 							xdocConfig.LoadXml(configContents);
+
+							//TODO: consider removing encrypted config signature check
+
+							XDocument privateConfig = XDocument.Parse(configContents);
+							_ourCertificate = cert;
+							_serverUri = new Uri(privateConfig.Root?.Element("GetFileUri")?.Value ?? "");
+							_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("ServerCertificateThumbprint")?.Value ?? "";
+							ClearError("Конфигурационный файл успешно загружен");
+							/*
 							if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
 								//config signature OK - loading contents
 								XDocument privateConfig = XDocument.Parse(configContents);
@@ -408,6 +418,7 @@ namespace UniSign.ViewModel {
 								SetErrorMessage("Личный конфигурационный файл поврежден");
 								return false;
 							}
+							*/
 						} else {
 							//cert expired
 							MessageBox.Show("Файл сертификата просрочен.\nСкачайте новый файл сертификата с корпоративного портала.",

@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using SevenZip;
 
-namespace utility
-{
+namespace utility{
 	public static class Util {
-		private const string decryptionKey = "123";
+		private static readonly string decryptionKey = "123";
 		public static string DecryptConfig(string configPath) {
 			SevenZipBase.SetLibraryPath("7z_32.dll");
 			string decrypted = null;
