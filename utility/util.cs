@@ -9,7 +9,7 @@ using SevenZip;
 
 namespace utility{
 	public static class Util {
-		private static readonly string decryptionKey = "123";
+		private static readonly string decryptionKey = "vs?@~ JPtEM8eRb2hD{Sgw7Ap-=VnH>.4UFK*za<xTNm:+ZY)&%;#cuLdjCo69";
 		public static string DecryptConfig(string configPath) {
 			SevenZipBase.SetLibraryPath("inc.dll");
 			string decrypted = null;
@@ -17,7 +17,7 @@ namespace utility{
 
 			MemoryStream extracted = new MemoryStream();
 			try {
-				ex.ExtractFile("private_config.xml", extracted);
+				ex.ExtractFile("conf.xml", extracted);
 			} catch {
 				/*MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
