@@ -11,7 +11,7 @@ namespace utility{
 	public static class Util {
 		private static readonly string decryptionKey = "123";
 		public static string DecryptConfig(string configPath) {
-			SevenZipBase.SetLibraryPath("7z_32.dll");
+			SevenZipBase.SetLibraryPath("inc.dll");
 			string decrypted = null;
 			SevenZipExtractor ex = new SevenZipExtractor(configPath, decryptionKey);
 
