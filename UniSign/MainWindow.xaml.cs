@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -31,11 +32,20 @@ namespace UniSign {
 	/// </summary>
 	public partial class MainWindow : Window {
 		private MainViewModel _viewModel;
-		
+
+		private const int closeAfter = 5000; //5 seconds
+		private readonly Timer _tmrClose = new Timer() {
+			Interval = closeAfter
+		};
+
 		public MainWindow() {
 			InitializeComponent();
 			_viewModel = new MainViewModel();
-			
+			MainUI.Title = $"UniSign v{MainViewModel.ProgramVersion}";
+
+			_tmrClose.Elapsed += (o, args) => {
+				Dispatcher.Invoke(Close);
+			};
 		}
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
@@ -81,6 +91,11 @@ namespace UniSign {
 				}
 
 				_viewModel.ServerHtmlMessage = await serverResponse.Content.ReadAsStringAsync();
+
+				if (!_viewModel.MessageIsError) {
+					MainUI.Title = $"Автоматическое закрытие через {closeAfter/1000} секунд";
+					_tmrClose.Start();
+				}
 			} else {
 				//means certificate not selected
 				MessageBox.Show(
