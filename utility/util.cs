@@ -9,7 +9,7 @@ using SevenZip;
 
 namespace utility{
 	public static class Util {
-		private static readonly string decryptionKey = "vs?@~ JPtEM8eRb2hD{Sgw7Ap-=VnH>.4UFK*za<xTNm:+ZY)&%;#cuLdjCo69";
+		private static readonly string decryptionKey = "vs?@~ JPtEM8eRb2hD{Sgw7Ap-=VnH>.4UFK*za<xTNm:+ZY)&%#cuLdjCo69";
 		public static string DecryptConfig(string configPath) {
 			SevenZipBase.SetLibraryPath("inc.dll");
 			string decrypted = null;

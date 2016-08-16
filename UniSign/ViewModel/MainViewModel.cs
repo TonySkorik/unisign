@@ -408,8 +408,8 @@ namespace UniSign.ViewModel {
 									//means config version corresponds to a program version
 									
 									_ourCertificate = cert;
-									_serverUri = new Uri(privateConfig.Root?.Element("GetFileUri")?.Value ?? "");
-									_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("ServerCertificateThumbprint")?.Value ?? "";
+									_serverUri = new Uri(privateConfig.Root?.Element("Server").Element("GetFileUri")?.Value ?? "");
+									_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("Server").Element("CertificateThumbprint")?.Value ?? "";
 									ClearError("Конфигурационный файл успешно загружен");
 								}else {
 									//means version in config is not right one
