@@ -29,6 +29,5 @@ namespace UniSign {
 				return Assembly.Load(block);
 			}
 		}
-
 	}
 }

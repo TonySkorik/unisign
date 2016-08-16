@@ -284,6 +284,11 @@ namespace UniSign.ViewModel {
 
 		}
 
+		public static string getVersionMajorMinor() {
+			Version ver = Assembly.GetExecutingAssembly().GetName().Version;
+			return $"{ver.Major}.{ver.Minor}";
+		}
+
 		private bool checkConfig(XDocument cfg) {
 			string binConfigPath = cfg.Root?.Element("CfgBinPath")?.Value;
 			string certFilePath = cfg.Root?.Element("CertificateFilePath")?.Value;
@@ -391,26 +396,29 @@ namespace UniSign.ViewModel {
 								SetErrorMessage("Личный конфигурационный файл поврежден");
 								return false;
 							}
-							XmlDocument xdocConfig = new XmlDocument();
-							xdocConfig.LoadXml(configContents);
-
-							//TODO: consider removing encrypted config signature check
-
+							XmlDocument xdocConfig = new XmlDocument();		// this stuff is for
+							xdocConfig.LoadXml(configContents);				// check signature further
 							XDocument privateConfig = XDocument.Parse(configContents);
-							_ourCertificate = cert;
-							_serverUri = new Uri(privateConfig.Root?.Element("Server").Element("GetFileUri")?.Value ?? "");
-							_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("Server").Element("CertificateThumbprint")?.Value ?? "";
-							ClearError("Конфигурационный файл успешно загружен");
-							/*
-							if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
-								//config signature OK - loading contents
-								XDocument privateConfig = XDocument.Parse(configContents);
 
-								_ourCertificate = cert;
-								_serverUri = new Uri(privateConfig.Root?.Element("GetFileUri")?.Value ?? "");
-								_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("ServerCertificateThumbprint")?.Value ?? "";
-								ClearError("Конфигурационный файл успешно загружен");
-							} else {
+							//TODO: enable signature check
+							//if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
+								//config signature OK - loading contents
+								string programVersion = getVersionMajorMinor();
+								if (privateConfig.Root?.Attribute("version").Value == programVersion) {
+									//means config version corresponds to a program version
+									
+									_ourCertificate = cert;
+									_serverUri = new Uri(privateConfig.Root?.Element("GetFileUri")?.Value ?? "");
+									_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("ServerCertificateThumbprint")?.Value ?? "";
+									ClearError("Конфигурационный файл успешно загружен");
+								}else {
+									//means version in config is not right one
+									MessageBox.Show($"Текущая версия программы <{programVersion}> устарела.\nСкачайте новую версию с корпоративного портала.",
+									"Программа устарела.", MessageBoxButton.OK, MessageBoxImage.Error);
+									SetErrorMessage($"Установленная версия программы <{programVersion}> устарела. Скачайте новую версию с корпоративного портала.");
+									return false;
+								}
+							/*} else {
 								//signature incorrect
 								Debug.WriteLine("Invalid Signature");
 								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
