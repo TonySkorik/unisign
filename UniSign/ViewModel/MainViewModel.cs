@@ -22,6 +22,7 @@ using SevenZip;
 using UniSign.CoreModules;
 using UniSign.DataModel;
 using UniSign.DataModel.Enums;
+using utility;
 
 namespace UniSign.ViewModel {
 	class MainViewModel:INotifyPropertyChanged {
@@ -365,7 +366,6 @@ namespace UniSign.ViewModel {
 				SetErrorMessage("Личный конфигурационный файл не найден");
 				return false;
 			} else {
-				decryptConfig(binConfigPath);
 				//means htere is a config
 				//check it's signature, but first load our certificate
 				if(string.IsNullOrEmpty(certFilePath)) {
@@ -375,15 +375,19 @@ namespace UniSign.ViewModel {
 					return false;
 				} else {
 					//means certificate && config present
-					//check config expiration date
+					//check cert expiration date
 					X509Certificate2 cert = new X509Certificate2();
 					try {
 						cert.Import(certFilePath);
 						if (cert.NotAfter > DateTime.Now) {
 							//cert ok
 							//check config signature
-							string configContents = decryptConfig(binConfigPath);
+							//string configContents = decryptConfig(binConfigPath);
+							string configContents = Util.DecryptConfig(binConfigPath);
 							if (string.IsNullOrEmpty(configContents)) {
+								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
+									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+								SetErrorMessage("Личный конфигурационный файл поврежден");
 								return false;
 							}
 							XmlDocument xdocConfig = new XmlDocument();
@@ -422,7 +426,7 @@ namespace UniSign.ViewModel {
 			}
 			return true;
 		}
-
+		/*
 		private string decryptConfig(string configPath) {
 			SevenZipBase.SetLibraryPath("7z_32.dll");
 			string decrypted = null;
@@ -444,6 +448,7 @@ namespace UniSign.ViewModel {
 			extracted.Close();
 			return decrypted;
 		}
+		*/
 		#endregion
 		
 		#region [SIGNING SESSION INIT]
