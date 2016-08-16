@@ -33,6 +33,13 @@ namespace UniSign.ViewModel {
 		}
 
 		#region [P & F]
+
+		public static string ProgramVersion {
+			get {
+				Version ver = Assembly.GetExecutingAssembly().GetName().Version;
+				return $"{ver.Major}.{ver.Minor}";
+			}
+		}
 		private SigningSession _s;
 		private string _humanRadableDataToSign;
 		private string _serverHtmlMessage;
@@ -57,7 +64,7 @@ namespace UniSign.ViewModel {
 		private Uri _serverUri;
 		private string _serverHttpsCertificateThumbprint;
 		//===============================================
-
+		
 		#region [FOR DATA BINDING]
 
 		public string HumanRadableDataToSign {
@@ -154,12 +161,11 @@ namespace UniSign.ViewModel {
 		#endregion
 
 		public MainViewModel() {
-			LoadConfig();
+			LoadConfig(); // this function has LOTS side effects!
 			Certificates = new ObservableCollection<X509Certificate2>();
 			LoadCertificatesFromStore();
 
 			if(ConfigIsGo) {
-				
 				//setup our makeshift certificate check procedure
 				System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 |
 																SecurityProtocolType.Tls;
@@ -284,11 +290,6 @@ namespace UniSign.ViewModel {
 
 		}
 
-		public static string getVersionMajorMinor() {
-			Version ver = Assembly.GetExecutingAssembly().GetName().Version;
-			return $"{ver.Major}.{ver.Minor}";
-		}
-
 		private bool checkConfig(XDocument cfg) {
 			string binConfigPath = cfg.Root?.Element("CfgBinPath")?.Value;
 			string certFilePath = cfg.Root?.Element("CertificateFilePath")?.Value;
@@ -403,8 +404,7 @@ namespace UniSign.ViewModel {
 							//TODO: enable signature check
 							//if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
 								//config signature OK - loading contents
-								string programVersion = getVersionMajorMinor();
-								if (privateConfig.Root?.Attribute("version").Value == programVersion) {
+								if (privateConfig.Root?.Attribute("version").Value == ProgramVersion) {
 									//means config version corresponds to a program version
 									
 									_ourCertificate = cert;
@@ -413,9 +413,9 @@ namespace UniSign.ViewModel {
 									ClearError("Конфигурационный файл успешно загружен");
 								}else {
 									//means version in config is not right one
-									MessageBox.Show($"Текущая версия программы <{programVersion}> устарела.\nСкачайте новую версию с корпоративного портала.",
+									MessageBox.Show($"Текущая версия программы <{ProgramVersion}> устарела.\nСкачайте новую версию с корпоративного портала.",
 									"Программа устарела.", MessageBoxButton.OK, MessageBoxImage.Error);
-									SetErrorMessage($"Установленная версия программы <{programVersion}> устарела. Скачайте новую версию с корпоративного портала.");
+									SetErrorMessage($"Установленная версия программы <{ProgramVersion}> устарела");
 									return false;
 								}
 							/*} else {
@@ -477,7 +477,7 @@ namespace UniSign.ViewModel {
 			Uri startupUri = new Uri(startupArg);
 			
 			HttpClient client = new HttpClient() {
-				Timeout = new TimeSpan(0,0,0,60)
+				Timeout = new TimeSpan(0,0,0,60) // 60 seconds
 			};
 			
 			UriBuilder serverUri = new UriBuilder(_serverUri) {
@@ -490,13 +490,16 @@ namespace UniSign.ViewModel {
 			return await client.PostAsync(serverUri.Uri,content);
 		}
 
-		public void InitSession(string sessionDataString, string startupArg) {
+		public bool InitSession(string sessionDataString, string startupArg) {
 			_s = new SigningSession(sessionDataString) {
 				StartupArg = startupArg
 			};
+			
 			//set viewModel fields
 			OriginalXmlDataToSign = _s.DataToSign;
 			HumanRadableDataToSign = _s.HumanReadableHtml;
+
+			return _s.Success; //_s.Success == false when program version is not equal "vesrion" attribute value
 		}
 		#endregion
 

@@ -42,9 +42,7 @@ namespace UniSign {
 			
 			MainUI.DataContext = _viewModel;
 			
-			//MainGrid.DataContext = _viewModel;
 			if (!_viewModel.ConfigIsGo) {
-				//_viewModel.PrependMessage("Загрузка конфигурации завершилась ошибкой");
 				return;
 			}
 
@@ -55,7 +53,10 @@ namespace UniSign {
 
 			if (serverSessionData.IsSuccessStatusCode) {
 				_viewModel.MessageIsError = false;
-				_viewModel.InitSession(await serverSessionData.Content.ReadAsStringAsync(),args[1]);
+				if (!_viewModel.InitSession(await serverSessionData.Content.ReadAsStringAsync(), args[1])) {
+					//means session init ended with error
+					_viewModel.SetErrorMessage($"Версия программы {MainViewModel.ProgramVersion} устарела");
+				}
 			} else {
 				//means server returned not OK or connection timed out
 				_viewModel.MessageIsError = true;
@@ -80,7 +81,6 @@ namespace UniSign {
 				}
 
 				_viewModel.ServerHtmlMessage = await serverResponse.Content.ReadAsStringAsync();
-				//TODO:Interface changes due to error
 			} else {
 				//means certificate not selected
 				MessageBox.Show(

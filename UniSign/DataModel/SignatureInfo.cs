@@ -14,20 +14,12 @@ namespace UniSign.DataModel {
 		public string NodeId;
 
 		public SignatureInfo(XElement node) {
-			
-			SignatureType.TryParse(node.Descendants("Type").First().Value, true, out SigType);
-			
-			//SmevMode = 2;
-			//NodeId = string.Empty;
 
-			//if (node.Descendants("SmevMode").Any()) {
-				SmevMode = Int32.Parse(node.Descendants("SmevMode").DefaultIfEmpty(new XElement("SmevMode", 2)).First().Value);
-			//}
-
-			//if(node.Descendants("NodeId").Any()) {
-				NodeId = node.Descendants("NodeId").DefaultIfEmpty(new XElement("NodeId",string.Empty)).First().Value;
-
-			//}
+			if (!SignatureType.TryParse(node.Descendants("Type").First().Value, true, out SigType)) {
+				SigType = SignatureType.SideBySide;
+			}
+			SmevMode = Int32.Parse(node.Descendants("SmevMode").DefaultIfEmpty(new XElement("SmevMode", 2)).First().Value);
+			NodeId = node.Descendants("NodeId").DefaultIfEmpty(new XElement("NodeId",string.Empty)).First().Value;
 		}
 
 		/*

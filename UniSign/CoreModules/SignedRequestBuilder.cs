@@ -8,11 +8,14 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
+using UniSign.ViewModel;
+
 namespace UniSign.CoreModules {
 	static class SignedRequestBuilder {
 
 		public static string GetSessionRequest(string sessionId, string interopSignatureThumb, StoreLocation interopSignatureStoreLocation) {
 			XDocument ret =XDocument.Parse(UniSign.Properties.Resources.SessionRequest);
+			ret.Root.Attribute("version").Value = MainViewModel.ProgramVersion;
 			ret.Root.Element("SessionId").Value = sessionId;
 			ret.Root.Element("SessionId").Attribute("timestamp").Value = DateTime.Now.ToString("s").Replace("T"," ");
 
@@ -22,12 +25,13 @@ namespace UniSign.CoreModules {
 			X509Certificate2 cert = SignatureProcessor.GetCertificateByThumbprint(interopSignatureThumb,
 																				interopSignatureStoreLocation);
 
-			return SignatureProcessor.Sign(SignatureProcessor.SigningMode.Simple, cert, signThis, false, "SIGNED_BY_CALLER");
+			return SignatureProcessor.Sign(SignatureProcessor.SigningMode.Simple, cert, signThis, false, "SIGNED_BY_SIGNER");
 		}
 
 		public static string GetSignedDataRequest(string sessionId, string signedData, string interopSignatureThumb, StoreLocation interopSignatureStoreLocation) {
 			XDocument ret = XDocument.Parse(UniSign.Properties.Resources.SignedDataRequest);
-			
+
+			ret.Root.Attribute("version").Value = MainViewModel.ProgramVersion;
 			ret.Root.Element("SignedData").Value = Convert.ToBase64String(Encoding.UTF8.GetBytes(signedData));
 			ret.Root.Element("SignedData").Attribute("sessionId").Value = sessionId;
 			ret.Root.Element("SignedData").Attribute("timestamp").Value = DateTime.Now.ToString("s").Replace("T", " ");
@@ -38,7 +42,7 @@ namespace UniSign.CoreModules {
 			X509Certificate2 cert = SignatureProcessor.GetCertificateByThumbprint(interopSignatureThumb,
 																				interopSignatureStoreLocation);
 
-			return SignatureProcessor.Sign(SignatureProcessor.SigningMode.Simple, cert, signThis, false, "SIGNED_BY_CALLER");
+			return SignatureProcessor.Sign(SignatureProcessor.SigningMode.Simple, cert, signThis, false, "SIGNED_BY_SIGNER");
 		}
 	}
 }

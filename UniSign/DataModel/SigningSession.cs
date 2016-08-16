@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
 using UniSign.DataModel.Enums;
+using UniSign.ViewModel;
 
 namespace UniSign.DataModel {
 	class SigningSession {
@@ -26,34 +27,39 @@ namespace UniSign.DataModel {
 		public XDocument XslStylesheet;
 		public string HumanReadableHtml;
 
-		public SignatureInfo SignInfo;
+		public readonly SignatureInfo SignInfo;
 		
 		public string SignedData;
+
+		public bool Success;
 
 		#endregion
 
 		#region [CONSTRUCTOR]
 		public SigningSession(string sessionMessage) {
+			Success = true;
 			ServerSessionMessage = XDocument.Parse(sessionMessage);
+			if (ServerSessionMessage.Root.Attribute("vesrsion").Value != MainViewModel.ProgramVersion) {
+				Success = false;
+				return;
+			}
 			SessionId = ServerSessionMessage.Root?.Attribute("session_id").Value;
 
 			/*
-			<SigningInfo id='SIGNED' session_id='...'>
-				<DocumentToSign>
-					<!-- XML BASE64 (Utf-8) -->
-				</DocumentToSign>
-				<DocumentXsl>
-					<!-- XSLT Stylesheet BASE64 (Utf-8) -->
-				</DocumentXsl>
-				<SignatureInfo>
-					<Type>detached|side-by-side|enveloped</Type>
-					<SmevMode*>2|3</SmevMode>
-					<NodeId*>
-						<!-- Textual node ID or blank or abscent if signature must be placed inside (or side-by-side with) the root -->
-					</NodeId>
-				</SignatureInfo>
-				<тут ЭП для SIGNED />
-			</SigningInfo>
+			 * <SessionResponse version='1.1'>
+					<SigningInfo id="SIGNED_BY_SERVER" session_id="...">
+							<DocumentToSign>PE1haW4+Cgk8YXBwX2lkPtCg0YPRgdGB0LrQuNC1INCx0YPQutCy0Ys8L2FwcF9pZD4KCTxzZW5kZXJfaWQ+0KHQvdC+0LLQsCDQsdGD0LrQstGLPC9zZW5kZXJfaWQ+Cgk8c2VydmljZV9pZD4xMDAwMTAwNTQ4NTwvc2VydmljZV9pZD4KPC9NYWluPg==</DocumentToSign> 
+							<DocumentXsl>PHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjEuMCIgeG1sbnM6eHNsPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0iPgoJPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iL01haW4iPgoJCTxwPjxzdHJvbmc+PHhzbDp2YWx1ZS1vZiBzZWxlY3Q9Ii8vYXBwX2lkIi8+PC9zdHJvbmc+PC9wPgoJCTxwPjx4c2w6dmFsdWUtb2Ygc2VsZWN0PSIvL3NlbmRlcl9pZCIvPjwvcD4KCQk8cD48dT48eHNsOnZhbHVlLW9mIHNlbGVjdD0iLy9zZXJ2aWNlX2lkIi8+PC91PjwvcD4KCTwveHNsOnRlbXBsYXRlPgo8L3hzbDpzdHlsZXNoZWV0Pg==</DocumentXsl> 
+							<SignatureInfo>
+									<Type>enveloped</Type> 
+									<SmevMode>2</SmevMode> 
+									<NodeId> *
+											SIGNED_1
+									</NodeId>
+							</SignatureInfo>
+					</SigningInfo>
+					<Signature/>
+				</SessionResponse>  
 			*/
 
 			DataToSign =
