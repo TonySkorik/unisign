@@ -400,9 +400,8 @@ namespace UniSign.ViewModel {
 							XmlDocument xdocConfig = new XmlDocument();		// this stuff is for
 							xdocConfig.LoadXml(configContents);				// check signature further
 							XDocument privateConfig = XDocument.Parse(configContents);
-
-							//TODO: enable signature check
-							//if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
+							
+							if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
 								//config signature OK - loading contents
 								if (privateConfig.Root?.Attribute("version").Value == ProgramVersion) {
 									//means config version corresponds to a program version
@@ -418,7 +417,7 @@ namespace UniSign.ViewModel {
 									SetErrorMessage($"Установленная версия программы <{ProgramVersion}> устарела");
 									return false;
 								}
-							/*} else {
+							} else {
 								//signature incorrect
 								Debug.WriteLine("Invalid Signature");
 								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
@@ -426,7 +425,7 @@ namespace UniSign.ViewModel {
 								SetErrorMessage("Личный конфигурационный файл поврежден");
 								return false;
 							}
-							*/
+							
 						} else {
 							//cert expired
 							MessageBox.Show("Файл сертификата просрочен.\nСкачайте новый файл сертификата с корпоративного портала.",

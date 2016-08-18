@@ -665,7 +665,7 @@ namespace UniSign.CoreModules {
 				xmlDocument.GetElementsByTagName(
 					"Signature", SignedXml.XmlDsigNamespaceUrl
 				);
-
+			
 			foreach (XmlElement sig in nodeList) {
 				SignedXml signedXml = new SignedXml(xmlDocument);
 				signedXml.LoadXml(sig);
