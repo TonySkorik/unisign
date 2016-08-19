@@ -655,6 +655,7 @@ namespace UniSign.CoreModules {
 		public static bool VerifySignature(XmlDocument message, bool verifySignatureOnly = false, X509Certificate2 verifyOnThisCert = null) {
 			bool ret = false;
 			X509Certificate2 cert = new X509Certificate2();
+			bool test = CryptoPro.Sharpei.CryptoHelper.IsGostCertificate(verifyOnThisCert);
 			if (verifySignatureOnly) {
 				cert = verifyOnThisCert ?? ReadCertificateFromXml(message.GetXDocument());
 			}

@@ -161,9 +161,12 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>:: "c:\Program Files\Red Gate\SmartAssembly 6\SmartAssembly.com" /build $(ProjectDir)Obfuscation\utility.saproj
-::del $(TargetDir)SevenZipSharp.dll
-::xcopy $(ProjectDir)Obfuscation\utility.dll $(TargetDir)utility.dll /y</PostBuildEvent>
+    <PostBuildEvent>::Debug_version
+::"c:\Program Files\Red Gate\SmartAssembly 6\SmartAssembly.com" /build $(ProjectDir)Obfuscation\utility.saproj
+::Release version
+"c:\Program Files\Red Gate\SmartAssembly 6\SmartAssembly.com" /build $(ProjectDir)Obfuscation\utility_release.saproj
+del $(TargetDir)SevenZipSharp.dll
+xcopy $(ProjectDir)Obfuscation\utility.dll $(TargetDir)utility.dll /y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
