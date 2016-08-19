@@ -400,32 +400,42 @@ namespace UniSign.ViewModel {
 							XmlDocument xdocConfig = new XmlDocument();		// this stuff is for
 							xdocConfig.LoadXml(configContents);				// check signature further
 							XDocument privateConfig = XDocument.Parse(configContents);
-							
-							if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
-								//config signature OK - loading contents
-								if (privateConfig.Root?.Attribute("version").Value == ProgramVersion) {
-									//means config version corresponds to a program version
-									
-									_ourCertificate = cert;
-									_serverUri = new Uri(privateConfig.Root?.Element("Server").Element("GetFileUri")?.Value ?? "");
-									_serverHttpsCertificateThumbprint = privateConfig.Root?.Element("Server").Element("CertificateThumbprint")?.Value ?? "";
-									ClearError("Конфигурационный файл успешно загружен");
-								}else {
-									//means version in config is not right one
-									MessageBox.Show($"Текущая версия программы <{ProgramVersion}> устарела.\nСкачайте новую версию с корпоративного портала.",
-									"Программа устарела.", MessageBoxButton.OK, MessageBoxImage.Error);
-									SetErrorMessage($"Установленная версия программы <{ProgramVersion}> устарела");
+							try {
+								if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
+									//config signature OK - loading contents
+									if (privateConfig.Root?.Attribute("version").Value == ProgramVersion) {
+										//means config version corresponds to a program version
+
+										_ourCertificate = cert;
+										_serverUri = new Uri(privateConfig.Root?.Element("Server").Element("GetFileUri")?.Value ?? "");
+										_serverHttpsCertificateThumbprint =
+											privateConfig.Root?.Element("Server").Element("CertificateThumbprint")?.Value ?? "";
+										ClearError("Конфигурационный файл успешно загружен");
+									} else {
+										//means version in config is not right one
+										MessageBox.Show(
+											$"Текущая версия программы <{ProgramVersion}> устарела.\nСкачайте новую версию с корпоративного портала.",
+											"Программа устарела.", MessageBoxButton.OK, MessageBoxImage.Error);
+										SetErrorMessage($"Установленная версия программы <{ProgramVersion}> устарела");
+										return false;
+									}
+								} else {
+									//signature incorrect
+									Debug.WriteLine("Invalid Signature");
+									MessageBox.Show(
+										"Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
+										"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+									SetErrorMessage("Личный конфигурационный файл поврежден");
 									return false;
 								}
-							} else {
-								//signature incorrect
-								Debug.WriteLine("Invalid Signature");
-								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
-									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+							} catch (Exception e) {
+								MessageBox.Show(
+										$"Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.\n\n{e.Message}",
+										"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 								SetErrorMessage("Личный конфигурационный файл поврежден");
 								return false;
 							}
-							
+
 						} else {
 							//cert expired
 							MessageBox.Show("Файл сертификата просрочен.\nСкачайте новый файл сертификата с корпоративного портала.",
