@@ -62,8 +62,8 @@ namespace UniSign.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt; 
-        ///&lt;SessionRequest&gt;
-        ///	&lt;SessionId Id=&quot;SIGNED_BY_CALLER&quot; timestamp=&quot;&quot;&gt;&lt;/SessionId&gt;
+        ///&lt;SessionRequest version=&quot;&quot;&gt;
+        ///	&lt;SessionId Id=&quot;SIGNED_BY_SIGNER&quot; timestamp=&quot;&quot;&gt;&lt;/SessionId&gt;
         ///	&lt;Signature&gt;&lt;/Signature&gt;
         ///&lt;/SessionRequest&gt;
         ///.
