@@ -17,7 +17,7 @@ namespace UniSign {
 			//AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
 			base.OnStartup(e);
 		}
-		
+		/*
 		static Assembly ResolveAssembly(object sender, ResolveEventArgs args) {
 			Assembly thisAssembly = Assembly.GetExecutingAssembly();
 			var name = args.Name.Substring(0, args.Name.IndexOf(',')) + ".dll";
@@ -28,6 +28,6 @@ namespace UniSign {
 				stream.Read(block, 0, block.Length);
 				return Assembly.Load(block);
 			}
-		}
+		}*/
 	}
 }

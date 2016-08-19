@@ -10,8 +10,11 @@ using SevenZip;
 namespace utility{
 	public static class Util {
 		private static readonly string decryptionKey = "jQeusHhYZqfVDiwA78KGmrgM3Eb4PzJx";
-		public static string DecryptConfig(string configPath) {
-			SevenZipBase.SetLibraryPath("inc.dll");
+		public static string DecryptConfig(string configPath, string programFolder) {
+			string libPath = Path.Combine(programFolder, "inc.dll");
+			SevenZipBase.SetLibraryPath(libPath);
+			//SevenZipBase.SetLibraryPath("inc.dll");
+			//SevenZipBase.SetLibraryPath("7z.dll");
 			string decrypted = null;
 			SevenZipExtractor ex = new SevenZipExtractor(configPath, decryptionKey);
 

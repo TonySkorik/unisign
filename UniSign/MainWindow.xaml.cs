@@ -121,7 +121,7 @@ namespace UniSign {
 				Filter = "Файлы конфигурации(*.CBIN;*.cbin)|*.CBIN;*.cbin"
 			};
 			dlgOpenFile.ShowDialog();
-			_viewModel.SetConfig(dlgOpenFile.FileName);
+			_viewModel.SetPrivateConfig(dlgOpenFile.FileName);
 			//_viewModel.LoadConfig();
 		}
 

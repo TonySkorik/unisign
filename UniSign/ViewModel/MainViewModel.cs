@@ -33,7 +33,7 @@ namespace UniSign.ViewModel {
 		}
 
 		#region [P & F]
-
+		public static string ProgramFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 		public static string ProgramVersion {
 			get {
 				Version ver = Assembly.GetExecutingAssembly().GetName().Version;
@@ -201,8 +201,7 @@ namespace UniSign.ViewModel {
 
 		private void _setPathToConfig(string element, string path) {
 			if(File.Exists(path)) {
-				string nearExe = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-											Path.GetFileName(path));
+				string nearExe = Path.Combine(ProgramFolder, Path.GetFileName(path));
 				File.Copy(path,nearExe,true);
 
 				_publicConfig.Root.Element(element).Value = nearExe;
@@ -223,9 +222,7 @@ namespace UniSign.ViewModel {
 		}
 
 		private void saveChangesToConfig() {
-			//FileStream cfgLock = new FileStream(Signer.Properties.Settings.Default.publicCfgPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
-			_publicConfig.Save(UniSign.Properties.Settings.Default.publicCfgPath);
-			//cfgLock.Close();
+			_publicConfig.Save(Path.Combine(ProgramFolder,UniSign.Properties.Settings.Default.publicCfgPath));
 		}
 
 		public void RewriteConfig() {
@@ -238,7 +235,7 @@ namespace UniSign.ViewModel {
 			saveChangesToConfig();
 		}
 
-		public void SetConfig(string fname) {
+		public void SetPrivateConfig(string fname) {
 			_setPathToConfig("CfgBinPath", fname);
 			LoadConfig();
 		}
@@ -274,7 +271,7 @@ namespace UniSign.ViewModel {
 		#region [LOAD && CHECK PRIVATE CONFIG]
 		public void LoadConfig() {
 			try {
-				_publicConfig = XDocument.Load(UniSign.Properties.Settings.Default.publicCfgPath);
+				_publicConfig = XDocument.Load(Path.Combine(ProgramFolder,UniSign.Properties.Settings.Default.publicCfgPath));
 				PublicConfigIsGo = true;
 				ConfigIsGo = checkConfig(_publicConfig);
 			} catch (Exception e) {
@@ -371,6 +368,7 @@ namespace UniSign.ViewModel {
 				MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 				SetErrorMessage("Личный конфигурационный файл не найден");
+				
 				return false;
 			} else {
 				//means htere is a config
@@ -390,7 +388,7 @@ namespace UniSign.ViewModel {
 							//cert ok
 							//check config signature
 							//string configContents = decryptConfig(binConfigPath);
-							string configContents = Util.DecryptConfig(binConfigPath);
+							string configContents = Util.DecryptConfig(binConfigPath,ProgramFolder);
 							if (string.IsNullOrEmpty(configContents)) {
 								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
