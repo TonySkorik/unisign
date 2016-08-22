@@ -399,7 +399,12 @@ namespace UniSign.ViewModel {
 							xdocConfig.LoadXml(configContents);				// check signature further
 							XDocument privateConfig = XDocument.Parse(configContents);
 							try {
+								#if !DEBUG
 								if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
+								#endif
+								#if DEBUG
+								if(SignatureProcessor.VerifySignature(xdocConfig)) {
+								#endif
 									//config signature OK - loading contents
 									if (privateConfig.Root?.Attribute("version").Value == ProgramVersion) {
 										//means config version corresponds to a program version

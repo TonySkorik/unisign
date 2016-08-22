@@ -117,7 +117,7 @@
 			VerticalAlignment="Center" 
 			HorizontalAlignment="Stretch"
 		>
-			<GroupBox Header="Храналище сертификатов " Margin="5">
+			<GroupBox Header="Хранилище сертификатов " Margin="5">
 				<StackPanel Orientation="Horizontal">
 					<RadioButton 
 						Content="Current User" 
