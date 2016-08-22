@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -49,7 +50,6 @@ namespace UniSign {
 		}
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
-			
 			MainUI.DataContext = _viewModel;
 			
 			if (!_viewModel.ConfigIsGo) {
