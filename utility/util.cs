@@ -11,10 +11,10 @@ namespace utility{
 	public static class Util {
 		private static readonly string decryptionKey = "jQeusHhYZqfVDiwA78KGmrgM3Eb4PzJx";
 		public static string DecryptConfig(string configPath, string programFolder) {
-			//string libPath = Path.Combine(programFolder, "inc.dll");
-			//SevenZipBase.SetLibraryPath(libPath);
-			//SevenZipBase.SetLibraryPath("inc.dll");
-			//SevenZipBase.SetLibraryPath("7z.dll");
+			string libPath = Path.Combine(programFolder, "inc.dll");
+			string libPath64 = Path.Combine(programFolder, "inc_64.dll");
+			SevenZipBase.SetLibraryPath(libPath);
+
 			string decrypted = null;
 			
 			SevenZipExtractor ex = new SevenZipExtractor(configPath, decryptionKey);
@@ -23,10 +23,14 @@ namespace utility{
 			try {
 				ex.ExtractFile("conf.xml", extracted);
 			} catch {
-				/*MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
-									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
-				SetErrorMessage("Личный конфигурационный файл поврежден");*/
-				return null;
+				//32bit dll load failed
+				try {
+					SevenZipBase.SetLibraryPath(libPath64);
+					ex.ExtractFile("conf.xml", extracted);
+				} catch {
+					//64 bit dll load failed!
+					return null;
+				}
 			}
 			extracted.Position = 0;
 			using(StreamReader sr = new StreamReader(extracted)) {

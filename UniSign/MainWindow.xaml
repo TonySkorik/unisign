@@ -27,6 +27,19 @@
 		<core:BoolToColorConverter x:Key="BoolToColorConvert"/>
 	</Window.Resources>
 	
+	<Window.CommandBindings>
+		<CommandBinding Command="Open" Executed="SelectInteropCertificate_OnClick"/>
+		<CommandBinding Command="Find" Executed="LoadPrivateConfig_OnClick"/>
+		<CommandBinding Command="Save" Executed="LoadCertificate_OnClick"/>
+		<CommandBinding Command="Refresh" Executed="ReloadConfig_OnClick"/>
+	</Window.CommandBindings>
+	<Window.InputBindings>
+		<KeyBinding Key="I" Modifiers="Alt" Command="Open"/>
+		<KeyBinding Key="C" Modifiers="Alt" Command="Find"/>
+		<KeyBinding Key="S" Modifiers="Alt" Command="Save"/>
+		<KeyBinding Key="R" Modifiers="Alt" Command="Refresh"/>
+	</Window.InputBindings>
+	
 	<Grid x:Name="MainGrid"
 		Height="Auto"	  
 	>
@@ -37,14 +50,14 @@
 		</Grid.RowDefinitions>
 		<Menu FontSize="15">
 			<MenuItem Header="Файл" IsEnabled="{Binding Path=PublicConfigIsGo}">
-				<MenuItem Header="Загрузить сертификат для взаимодействия" Click="SelectInteropCertificate_OnClick"/>
+				<MenuItem Header="Загрузить сертификат для взаимодействия" Command="Open" InputGestureText="Alt+I"/>
 				<Separator/>
-				<MenuItem Header="Загрузить личный конфигурационный файл" Click="LoadPrivateConfig_OnClick"/>
-				<MenuItem Header="Загрузить сертификат сервера" Click="LoadCertificate_OnClick"/>
+				<MenuItem Header="Загрузить личный конфигурационный файл" Command="Find" InputGestureText="Alt+C"/>
+				<MenuItem Header="Загрузить сертификат сервера" Command="Save" InputGestureText="Alt+S"/>
 				<Separator/>
-				<MenuItem Header="Перезагрузить конфигурацию" Click="ReloadConfig_OnClick"/>
+				<MenuItem Header="Перезагрузить конфигурацию" Command="Refresh" InputGestureText="Alt+R"/>
 				<Separator/>
-				<MenuItem Header="Выход" Click="ProgramExit_OnClick"/>
+				<MenuItem Header="Выход" Click="ProgramExit_OnClick" InputGestureText="Alt+F4"/>
 			</MenuItem>
 			
 		</Menu>
