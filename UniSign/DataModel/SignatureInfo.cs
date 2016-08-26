@@ -5,21 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using UniSign.CoreModules;
-using UniSign.DataModel.Enums;
 
 namespace UniSign.DataModel {
 	struct SignatureInfo {
-		public SignatureType SigType;
-		public int SmevMode;
+		public SignatureProcessor.SignatureType SigType;
+		//public int SmevMode;
 		public string NodeId;
 
 		public SignatureInfo(XElement node) {
 
-			if (!SignatureType.TryParse(node.Descendants("Type").First().Value, true, out SigType)) {
-				SigType = SignatureType.SideBySide;
+			if (!SignatureProcessor.SignatureType.TryParse(node.Descendants("Type").First().Value, true, out SigType)) {
+				SigType = SignatureProcessor.SignatureType.Smev2SidebysideDetached;
 			}
+			/*
 			SmevMode = Int32.Parse(node.Descendants("SmevMode").DefaultIfEmpty(new XElement("SmevMode", 2)).First().Value);
+			*/
 			NodeId = node.Descendants("NodeId").DefaultIfEmpty(new XElement("NodeId",string.Empty)).First().Value;
+			
 		}
 
 		/*

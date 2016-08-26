@@ -21,7 +21,6 @@ using System.Xml;
 using SevenZip;
 using UniSign.CoreModules;
 using UniSign.DataModel;
-using UniSign.DataModel.Enums;
 using utility;
 
 namespace UniSign.ViewModel {
@@ -400,10 +399,10 @@ namespace UniSign.ViewModel {
 							XDocument privateConfig = XDocument.Parse(configContents);
 							try {
 								#if !DEBUG
-								if (SignatureProcessor.VerifySignature(xdocConfig, true, cert)) {
+								if (SignatureProcessor.VerifySignature(SignatureProcessor.SignatureType.Smev3SidebysideDetached, xdocConfig, cert)) {
 								#endif
 								#if DEBUG
-								if(SignatureProcessor.VerifySignature(xdocConfig)) {
+								if(SignatureProcessor.VerifySignature(SignatureProcessor.SignatureType.Smev3SidebysideDetached, xdocConfig)) {
 								#endif
 									//config signature OK - loading contents
 									if (privateConfig.Root?.Attribute("version").Value == ProgramVersion) {
@@ -530,6 +529,8 @@ namespace UniSign.ViewModel {
 			//use SignInfo from _s
 
 			SignatureInfo si = _s.SignInfo;
+			
+			/*
 			SignatureProcessor.SigningMode signMode = SignatureProcessor.SigningMode.Simple;
 
 			switch(_s.SignInfo.SigType) {
@@ -550,11 +551,12 @@ namespace UniSign.ViewModel {
 					}
 					break;
 			}
+			*/
 
 			XmlDocument docToSign = new XmlDocument();
 			docToSign.LoadXml(_s.DataToSign);
 
-			return SignatureProcessor.Sign(signMode, cert, docToSign, false, _s.SignInfo.NodeId);
+			return SignatureProcessor.Sign(_s.SignInfo.SigType, cert, docToSign, false, _s.SignInfo.NodeId);
 		}
 		#endregion
 

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
-using UniSign.DataModel.Enums;
 using UniSign.ViewModel;
 
 namespace UniSign.DataModel {

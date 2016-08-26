@@ -25,7 +25,7 @@ namespace UniSign.CoreModules {
 			X509Certificate2 cert = SignatureProcessor.GetCertificateByThumbprint(interopSignatureThumb,
 																				interopSignatureStoreLocation);
 
-			return SignatureProcessor.Sign(SignatureProcessor.SigningMode.Simple, cert, signThis, false, "SIGNED_BY_SIGNER");
+			return SignatureProcessor.Sign(SignatureProcessor.SignatureType.Smev2SidebysideDetached, cert, signThis, false, "SIGNED_BY_SIGNER");
 		}
 
 		public static string GetSignedDataRequest(string sessionId, string signedData, string interopSignatureThumb, StoreLocation interopSignatureStoreLocation) {
@@ -42,7 +42,7 @@ namespace UniSign.CoreModules {
 			X509Certificate2 cert = SignatureProcessor.GetCertificateByThumbprint(interopSignatureThumb,
 																				interopSignatureStoreLocation);
 
-			return SignatureProcessor.Sign(SignatureProcessor.SigningMode.Simple, cert, signThis, false, "SIGNED_BY_SIGNER");
+			return SignatureProcessor.Sign(SignatureProcessor.SignatureType.Smev2SidebysideDetached, cert, signThis, false, "SIGNED_BY_SIGNER");
 		}
 	}
 }

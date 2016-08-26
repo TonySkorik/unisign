@@ -109,7 +109,6 @@
     <Compile Include="CoreModules\Converters.cs" />
     <Compile Include="CoreModules\SignatureProcessor.cs" />
     <Compile Include="CoreModules\SignedRequestBuilder.cs" />
-    <Compile Include="DataModel\Enums\SignatureType.cs" />
     <Compile Include="DataModel\SignatureInfo.cs" />
     <Compile Include="DataModel\SigningSession.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
