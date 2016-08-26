@@ -77,9 +77,6 @@ namespace UniSign.CoreModules {
 
 		#region [SIGN]
 		public enum SignatureType { Smev2BaseDetached, Smev2ChargeEnveloped, Smev2SidebysideDetached, Smev3BaseDetached, Smev3SidebysideDetached, Smev3Ack, SigDetached, Unknown };
-		/*
-		public enum SigningMode : int { Simple = 1, Smev2 = 2, Smev3 = 3, Detached = 4, SimpleEnveloped = 5 };
-		*/
 		public enum StoreType : int {LocalMachine = 1, CurrentUser = 2}
 		
 
@@ -169,8 +166,6 @@ namespace UniSign.CoreModules {
 		#endregion
 
 		#endregion
-
-		//public static string Sign(SigningMode mode, X509Certificate2 cert, XmlDocument signThis, bool assignDs, string nodeToSign) {
 		public static string Sign(SignatureType mode, X509Certificate2 cert, XmlDocument signThis, bool assignDs, string nodeToSign) {
 			if(nodeToSign == null) {
 				nodeToSign = "ID_SIGN";
@@ -184,22 +179,18 @@ namespace UniSign.CoreModules {
 			
 			try {
 				switch(mode) {
-					//case SigningMode.Simple:
 					case SignatureType.Smev2SidebysideDetached:
 						if(string.IsNullOrEmpty(nodeToSign)) {
 							throw new Exception($"NODE_ID_REQUIRED] <node_id> value is empty. This value is required");
 						}
 						signedXmlDoc = SignXmlNode(signThis, cert, nodeToSign);
 						break;
-					//case SigningMode.SimpleEnveloped:
 					case SignatureType.Smev2ChargeEnveloped:
 						signedXmlDoc = SignXmlFileEnveloped(signThis, cert);
 						break;
-					//case SigningMode.Smev2:
 					case SignatureType.Smev2BaseDetached:
 						signedXmlDoc = SignXmlFileSmev2(signThis, cert);
 						break;
-					//case SigningMode.Smev3:
 					case SignatureType.Smev3BaseDetached:
 						if(string.IsNullOrEmpty(nodeToSign)) {
 							throw new Exception($"NODE_ID_REQUIRED] <node_id> value is empty. This value is required");
@@ -218,7 +209,6 @@ namespace UniSign.CoreModules {
 						}
 						signedXmlDoc = SignXmlFileSmev3(signThis, cert, nodeToSign, assignDs, isAck: true);
 						break;
-					//case SigningMode.Detached:
 					case SignatureType.SigDetached:
 						return Convert.ToBase64String(SignXmlFileDetached(signThis, cert, nodeToSign, assignDs));
 				}
@@ -227,16 +217,6 @@ namespace UniSign.CoreModules {
 			}
 			return signedXmlDoc.InnerXml;
 		}
-
-		/*
-		public static string Sign(SignatureType mode, string certificateThumbprint, XmlDocument signThis,bool assignDs, string nodeToSign = "ID_SIGN") {
-			if (nodeToSign == null) {
-				nodeToSign = "ID_SIGN";
-			}
-			X509Certificate2 certificate = _searchCertificateByThumbprint(certificateThumbprint);
-			return Sign(mode, certificate, signThis, assignDs, nodeToSign);
-		}
-		*/
 
 		#region [SIMPLE NODE SIGN]
 
@@ -596,12 +576,7 @@ namespace UniSign.CoreModules {
 		#endregion
 
 		#region [READ CERTIFICATE]
-		/// <summary>
-		/// Reads certificate to a UnismevData.CertificateInfo struct and returns it if certificate present. 
-		/// If not returns null.
-		/// </summary>
-		/// <param name="signedXml">Target XML for certificate read</param>
-		/// <returns>UnismevData.CertificateInfo?</returns>
+		
 		public static X509Certificate2 ReadCertificateFromXml(XDocument signedXml) {
 			X509Certificate2 cert = null;
 
@@ -658,41 +633,10 @@ namespace UniSign.CoreModules {
 		#region [VERIFY]
 
 		#region [STANDARD]
-		/*
-		public static bool VerifySignature(SignatureType mode, string documentPath, string certificateFilePath = null, string certificateThumb = null, string nodeId = null) {
-			XmlDocument xd = new XmlDocument();
-			try {
-				xd.Load(documentPath);
-			} catch(Exception e) {
-				throw new Exception($"INPUT_XML_MISSING_OR_CORRUPTED] Input file <{documentPath}> is invalid. Message: {e.Message}");
-			}
-
-			return VerifySignature(mode, xd, certificateFilePath, certificateThumb, nodeId);
-		}
-		*/
+		
 		public static bool VerifySignature(SignatureType mode, XmlDocument message, X509Certificate2 cert = null, string certificateThumb = null, string nodeId = null) {
 			SignedXml signedXml = new SignedXml(message);
 			Smev2SignedXml smev2SignedXml = null;
-
-			//X509Certificate2 cert = null;
-			/*
-			bool isCerFile;
-
-			if((isCerFile = !string.IsNullOrEmpty(certificateFilePath)) || !string.IsNullOrEmpty(certificateThumb)) {
-				//means we are testing signature on external certificate
-				if(isCerFile) {
-					cert = new X509Certificate2();
-					try {
-						cert.Import(certificateFilePath);
-					} catch(Exception e) {
-						throw new Exception($"CERTIFICATE_IMPORT_EXCEPTION] Certificate <{certificateFilePath}> can not be loaded. Message: {e.Message}");
-					}
-				} else {
-					//throws if not found
-					cert = _searchCertificateByThumbprint(certificateThumb);
-				}
-			}
-			*/
 
 			Dictionary<string, XmlElement> signatures = new Dictionary<string, XmlElement>();
 
