@@ -99,8 +99,6 @@ namespace UniSign {
 			_viewModel.RewriteConfig();
 		}
 
-		
-
 		#region [CERT & SIGN]
 		private void CertificateStoreSelect_OnClick(object sender, RoutedEventArgs e) {
 			_viewModel.LoadCertificatesFromStore();
