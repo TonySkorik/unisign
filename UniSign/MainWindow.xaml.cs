@@ -58,8 +58,15 @@ namespace UniSign {
 
 			string[] args = Environment.GetCommandLineArgs();
 			//List<X509Certificate2> certs = CertificatesInSelectedStore.Items.Cast<X509Certificate2>().ToList();
-			
-			HttpResponseMessage serverSessionData = await _viewModel.GetServerSessionData(args[1]);
+			HttpResponseMessage serverSessionData = null;
+			try {
+				serverSessionData = await _viewModel.GetServerSessionData(args[1]);
+			} catch (Exception ex) {
+				_viewModel.SetErrorMessage(_viewModel.IsCertificateRejected
+					? "SSL сертификат соединения недействиетлен."
+					: "Ошибка соединения с сервером.");
+				return;
+			}
 
 			if (serverSessionData.IsSuccessStatusCode) {
 				_viewModel.MessageIsError = false;

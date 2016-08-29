@@ -152,7 +152,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="config.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="XmlTemplates\SignedDataRequest.xml" />
     <Resource Include="XmlTemplates\SessionRequest.xml" />

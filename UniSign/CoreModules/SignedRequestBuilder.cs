@@ -24,8 +24,13 @@ namespace UniSign.CoreModules {
 
 			X509Certificate2 cert = SignatureProcessor.GetCertificateByThumbprint(interopSignatureThumb,
 																				interopSignatureStoreLocation);
+			#if DEBUG
+			return signThis.InnerXml;
+			#endif
 
+			#if !DEBUG
 			return SignatureProcessor.Sign(SignatureProcessor.SignatureType.Smev2SidebysideDetached, cert, signThis, false, "SIGNED_BY_SIGNER");
+			#endif
 		}
 
 		public static string GetSignedDataRequest(string sessionId, string signedData, string interopSignatureThumb, StoreLocation interopSignatureStoreLocation) {

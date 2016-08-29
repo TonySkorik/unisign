@@ -62,6 +62,13 @@ namespace UniSign.ViewModel {
 		private X509Certificate2 _ourCertificate;
 		private Uri _serverUri;
 		private string _serverHttpsCertificateThumbprint;
+		private string _serverSignatureCertificateThumbprint;
+
+		private bool _isCertificateRejected;
+		public bool IsCertificateRejected {
+			get { return _isCertificateRejected; }
+			set { _isCertificateRejected = value; }
+		}
 		//===============================================
 		
 		#region [FOR DATA BINDING]
@@ -154,7 +161,6 @@ namespace UniSign.ViewModel {
 				NotifyPropertyChanged();
 			}
 		}
-
 		#endregion
 
 		#endregion
@@ -171,7 +177,9 @@ namespace UniSign.ViewModel {
 
 				System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => {
 					X509Certificate2 c = (X509Certificate2)cert;
-					return c.Thumbprint == _serverHttpsCertificateThumbprint;
+					_isCertificateRejected = c.Thumbprint != _serverHttpsCertificateThumbprint;
+					//return c.Thumbprint == _serverHttpsCertificateThumbprint;
+					return !_isCertificateRejected;
 				};
 			}
 		}
@@ -383,7 +391,6 @@ namespace UniSign.ViewModel {
 						if (cert.NotAfter > DateTime.Now) {
 							//cert ok
 							//check config signature
-							//string configContents = decryptConfig(binConfigPath);
 							string configContents = Util.DecryptConfig(binConfigPath,ProgramFolder);
 							if (string.IsNullOrEmpty(configContents)) {
 								MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
@@ -407,8 +414,9 @@ namespace UniSign.ViewModel {
 
 										_ourCertificate = cert;
 										_serverUri = new Uri(privateConfig.Root?.Element("Server").Element("GetFileUri")?.Value ?? "");
+										_serverSignatureCertificateThumbprint = privateConfig.Root?.Element("Server").Element("CertificateThumbprint")?.Value ?? "";
 										_serverHttpsCertificateThumbprint =
-											privateConfig.Root?.Element("Server").Element("CertificateThumbprint")?.Value ?? "";
+											privateConfig.Root?.Element("Server").Element("SSLCertificateThumbprint")?.Value ?? "";
 										ClearError("Конфигурационный файл успешно загружен");
 									} else {
 										//means version in config is not right one
@@ -453,29 +461,6 @@ namespace UniSign.ViewModel {
 			}
 			return true;
 		}
-		/*
-		private string decryptConfig(string configPath) {
-			SevenZipBase.SetLibraryPath("7z_32.dll");
-			string decrypted = null;
-			SevenZipExtractor ex = new SevenZipExtractor(configPath,UniSign.Properties.Settings.Default.privateConfigUnlockKey);
-			
-			MemoryStream extracted = new MemoryStream();
-			try {
-				ex.ExtractFile("private_config.xml", extracted);
-			} catch {
-				MessageBox.Show("Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
-									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
-				SetErrorMessage("Личный конфигурационный файл поврежден");
-				return null;
-			}
-			extracted.Position = 0;
-			using (StreamReader sr = new StreamReader(extracted)) {
-				decrypted = sr.ReadToEnd();
-			}
-			extracted.Close();
-			return decrypted;
-		}
-		*/
 		#endregion
 		
 		#region [SIGNING SESSION INIT]
@@ -495,7 +480,7 @@ namespace UniSign.ViewModel {
 
 			HttpContent content = new StringContent(SignedRequestBuilder.GetSessionRequest(sessionId,_interopCertificateThumbprint,_interopCertificateStoreLocation));
 			content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
-
+			
 			return await client.PostAsync(serverUri.Uri,content);
 		}
 
