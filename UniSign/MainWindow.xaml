@@ -99,12 +99,9 @@
 			</TabItem>
 			<TabItem Header="XML">
 				<Border 
-						BorderThickness="1"
-						BorderBrush="Black" 
+					BorderThickness="1"
+					BorderBrush="Black" 
 				>
-					<Border.Effect>
-						<DropShadowEffect ShadowDepth="1"/>
-					</Border.Effect>
 					<TextBlock Text="{Binding Path=OriginalXmlDataToSign}" Margin="5" />
 				</Border>
 			</TabItem>

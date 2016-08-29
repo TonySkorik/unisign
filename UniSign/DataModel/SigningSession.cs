@@ -38,7 +38,7 @@ namespace UniSign.DataModel {
 		public SigningSession(string sessionMessage) {
 			Success = true;
 			ServerSessionMessage = XDocument.Parse(sessionMessage);
-			if (ServerSessionMessage.Root.Attribute("vesrsion").Value != MainViewModel.ProgramVersion) {
+			if (ServerSessionMessage.Root.Attribute("version").Value != MainViewModel.ProgramVersion) {
 				Success = false;
 				return;
 			}

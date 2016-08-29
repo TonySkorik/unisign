@@ -22,8 +22,8 @@ namespace UniSign.DataModel {
 				SigType = stype;
 			}
 
-			NodeId = node.Descendants("NodeId").DefaultIfEmpty(new XElement("NodeId",string.Empty)).First().Value;
-			
+			//NodeId = node.Descendants("NodeId").DefaultIfEmpty(new XElement("NodeId",string.Empty)).First().Value;
+			NodeId = node.Descendants("NodeId").DefaultIfEmpty(null).First().Value;
 		}
 
 		/*

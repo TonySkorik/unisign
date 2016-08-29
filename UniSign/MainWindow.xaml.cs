@@ -109,7 +109,12 @@ namespace UniSign {
 		private async void SignButton_OnClick(object sender, RoutedEventArgs e) {
 			if (SelectedSignatureCert.SelectedItem != null) {
 				X509Certificate2 selectedCert = (X509Certificate2) SelectedSignatureCert.SelectedItem;
-				HttpResponseMessage serverResponse = await _viewModel.SendDataBackToServer(_viewModel.SignWithSelectedCert(selectedCert));
+				string signedData = _viewModel.SignWithSelectedCert(selectedCert);
+				if (string.IsNullOrEmpty(signedData)) {
+					return;
+				}
+
+				HttpResponseMessage serverResponse = await _viewModel.SendDataBackToServer(signedData);
 				if (!serverResponse.IsSuccessStatusCode) {
 					_viewModel.MessageIsError = true;
 				}

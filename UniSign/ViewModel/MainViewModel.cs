@@ -515,8 +515,14 @@ namespace UniSign.ViewModel {
 			SignatureInfo si = _s.SignInfo;
 			XmlDocument docToSign = new XmlDocument();
 			docToSign.LoadXml(_s.DataToSign);
+			string signedData = string.Empty;
+			try {
+				signedData = SignatureProcessor.Sign(_s.SignInfo.SigType, cert, docToSign, false, _s.SignInfo.NodeId);
+			} catch (Exception e) {
+				SetErrorMessage(e.Message);
+			}
 
-			return SignatureProcessor.Sign(_s.SignInfo.SigType, cert, docToSign, false, _s.SignInfo.NodeId);
+			return signedData;
 		}
 		#endregion
 
