@@ -46,7 +46,7 @@ namespace UniSign.DataModel {
 
 			/*
 			 * <SessionResponse version='1.1'>
-					<SigningInfo id="SIGNED_BY_SERVER" session_id="...">
+					<SigningInfo id="SIGNED_BY_SERVER" session_id="..." vsrsion="...">
 							<DocumentToSign>PE1haW4+Cgk8YXBwX2lkPtCg0YPRgdGB0LrQuNC1INCx0YPQutCy0Ys8L2FwcF9pZD4KCTxzZW5kZXJfaWQ+0KHQvdC+0LLQsCDQsdGD0LrQstGLPC9zZW5kZXJfaWQ+Cgk8c2VydmljZV9pZD4xMDAwMTAwNTQ4NTwvc2VydmljZV9pZD4KPC9NYWluPg==</DocumentToSign> 
 							<DocumentXsl>PHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjEuMCIgeG1sbnM6eHNsPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0iPgoJPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iL01haW4iPgoJCTxwPjxzdHJvbmc+PHhzbDp2YWx1ZS1vZiBzZWxlY3Q9Ii8vYXBwX2lkIi8+PC9zdHJvbmc+PC9wPgoJCTxwPjx4c2w6dmFsdWUtb2Ygc2VsZWN0PSIvL3NlbmRlcl9pZCIvPjwvcD4KCQk8cD48dT48eHNsOnZhbHVlLW9mIHNlbGVjdD0iLy9zZXJ2aWNlX2lkIi8+PC91PjwvcD4KCTwveHNsOnRlbXBsYXRlPgo8L3hzbDpzdHlsZXNoZWV0Pg==</DocumentXsl> 
 							<SignatureInfo>

@@ -50,6 +50,22 @@ namespace UniSign {
 		}
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
+			bool? isProtocolRegistered = MainViewModel.IsProtocolRegistered();
+			if (!isProtocolRegistered.HasValue) {
+				//means no rights to pen registry
+				MessageBox.Show(
+						"Невозможно проверить регистрацию протокола удаленного подписания в системе.\nВозможна утрата работоспособности программы.\nОбратитесь к разработчику или запустите программу от имени администратора.",
+						"Невозможно проверить регистрацию протокола", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			} else {
+				//means registry opened
+				if (!isProtocolRegistered.Value) {
+					//means protocol unregistered
+					MessageBox.Show(
+						"Протокол удаленного подписания не зарегистрирован в системе.\nВызов программы по ссылке невозможен. Обратитесь к разработчику.",
+						"Протокол не зарегистрирован", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				}
+			}
+
 			MainUI.DataContext = _viewModel;
 			
 			if (!_viewModel.ConfigIsGo) {
@@ -76,14 +92,15 @@ namespace UniSign {
 				}
 			} else {
 				//means server returned not OK or connection timed out
-				//_viewModel.MessageIsError = true;
 				_viewModel.SetErrorMessage(await serverSessionData.Content.ReadAsStringAsync());
 			}
 		}
 		private void MainWindow_OnClosing(object sender, CancelEventArgs e) {
 			_viewModel.RewriteConfig();
 		}
+
 		
+
 		#region [CERT & SIGN]
 		private void CertificateStoreSelect_OnClick(object sender, RoutedEventArgs e) {
 			_viewModel.LoadCertificatesFromStore();

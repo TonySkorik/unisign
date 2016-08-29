@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.Web;
 using System.Windows;
 using System.Xml;
+using Microsoft.Win32;
 using SevenZip;
 using UniSign.CoreModules;
 using UniSign.DataModel;
@@ -177,7 +178,7 @@ namespace UniSign.ViewModel {
 
 				System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => {
 					X509Certificate2 c = (X509Certificate2)cert;
-					_isCertificateRejected = c.Thumbprint != _serverHttpsCertificateThumbprint;
+					_isCertificateRejected = c.Thumbprint.ToLower() != _serverHttpsCertificateThumbprint.ToLower();
 					//return c.Thumbprint == _serverHttpsCertificateThumbprint;
 					return !_isCertificateRejected;
 				};
@@ -512,30 +513,6 @@ namespace UniSign.ViewModel {
 			//use SignInfo from _s
 
 			SignatureInfo si = _s.SignInfo;
-			
-			/*
-			SignatureProcessor.SigningMode signMode = SignatureProcessor.SigningMode.Simple;
-
-			switch(_s.SignInfo.SigType) {
-				case SignatureType.Detached:
-					signMode = SignatureProcessor.SigningMode.Detached;
-					break;
-				case SignatureType.Enveloped:
-					signMode = SignatureProcessor.SigningMode.SimpleEnveloped;
-					break;
-				case SignatureType.SideBySide:
-					switch(_s.SignInfo.SmevMode) {
-						case 2:
-							signMode = SignatureProcessor.SigningMode.Smev2;
-							break;
-						case 3:
-							signMode = SignatureProcessor.SigningMode.Smev3;
-							break;
-					}
-					break;
-			}
-			*/
-
 			XmlDocument docToSign = new XmlDocument();
 			docToSign.LoadXml(_s.DataToSign);
 
@@ -561,6 +538,23 @@ namespace UniSign.ViewModel {
 
 			return await client.PostAsync(serverUri.Uri,content);
 		}
+		#endregion
+
+		#region [UTILITY]
+
+		public static bool? IsProtocolRegistered() {
+			bool? ret = null;
+			RegistryKey classesRoot = null;
+			try {
+				classesRoot = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default);
+				ret = classesRoot.OpenSubKey("unisign") != null;
+			} catch(Exception e) {
+				//means no rights to open the registry key
+				ret = null; // actualluy no need to do this))
+			}
+			return ret;
+		}
+
 		#endregion
 	}
 }
