@@ -280,10 +280,7 @@ namespace UniSign.ViewModel {
 				MessageBox.Show(
 					$"Основной конфигурационный файл не найден или поврежден! Обратитесь к разработчику.\n\n{e.Message}",
 					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
-			} finally {
-				ConfigIsGo = false;
-			}
-
+			} 
 		}
 
 		private bool checkConfig(XDocument cfg) {
@@ -494,8 +491,9 @@ namespace UniSign.ViewModel {
 			UriBuilder serverUri = new UriBuilder(_serverUri) {
 				Query = $"oper=getfile&{startupUri.PathAndQuery}"
 			};
-			
-			HttpContent content = new StringContent(SignedRequestBuilder.GetSessionRequest(_s.SessionId,_interopCertificateThumbprint,_interopCertificateStoreLocation));
+			string sessionId = startupArg.Split('=')?[1];
+
+			HttpContent content = new StringContent(SignedRequestBuilder.GetSessionRequest(sessionId,_interopCertificateThumbprint,_interopCertificateStoreLocation));
 			content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
 
 			return await client.PostAsync(serverUri.Uri,content);

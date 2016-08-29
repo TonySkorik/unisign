@@ -69,8 +69,8 @@ namespace UniSign {
 				}
 			} else {
 				//means server returned not OK or connection timed out
-				_viewModel.MessageIsError = true;
-				_viewModel.ServerHtmlMessage = await serverSessionData.Content.ReadAsStringAsync();
+				//_viewModel.MessageIsError = true;
+				_viewModel.SetErrorMessage(await serverSessionData.Content.ReadAsStringAsync());
 			}
 		}
 		private void MainWindow_OnClosing(object sender, CancelEventArgs e) {
