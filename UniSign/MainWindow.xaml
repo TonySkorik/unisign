@@ -69,7 +69,7 @@
 			<TabItem Header="Text">
 				<Grid>
 					<Grid.RowDefinitions>
-						<RowDefinition Height="3*"/>
+						<RowDefinition Height="2.6*"/>
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					<Border 

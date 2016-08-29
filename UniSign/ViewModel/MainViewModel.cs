@@ -503,7 +503,7 @@ namespace UniSign.ViewModel {
 			int lastSelectedCertItem = CertificateItem;
 			List<X509Certificate2> certs = SignatureProcessor.GetAllCertificatesFromStore(CertificateStore);
 			Certificates.Clear();
-			foreach (X509Certificate2 c in certs) {
+			foreach (X509Certificate2 c in certs.Where((cert)=>cert.HasPrivateKey)) {
 				Certificates.Add(c);
 			}
 			CertificateItem = lastSelectedCertItem;

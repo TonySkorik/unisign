@@ -90,7 +90,7 @@ namespace UniSign.DataModel {
 
 			MemoryStream transformedData = new MemoryStream();
 			XmlWriter transformedDocument = new XmlTextWriter(transformedData,Encoding.UTF8);
-
+			
 			xslt.Transform(DocToSign.CreateReader(), transformedDocument);
 			transformedData.Position = 0L; // 'cause after conversion stream read pointer is already in the last position
 
