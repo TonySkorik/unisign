@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <SignedDataRequest version="">
-	<SignedData sessionId="" timestamp="" Id="SIGNED_BY_CALLER"></SignedData>
+	<SignedData sessionId="" timestamp="" Id="SIGNED_BY_SIGNER"></SignedData>
 	<Signature></Signature>
 </SignedDataRequest>
