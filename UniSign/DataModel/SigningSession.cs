@@ -68,18 +68,20 @@ namespace UniSign.DataModel {
 				);
 
 			DocToSign = XDocument.Parse(DataToSign);
-			
-			XslStylesheet =
-				XDocument.Parse(
-					Encoding.UTF8.GetString(
-						Convert.FromBase64String(
-							ServerSessionMessage.Root.Descendants("DocumentXsl").First().Value
-						)
-					)
-				);
+			try {
+				XslStylesheet =
+					XDocument.Parse(
+						Encoding.UTF8.GetString(
+							Convert.FromBase64String(
+								ServerSessionMessage.Root.Descendants("DocumentXsl").First().Value
+								)
+							)
+						);
 
-			HumanReadableHtml = _transformDoc();
-
+				HumanReadableHtml = _transformDoc();
+			} catch (Exception e) {
+				HumanReadableHtml = DocToSign.Root.ToString();
+			}
 			SignInfo = new SignatureInfo(ServerSessionMessage.Root.Descendants("SignatureInfo").First());
 		}
 		#endregion
