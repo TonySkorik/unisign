@@ -109,11 +109,16 @@ namespace UniSign {
 		private async void SignButton_OnClick(object sender, RoutedEventArgs e) {
 			if (SelectedSignatureCert.SelectedItem != null) {
 				X509Certificate2 selectedCert = (X509Certificate2) SelectedSignatureCert.SelectedItem;
+				#if !DEBUG
 				string signedData = _viewModel.SignWithSelectedCert(selectedCert);
 				if (string.IsNullOrEmpty(signedData)) {
 					return;
 				}
+				#endif
 
+				#if DEBUG
+				string signedData = _viewModel.OriginalXmlDataToSign;
+				#endif
 				HttpResponseMessage serverResponse = await _viewModel.SendDataBackToServer(signedData);
 				if (!serverResponse.IsSuccessStatusCode) {
 					_viewModel.MessageIsError = true;
@@ -137,7 +142,7 @@ namespace UniSign {
 		}
 		#endregion
 
-		#region [MAIN MENU]
+#region [MAIN MENU]
 		private void SelectInteropCertificate_OnClick(object sender, RoutedEventArgs e) {
 			_viewModel.SelectInteropCertificate();
 			_viewModel.LoadConfig(); // because SelectInteropCertificate() doesn't call LoadConfig upon completion
@@ -173,6 +178,6 @@ namespace UniSign {
 		private void ProgramExit_OnClick(object sender, RoutedEventArgs e) {
 			Close();
 		}
-		#endregion
+#endregion
 	}
 }
