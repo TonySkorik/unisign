@@ -101,8 +101,9 @@
 				<Border 
 					BorderThickness="1"
 					BorderBrush="Black" 
+					Padding="0"
 				>
-					<TextBlock Text="{Binding Path=OriginalXmlDataToSign}" Margin="5" />
+					<TextBlock Text="{Binding Path=OriginalXmlDataToSign}" Margin="1" Background="White" Padding="0"/>
 				</Border>
 			</TabItem>
 		</TabControl>
