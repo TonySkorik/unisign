@@ -77,7 +77,6 @@ namespace UniSign.DataModel {
 								)
 							)
 						);
-
 				HumanReadableHtml = _transformDoc();
 			} catch (Exception e) {
 				HumanReadableHtml = DocToSign.Root.ToString();
