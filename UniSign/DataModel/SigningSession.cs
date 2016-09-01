@@ -34,24 +34,27 @@ namespace UniSign.DataModel {
 
 		public bool Success;
 		public bool SignatureIsCorrect;
+		public bool VersionIsCorrect;
 		#endregion
 
 		#region [CONSTRUCTOR]
 		public SigningSession(string sessionMessage) {
 			Success = false;
 			SignatureIsCorrect = false;
+			VersionIsCorrect = false;
 			ServerSessionMessage = XDocument.Parse(sessionMessage);
+
 			if (ServerSessionMessage.Root.Attribute("version").Value != MainViewModel.ProgramVersion) {
 				return;
 			}
 			SessionId = ServerSessionMessage.Root?.Attribute("session_id").Value;
+			VersionIsCorrect = true;
 
 			XmlDocument signedDoc = new XmlDocument();
 			signedDoc.LoadXml(sessionMessage);
 			
 			#if !DEBUG
-			if (!SignatureProcessor.VerifySignature(SignatureProcessor.SignatureType.Smev2SidebysideDetached, signedDoc, null,
-													null, "SIGNED_BY_SERVER")) {
+			if (!SignatureProcessor.VerifySignature(SignatureProcessor.SignatureType.Smev2SidebysideDetached, signedDoc)) {
 				return;
 			}
 			#endif
@@ -95,9 +98,9 @@ namespace UniSign.DataModel {
 				HumanReadableHtml = DocToSign.Root.ToString();
 			}
 			SignInfo = new SignatureInfo(ServerSessionMessage.Root.Descendants("SignatureInfo").First());
-			Success = true;
+			Success = VersionIsCorrect || SignatureIsCorrect;
 		}
-#endregion
+		#endregion
 
 		private string _transformDoc() {
 			XslCompiledTransform xslt = new XslCompiledTransform();

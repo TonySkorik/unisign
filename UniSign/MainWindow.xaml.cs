@@ -101,7 +101,7 @@ namespace UniSign {
 					} catch (Exception ex) {
 						_viewModel.SetErrorMessage(ex.Message.Contains("REFERENCED_SIGNATURE_NOT_FOUND")
 							? "Цифровая подпись сервера отсутствует или ссылка на нее неверна"
-							: ex.Message);
+							: $"Ошибка проверки цифровой подписи. {ex.Message}");
 						return;
 					}
 				} else {
