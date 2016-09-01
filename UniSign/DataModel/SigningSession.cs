@@ -35,31 +35,11 @@ namespace UniSign.DataModel {
 		public bool Success;
 		public bool SignatureIsCorrect;
 		public bool VersionIsCorrect;
+		public string RequestedProgramVersion;
 		#endregion
 
 		#region [CONSTRUCTOR]
 		public SigningSession(string sessionMessage) {
-			Success = false;
-			SignatureIsCorrect = false;
-			VersionIsCorrect = false;
-			ServerSessionMessage = XDocument.Parse(sessionMessage);
-
-			if (ServerSessionMessage.Root.Attribute("version").Value != MainViewModel.ProgramVersion) {
-				return;
-			}
-			SessionId = ServerSessionMessage.Root?.Attribute("session_id").Value;
-			VersionIsCorrect = true;
-
-			XmlDocument signedDoc = new XmlDocument();
-			signedDoc.LoadXml(sessionMessage);
-			
-			#if !DEBUG
-			if (!SignatureProcessor.VerifySignature(SignatureProcessor.SignatureType.Smev2SidebysideDetached, signedDoc)) {
-				return;
-			}
-			#endif
-
-			SignatureIsCorrect = true;
 			/*
 			 * <SessionResponse version='1.1'>
 					<SigningInfo id="SIGNED_BY_SERVER" session_id="..." vsrsion="...">
@@ -75,6 +55,26 @@ namespace UniSign.DataModel {
 					<Signature/>
 				</SessionResponse>  
 			*/
+
+			Success = false;
+			SignatureIsCorrect = false;
+			VersionIsCorrect = false;
+			
+			ServerSessionMessage = XDocument.Parse(sessionMessage);
+			if ((RequestedProgramVersion = ServerSessionMessage.Root.Attribute("version").Value) != MainViewModel.ProgramVersion) {
+				return;
+			}
+			SessionId = ServerSessionMessage.Root?.Element("SigningInfo").Attribute("session_id").Value?? string.Empty;
+			VersionIsCorrect = true;
+			
+			XmlDocument signedDoc = new XmlDocument();
+			signedDoc.LoadXml(sessionMessage);
+			#if !DEBUG
+			if (!SignatureProcessor.VerifySignature(SignatureProcessor.SignatureType.Smev2SidebysideDetached, signedDoc)) {
+				return;
+			}
+			#endif
+			SignatureIsCorrect = true;
 
 			DataToSign =
 				Encoding.UTF8.GetString(

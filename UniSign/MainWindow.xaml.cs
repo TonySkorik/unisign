@@ -90,18 +90,23 @@ namespace UniSign {
 					try {
 						if (!_viewModel.InitSession(await serverSessionData.Content.ReadAsStringAsync(), args[1])) {
 							//means session init ended with error
-							if (!_viewModel.Session.SignatureIsCorrect) {
-								_viewModel.SetErrorMessage($"Цифровая подпись сервера невалидна или отсутствует!");
-								return;
-							}else {
-								_viewModel.SetErrorMessage($"Версия программы {MainViewModel.ProgramVersion} устарела");
+							if (_viewModel.Session.VersionIsCorrect) {
+								if (!_viewModel.Session.SignatureIsCorrect) {
+									_viewModel.SetErrorMessage($"Цифровая подпись сервера невалидна или отсутствует!");
+									return;
+								}
+							} else {
+								_viewModel.SetErrorMessage($"Версия программы (v {MainViewModel.ProgramVersion}) устарела, требуется новыя версия программы - (v {_viewModel.Session.RequestedProgramVersion})");
 								return;
 							}
 						}
 					} catch (Exception ex) {
-						_viewModel.SetErrorMessage(ex.Message.Contains("REFERENCED_SIGNATURE_NOT_FOUND")
-							? "Цифровая подпись сервера отсутствует или ссылка на нее неверна"
-							: $"Ошибка проверки цифровой подписи. {ex.Message}");
+						if (ex.Message.Contains("NO_SIGNATURES_FOUND")) {
+							_viewModel.SetErrorMessage("Цифровая подпись сервера не найдена");
+							return;
+						}
+						
+						_viewModel.SetErrorMessage($"Ошибка проверки цифровой подписи. {ex.Message}");
 						return;
 					}
 				} else {
