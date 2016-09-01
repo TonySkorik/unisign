@@ -87,15 +87,30 @@ namespace UniSign {
 
 				if (serverSessionData.IsSuccessStatusCode) {
 					_viewModel.MessageIsError = false;
-					if (!_viewModel.InitSession(await serverSessionData.Content.ReadAsStringAsync(), args[1])) {
-						//means session init ended with error
-						_viewModel.SetErrorMessage($"Версия программы {MainViewModel.ProgramVersion} устарела");
+					try {
+						if (!_viewModel.InitSession(await serverSessionData.Content.ReadAsStringAsync(), args[1])) {
+							//means session init ended with error
+							if (!_viewModel.Session.SignatureIsCorrect) {
+								_viewModel.SetErrorMessage($"Цифровая подпись сервера невалидна или отсутствует!");
+								return;
+							}else {
+								_viewModel.SetErrorMessage($"Версия программы {MainViewModel.ProgramVersion} устарела");
+								return;
+							}
+						}
+					} catch (Exception ex) {
+						_viewModel.SetErrorMessage(ex.Message.Contains("REFERENCED_SIGNATURE_NOT_FOUND")
+							? "Цифровая подпись сервера отсутствует или ссылка на нее неверна"
+							: ex.Message);
+						return;
 					}
 				} else {
 					//means server returned not OK or connection timed out
 					_viewModel.SetErrorMessage(await serverSessionData.Content.ReadAsStringAsync());
+					return;
 				}
 			}
+			//make button active
 		}
 		private void MainWindow_OnClosing(object sender, CancelEventArgs e) {
 			_viewModel.RewriteConfig();

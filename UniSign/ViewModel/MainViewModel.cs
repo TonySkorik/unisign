@@ -40,7 +40,7 @@ namespace UniSign.ViewModel {
 				return $"{ver.Major}.{ver.Minor}";
 			}
 		}
-		private SigningSession _s;
+		public SigningSession Session;
 		private string _humanRadableDataToSign;
 		private string _serverHtmlMessage;
 		private string _originalXmlDataToSign;
@@ -55,6 +55,7 @@ namespace UniSign.ViewModel {
 		private int _windowLeft;
 		private int _windowTop;
 		private int _certificateItem;
+		private bool _sessionIsGo;
 
 		private string _interopCertificateThumbprint;
 		private StoreLocation _interopCertificateStoreLocation;
@@ -162,6 +163,14 @@ namespace UniSign.ViewModel {
 				NotifyPropertyChanged();
 			}
 		}
+		public bool SessionIsGo {
+			get { return _sessionIsGo; }
+			set {
+				_sessionIsGo = value;
+				NotifyPropertyChanged();
+			}
+		}
+
 		#endregion
 
 		#endregion
@@ -188,6 +197,7 @@ namespace UniSign.ViewModel {
 		#region [SET / CLEAR / EDIT SERVER (ERROR) MESSAGE]
 		public void SetErrorMessage(string message) {
 			MessageIsError = true;
+			ConfigIsGo = false;
 			ServerHtmlMessage = $"<b>Ошибка:</b><br>{message}";
 		}
 
@@ -486,15 +496,17 @@ namespace UniSign.ViewModel {
 		}
 
 		public bool InitSession(string sessionDataString, string startupArg) {
-			_s = new SigningSession(sessionDataString) {
+			Session = new SigningSession(sessionDataString) {
 				StartupArg = startupArg
 			};
 			
 			//set viewModel fields
-			OriginalXmlDataToSign = _s.DataToSign;
-			HumanRadableDataToSign = _s.HumanReadableHtml;
+			OriginalXmlDataToSign = Session.DataToSign;
+			HumanRadableDataToSign = Session.HumanReadableHtml;
 
-			return _s.Success; //_s.Success == false when program version is not equal "vesrion" attribute value
+			ConfigIsGo = Session.Success; //because this property is bound onto Sign button
+
+			return Session.Success; //Session.Success == false when program version is not equal "vesrion" attribute value or server signature is invalid
 		}
 		#endregion
 
@@ -510,14 +522,14 @@ namespace UniSign.ViewModel {
 		}
 
 		public string SignWithSelectedCert(X509Certificate2 cert) {
-			//use SignInfo from _s
+			//use SignInfo from Session
 
-			SignatureInfo si = _s.SignInfo;
+			SignatureInfo si = Session.SignInfo;
 			XmlDocument docToSign = new XmlDocument();
-			docToSign.LoadXml(_s.DataToSign);
+			docToSign.LoadXml(Session.DataToSign);
 			string signedData = string.Empty;
 			try {
-				signedData = SignatureProcessor.Sign(_s.SignInfo.SigType, cert, docToSign, false, _s.SignInfo.NodeId);
+				signedData = SignatureProcessor.Sign(Session.SignInfo.SigType, cert, docToSign, false, Session.SignInfo.NodeId);
 			} catch (Exception e) {
 				SetErrorMessage(e.Message);
 			}
@@ -528,7 +540,7 @@ namespace UniSign.ViewModel {
 
 		#region [SEND DATA BACK TO SRV]
 		public async Task<HttpResponseMessage> SendDataBackToServer(string signedData) {
-			Uri startupUri = new Uri(_s.StartupArg);
+			Uri startupUri = new Uri(Session.StartupArg);
 
 			HttpClient client = new HttpClient() {
 				Timeout = new TimeSpan(0, 0, 0, 60)
@@ -539,7 +551,7 @@ namespace UniSign.ViewModel {
 			};
 			
 			//HttpContent content = new StringContent(signedData);
-			HttpContent content = new StringContent(SignedRequestBuilder.GetSignedDataRequest(_s.SessionId, signedData, _interopCertificateThumbprint,_interopCertificateStoreLocation));
+			HttpContent content = new StringContent(SignedRequestBuilder.GetSignedDataRequest(Session.SessionId, signedData, _interopCertificateThumbprint,_interopCertificateStoreLocation));
 			content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
 
 			return await client.PostAsync(serverUri.Uri,content);

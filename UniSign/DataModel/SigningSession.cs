@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
+
 using UniSign.ViewModel;
+using UniSign.CoreModules;
 
 namespace UniSign.DataModel {
 	class SigningSession {
@@ -31,19 +33,30 @@ namespace UniSign.DataModel {
 		public string SignedData;
 
 		public bool Success;
-
+		public bool SignatureIsCorrect;
 		#endregion
 
 		#region [CONSTRUCTOR]
 		public SigningSession(string sessionMessage) {
-			Success = true;
+			Success = false;
+			SignatureIsCorrect = false;
 			ServerSessionMessage = XDocument.Parse(sessionMessage);
 			if (ServerSessionMessage.Root.Attribute("version").Value != MainViewModel.ProgramVersion) {
-				Success = false;
 				return;
 			}
 			SessionId = ServerSessionMessage.Root?.Attribute("session_id").Value;
 
+			XmlDocument signedDoc = new XmlDocument();
+			signedDoc.LoadXml(sessionMessage);
+			
+			#if !DEBUG
+			if (!SignatureProcessor.VerifySignature(SignatureProcessor.SignatureType.Smev2SidebysideDetached, signedDoc, null,
+													null, "SIGNED_BY_SERVER")) {
+				return;
+			}
+			#endif
+
+			SignatureIsCorrect = true;
 			/*
 			 * <SessionResponse version='1.1'>
 					<SigningInfo id="SIGNED_BY_SERVER" session_id="..." vsrsion="...">
@@ -78,12 +91,13 @@ namespace UniSign.DataModel {
 							)
 						);
 				HumanReadableHtml = _transformDoc();
-			} catch (Exception e) {
+			} catch (Exception) {
 				HumanReadableHtml = DocToSign.Root.ToString();
 			}
 			SignInfo = new SignatureInfo(ServerSessionMessage.Root.Descendants("SignatureInfo").First());
+			Success = true;
 		}
-		#endregion
+#endregion
 
 		private string _transformDoc() {
 			XslCompiledTransform xslt = new XslCompiledTransform();
