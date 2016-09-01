@@ -96,7 +96,7 @@ namespace UniSign {
 									return;
 								}
 							} else {
-								_viewModel.SetErrorMessage($"Версия программы (v {MainViewModel.ProgramVersion}) устарела, требуется новыя версия программы - (v {_viewModel.Session.RequestedProgramVersion})");
+								_viewModel.SetErrorMessage($"Версия программы (v{MainViewModel.ProgramVersion}) устарела, требуется новыя версия программы - v{_viewModel.Session.RequestedProgramVersion}");
 								return;
 							}
 						}
@@ -106,7 +106,7 @@ namespace UniSign {
 							return;
 						}
 						
-						_viewModel.SetErrorMessage($"Ошибка проверки цифровой подписи. {ex.Message}");
+						_viewModel.SetErrorMessage($"Ошибка проверки цифровой подписи.\n{ex.Message}");
 						return;
 					}
 				} else {
