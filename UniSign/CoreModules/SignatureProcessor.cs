@@ -661,11 +661,7 @@ namespace UniSign.CoreModules {
 			if(!string.IsNullOrEmpty(nodeId) && !signatures.ContainsKey(nodeId)) {
 				throw new Exception($"REFERENCED_SIGNATURE_NOT_FOUND] Referenced signature (-node_id=<{nodeId}>) not found in the input file.");
 			}
-			/*
-			if(signaturesInDoc.Count < 1) {
-				throw new Exception($"NO_SIGNATURES_FOUND] No signatures found in the input file.");
-			}
-			*/
+			
 			switch(mode) {
 				case SignatureType.Smev2BaseDetached:
 					smev2SignedXml = new Smev2SignedXml(message);

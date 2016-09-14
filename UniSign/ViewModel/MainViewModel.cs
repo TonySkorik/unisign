@@ -33,6 +33,7 @@ namespace UniSign.ViewModel {
 		}
 
 		#region [P & F]
+		public const string SignedFilesFolder = "Signed_files";
 		public static string ProgramFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 		public static string ProgramVersion {
 			get {
@@ -540,6 +541,7 @@ namespace UniSign.ViewModel {
 
 		#region [SEND DATA BACK TO SRV]
 		public async Task<HttpResponseMessage> SendDataBackToServer(string signedData) {
+			SaveDataToDisk(signedData);
 			Uri startupUri = new Uri(Session.StartupArg);
 
 			HttpClient client = new HttpClient() {
@@ -558,8 +560,16 @@ namespace UniSign.ViewModel {
 		}
 		#endregion
 
-		#region [UTILITY]
+		#region [SAVE SIGNED DATA]
+		private void SaveDataToDisk(string data) {
+			DateTime now = DateTime.Now;
+			string savePath = Path.Combine(ProgramFolder, now.Year.ToString(), now.Month.ToString(), now.Day.ToString());
+			Directory.CreateDirectory(savePath);
+			File.WriteAllText(Path.Combine(savePath,$"{Session.SessionId}.xml"),data);
+		}
+		#endregion
 
+		#region [UTILITY]
 		public static bool? IsProtocolRegistered() {
 			bool? ret = null;
 			RegistryKey classesRoot = null;
@@ -572,7 +582,6 @@ namespace UniSign.ViewModel {
 			}
 			return ret;
 		}
-
 		#endregion
 	}
 }

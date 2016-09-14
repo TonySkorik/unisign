@@ -40,10 +40,10 @@ namespace UniSign {
 		};
 
 		public MainWindow() {
-			InitializeComponent();
 			_viewModel = new MainViewModel();
+			InitializeComponent();
+			MainUI.DataContext = _viewModel;
 			MainUI.Title = $"UniSign v{MainViewModel.ProgramVersion}";
-
 			_tmrClose.Elapsed += (o, args) => {
 				Dispatcher.Invoke(Close);
 			};
@@ -65,8 +65,6 @@ namespace UniSign {
 						"Протокол не зарегистрирован", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 				}
 			}
-
-			MainUI.DataContext = _viewModel;
 			
 			if (!_viewModel.ConfigIsGo) {
 				return;
