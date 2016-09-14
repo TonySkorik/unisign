@@ -177,7 +177,7 @@ namespace UniSign.ViewModel {
 		#endregion
 
 		public MainViewModel() {
-			LoadConfig(); // this function has LOTS side effects!
+			LoadConfig(); // this function has LOTS of side effects!
 			Certificates = new ObservableCollection<X509Certificate2>();
 			LoadCertificatesFromStore();
 
@@ -189,7 +189,6 @@ namespace UniSign.ViewModel {
 				System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => {
 					X509Certificate2 c = (X509Certificate2)cert;
 					_isCertificateRejected = c.Thumbprint.ToLower() != _serverHttpsCertificateThumbprint.ToLower();
-					//return c.Thumbprint == _serverHttpsCertificateThumbprint;
 					return !_isCertificateRejected;
 				};
 			}
@@ -552,7 +551,6 @@ namespace UniSign.ViewModel {
 				Query = $"oper=signed&{startupUri.PathAndQuery}"
 			};
 			
-			//HttpContent content = new StringContent(signedData);
 			HttpContent content = new StringContent(SignedRequestBuilder.GetSignedDataRequest(Session.SessionId, signedData, _interopCertificateThumbprint,_interopCertificateStoreLocation));
 			content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
 
@@ -563,7 +561,7 @@ namespace UniSign.ViewModel {
 		#region [SAVE SIGNED DATA]
 		private void SaveDataToDisk(string data) {
 			DateTime now = DateTime.Now;
-			string savePath = Path.Combine(ProgramFolder, now.Year.ToString(), now.Month.ToString(), now.Day.ToString());
+			string savePath = Path.Combine(ProgramFolder,SignedFilesFolder, now.ToString("yyyy"), now.ToString("MM"), now.ToString("dd"));
 			Directory.CreateDirectory(savePath);
 			File.WriteAllText(Path.Combine(savePath,$"{Session.SessionId}.xml"),data);
 		}
