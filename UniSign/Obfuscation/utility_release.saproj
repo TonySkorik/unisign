@@ -1,11 +1,11 @@
-<SmartAssemblyProject ProjectId="{a1359397-dfdd-4535-b74c-a51a019c6dfc}" Version="2.0">
-    <MainAssemblyFileName>..\bin\Release\utility.dll</MainAssemblyFileName>
+<SmartAssemblyProject ProjectId="{55945536-f540-4291-ab33-518fd35044d4}" Version="2.0">
+    <MainAssemblyFileName>..\..\utility\bin\Release\utility.dll</MainAssemblyFileName>
     <Configuration Name="Release">
         <Options>
             <ExceptionReporting Template="res:{SmartExceptions}.1033.dll" />
             <FeatureUsageReporting Template="res:SmartUsageWithUIConsentFirstRun1033.dll" />
-            <StringsEncoding Compress="1" Encode="1" UseImprovedEncoding="1" />
-            <StrongNameSigning KeyFileName="..\TS.pfx" Password="maAwRmPk626AZ+zZNOEcp1k2rFgyM3XMWryKduyOnhQ=" Sign="1" />
+            <StringsEncoding Encode="1" UseImprovedEncoding="1" />
+            <StrongNameSigning KeyFileName="..\..\utility\TS.pfx" Password="izIzcFVhc5bq3QEKp/nrg2WuQV77t2ATfh2EGTYUsWE=" Sign="1" />
             <OtherOptimizations />
             <Obfuscation FieldsNameMangling="2" NameMangling="3" />
             <OtherProtections SuppressIldasm="1" />
@@ -14,29 +14,28 @@
         <ApplicationName />
         <Destination DestinationFileName=".\utility.dll" />
         <Assemblies>
-            <Assembly AssemblyName="utility, Culture=neutral, PublicKeyToken=305f03342bc0f197">
+            <Assembly AssemblyName="utility, Culture=neutral, PublicKeyToken=10bfded1a0bcd252">
                 <Merging>
                     <ResourcesCompression />
                     <MemberRefsProxy Proxy="1" />
-                    <Pruning Prune="1">
-                        <Exclusion />
-                    </Pruning>
+                    <Pruning />
                     <Obfuscation Obfuscate="1">
                         <Exclusion />
                     </Obfuscation>
                     <ControlFlow Obfuscate="1" ObfuscationLevel="3" />
+                    <StringsEncoding />
                 </Merging>
                 <Embedding />
             </Assembly>
             <Assembly AssemblyName="SevenZipSharp, Culture=neutral, PublicKeyToken=20de82c62b055c88">
-                <Merging Merge="1">
+                <Merging Merge="0">
                     <Pruning />
                     <Obfuscation />
                     <ControlFlow />
                     <MemberRefsProxy />
-                    <ResourcesCompression />
+                    <ResourcesCompression Compress="1" />
                 </Merging>
-                <Embedding Embed="0" />
+                <Embedding Embed="1" />
             </Assembly>
             <Assembly AssemblyName="mscorlib, Culture=neutral, PublicKeyToken=b77a5c561934e089">
                 <Merging />
@@ -68,9 +67,13 @@
             </Assembly>
             <Assembly AssemblyName="SmartAssembly.Zip, Culture=neutral, PublicKeyToken=7f465a1c156d4d57">
                 <Merging>
-                    <Pruning>
+                    <Obfuscation>
                         <Exclusion />
-                    </Pruning>
+                    </Obfuscation>
+                </Merging>
+            </Assembly>
+            <Assembly AssemblyName="SmartAssembly.ResourceResolver, Culture=neutral, PublicKeyToken=7f465a1c156d4d57">
+                <Merging>
                     <Obfuscation>
                         <Exclusion />
                     </Obfuscation>
@@ -78,9 +81,6 @@
             </Assembly>
             <Assembly AssemblyName="SmartAssembly.StringsEncoding, Culture=neutral, PublicKeyToken=7f465a1c156d4d57">
                 <Merging>
-                    <Pruning>
-                        <Exclusion />
-                    </Pruning>
                     <Obfuscation>
                         <Exclusion />
                     </Obfuscation>

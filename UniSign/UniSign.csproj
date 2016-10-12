@@ -44,7 +44,7 @@
     <ApplicationIcon>ink%28256%29.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>TS.pfx</AssemblyOriginatorKeyFile>
@@ -84,9 +84,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="utility, Version=1.0.0.0, Culture=ru-RU, PublicKeyToken=305f03342bc0f197, processorArchitecture=MSIL">
+    <Reference Include="utility, Version=1.0.6129.33425, Culture=neutral, PublicKeyToken=10bfded1a0bcd252, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\utility\bin\Debug\utility.dll</HintPath>
+      <HintPath>..\utility\bin\Release\utility.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
