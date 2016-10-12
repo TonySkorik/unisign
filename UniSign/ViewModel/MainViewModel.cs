@@ -389,9 +389,9 @@ namespace UniSign.ViewModel {
 				//means htere is a config
 				//check it's signature, but first load our certificate
 				if(string.IsNullOrEmpty(certFilePath)) {
-					MessageBox.Show("Файл сертификата не найден.\nСкачайте новый файл сертификата с корпоративного портала.",
+					MessageBox.Show("Файл сертификата сервера не найден.\nСкачайте файл сертификата сервера с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
-					SetErrorMessage("Файл сертификата не найден");
+					SetErrorMessage("Файл сертификата сервера не найден");
 					return false;
 				} else {
 					//means certificate && config present
@@ -409,8 +409,18 @@ namespace UniSign.ViewModel {
 								SetErrorMessage("Личный конфигурационный файл поврежден");
 								return false;
 							}
-							XmlDocument xdocConfig = new XmlDocument();		// this stuff is for
-							xdocConfig.LoadXml(configContents);				// check signature further
+							XmlDocument xdocConfig = new XmlDocument();     // this stuff is for
+
+							try {
+								xdocConfig.LoadXml(configContents); // check signature further
+							} catch (Exception e) {
+								MessageBox.Show(
+									$"Личный конфигурационный файл поврежден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.\n\n{e.Message}",
+									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+								SetErrorMessage("Личный конфигурационный файл поврежден");
+								return false;
+							}
+
 							XDocument privateConfig = XDocument.Parse(configContents);
 							try {
 								#if !DEBUG
@@ -456,16 +466,16 @@ namespace UniSign.ViewModel {
 
 						} else {
 							//cert expired
-							MessageBox.Show("Файл сертификата просрочен.\nСкачайте новый файл сертификата с корпоративного портала.",
+							MessageBox.Show("Файл сертификата сервера просрочен.\nСкачайте новый файл сертификата сервера с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
-							SetErrorMessage("Файл сертификата просрочен");
+							SetErrorMessage("Файл сертификата сервера просрочен");
 							return false;
 						}
 					} catch (Exception e) {
 						//certificate corrupted
-						MessageBox.Show($"Ошибка загрузки сертификата. Файл поврежден.\nСкачайте новый файл сертификата с корпоративного портала.\n\n{e.Message}",
+						MessageBox.Show($"Ошибка загрузки сертификата сервера. Файл поврежден.\nСкачайте новый файл сертификата сервера с корпоративного портала.\n\n{e.Message}",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
-						SetErrorMessage("Ошибка загрузки сертификата");
+						SetErrorMessage("Ошибка загрузки сертификата сервера");
 						return false;
 					}
 				}

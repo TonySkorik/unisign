@@ -44,7 +44,7 @@
     <ApplicationIcon>ink%28256%29.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>TS.pfx</AssemblyOriginatorKeyFile>
@@ -161,6 +161,7 @@
     <Content Include="inc_64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <SplashScreen Include="splash_title.jpg" />
     <Content Include="TestPage.html" />
   </ItemGroup>
   <ItemGroup />
