@@ -513,7 +513,7 @@ namespace UniSign.ViewModel {
 			//set viewModel fields
 			OriginalXmlDataToSign = Session.DataToSign;
 			HumanRadableDataToSign = Session.HumanReadableHtml;
-
+			SessionIsGo = Session.Success;
 			ConfigIsGo = Session.Success; //because this property is bound onto Sign button
 
 			return Session.Success; //Session.Success == false when program version is not equal "vesrion" attribute value or server signature is invalid

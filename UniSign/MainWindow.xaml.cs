@@ -50,6 +50,7 @@ namespace UniSign {
 		}
 		
 		private async void MainWindow_OnLoaded(object sender,RoutedEventArgs e) {
+			SignButton.IsEnabled = false;
 			bool? isProtocolRegistered = MainViewModel.IsProtocolRegistered();
 			if (!isProtocolRegistered.HasValue) {
 				//means no rights to pen registry
@@ -98,6 +99,7 @@ namespace UniSign {
 								return;
 							}
 						}
+						SignButton.IsEnabled = true;
 					} catch (Exception ex) {
 						if (ex.Message.Contains("NO_SIGNATURES_FOUND")) {
 							_viewModel.SetErrorMessage("Цифровая подпись сервера не найдена");
@@ -125,7 +127,17 @@ namespace UniSign {
 		}
 
 		private async void SignButton_OnClick(object sender, RoutedEventArgs e) {
-			if (SelectedSignatureCert.SelectedItem != null) {
+			if (SelectedSignatureCert.SelectedItem == null) {
+				MessageBox.Show(
+					"Пожалуйста, выберите сертификат подписи!",
+					"Не выбран сертификат подписи",
+					MessageBoxButton.OK,
+					MessageBoxImage.Exclamation
+				);
+				return;
+			}
+			if (_viewModel.SessionIsGo) {
+				SignButton.IsEnabled = false;
 				X509Certificate2 selectedCert = (X509Certificate2) SelectedSignatureCert.SelectedItem;
 				#if !DEBUG
 				string signedData = _viewModel.SignWithSelectedCert(selectedCert);
@@ -153,13 +165,16 @@ namespace UniSign {
 					_viewModel.SetErrorMessage(ex.Message);
 				}
 			} else {
-				//means certificate not selected
+				//means session is not success
+				_viewModel.SetErrorMessage("Сеанс подписания не инициализирован.");
+				/*
 				MessageBox.Show(
 					"Пожалуйста, выберите сертификат подписи!",
 					"Не выбран сертификат подписи",
 					MessageBoxButton.OK,
 					MessageBoxImage.Exclamation
 				);
+				*/
 			}
 		}
 		#endregion

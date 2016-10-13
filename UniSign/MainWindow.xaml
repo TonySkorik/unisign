@@ -154,7 +154,7 @@
 
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-			<Button Height="40" Margin="5" Click="SignButton_OnClick" IsEnabled="{Binding Path=ConfigIsGo}">
+			<Button Height="40" Margin="5" Click="SignButton_OnClick" IsEnabled="{Binding Path=ConfigIsGo}" x:Name="SignButton">
 				<Button.Content>
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
 						<Image Source="pen(48).ico" VerticalAlignment="Center"/>

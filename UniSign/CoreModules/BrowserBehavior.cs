@@ -29,8 +29,7 @@ namespace UniSign.CoreModules {
 		static void OnHtmlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
 			WebBrowser wb = d as WebBrowser;
 			if (e.NewValue != null) {
-				//wb?.NavigateToString(Encoding.GetEncoding("windows-1251").GetString(Encoding.UTF8.GetBytes(e.NewValue as string)));				
-				string v = e.NewValue as string;
+				//wb?.NavigateToString(Encoding.GetEncoding("windows-1251").GetString(Encoding.UTF8.GetBytes(e.NewValue as string)));
 				StringBuilder sb = new StringBuilder();
 				sb.Append(
 					@"<!DOCTYPE html ><html><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'><head></head>");
