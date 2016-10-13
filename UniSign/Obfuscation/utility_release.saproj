@@ -28,14 +28,14 @@
                 <Embedding />
             </Assembly>
             <Assembly AssemblyName="SevenZipSharp, Culture=neutral, PublicKeyToken=20de82c62b055c88">
-                <Merging Merge="0">
+                <Merging Merge="1">
                     <Pruning />
                     <Obfuscation />
                     <ControlFlow />
                     <MemberRefsProxy />
                     <ResourcesCompression Compress="1" />
                 </Merging>
-                <Embedding Embed="1" />
+                <Embedding Embed="0" />
             </Assembly>
             <Assembly AssemblyName="mscorlib, Culture=neutral, PublicKeyToken=b77a5c561934e089">
                 <Merging />
