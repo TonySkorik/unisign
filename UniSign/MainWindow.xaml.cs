@@ -77,7 +77,7 @@ namespace UniSign {
 				HttpResponseMessage serverSessionData = null;
 				try {
 					serverSessionData = await _viewModel.GetServerSessionData(args[1]);
-				} catch (Exception ex) {
+				} catch {
 					_viewModel.SetErrorMessage(_viewModel.IsCertificateRejected
 						? "SSL сертификат соединения недействиетлен."
 						: "Ошибка соединения с сервером.");

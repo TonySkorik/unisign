@@ -216,7 +216,6 @@ namespace UniSign.ViewModel {
 		#endregion
 
 		#region [SET CONFIG & CERT]
-
 		private void _setPathToConfig(string element, string path) {
 			if(File.Exists(path)) {
 				string nearExe = Path.Combine(ProgramFolder, Path.GetFileName(path));
@@ -325,7 +324,7 @@ namespace UniSign.ViewModel {
 			if(!string.IsNullOrEmpty(lastHeightStr)) {
 				WindowHeight = Int32.Parse(lastHeightStr);
 			} else {
-				WindowHeight = 600;
+				WindowHeight = 780;
 				SetConfigField("WindowHeight", WindowHeight.ToString());
 			}
 
@@ -627,7 +626,7 @@ namespace UniSign.ViewModel {
 			try {
 				classesRoot = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default);
 				ret = classesRoot.OpenSubKey("unisign") != null;
-			} catch(Exception e) {
+			} catch {
 				//means no rights to open the registry key
 				ret = null; // actualluy no need to do this))
 			}

@@ -12,7 +12,6 @@
     <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPPRODUCTICON" Value="UniSign.exe" Type="8"/>
-    <ROW Property="AiFeatIcoMainFeature" Value="UniSign_setup_1.1.0_allCPU.exe" Type="8"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="CRC"/>
     <ROW Property="ProductCode" Value="1033:{C84CEE7D-3D8E-4E98-A2C3-859B8C4343F2} 1049:{25F70AFA-E9C4-4980-AF7B-E1F7FF9667B2} " Type="16"/>
@@ -51,13 +50,17 @@
     <ROW Component="UniSign.exe" ComponentId="{ECC13DCE-B289-4D88-A449-9C77DDBAB559}" Directory_="APPDIR" Attributes="0" KeyPath="UniSign.exe"/>
     <ROW Component="_" ComponentId="{4ED0E284-75A8-411C-A2AF-6310BFDFFF10}" Directory_="APPDIR" Attributes="4" KeyPath="_"/>
     <ROW Component="__1" ComponentId="{62C43AAF-D8B5-420D-8C03-0EA08192106E}" Directory_="APPDIR" Attributes="4" KeyPath="__1"/>
+    <ROW Component="command" ComponentId="{DBF66B5E-42F7-4A64-9114-1EE0A88E289E}" Directory_="APPDIR" Attributes="4" KeyPath="command"/>
     <ROW Component="config.xml" ComponentId="{E3604A38-6E58-441B-B0CC-E0F06874B7A6}" Directory_="APPDIR" Attributes="0" KeyPath="config.xml" Type="0"/>
     <ROW Component="inc.dll" ComponentId="{F4B0FC9F-2BBD-4F5B-9F6E-BFBC4CD8E007}" Directory_="APPDIR" Attributes="0" KeyPath="inc.dll"/>
     <ROW Component="inc_64.dll" ComponentId="{AFBCC812-67D9-408B-A32B-0451DE6EEBAF}" Directory_="APPDIR" Attributes="256" KeyPath="inc_64.dll"/>
+    <ROW Component="open" ComponentId="{41B4E24E-9F8F-4D11-AEB3-687530B07051}" Directory_="APPDIR" Attributes="4" KeyPath="open"/>
+    <ROW Component="shell" ComponentId="{1612F8F8-92C0-4E95-85AC-792B1FD24060}" Directory_="APPDIR" Attributes="4" KeyPath="shell"/>
+    <ROW Component="unisign" ComponentId="{D7D88F66-BA31-4EDF-B96B-BC4D8C692C9D}" Directory_="APPDIR" Attributes="4" KeyPath="unisign"/>
     <ROW Component="utility.dll" ComponentId="{439763A6-07A8-451B-A167-93D83811FB38}" Directory_="APPDIR" Attributes="0" KeyPath="utility.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath AI_InstallLanguage CryptoPro.Sharpei.Base.dll CryptoPro.Sharpei.Xml.dll Newtonsoft.Json.dll ProductInformation URLProtocol UniSign.exe _ __1 config.xml inc.dll inc_64.dll utility.dll"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath AI_InstallLanguage CryptoPro.Sharpei.Base.dll CryptoPro.Sharpei.Xml.dll Newtonsoft.Json.dll ProductInformation URLProtocol UniSign.exe _ __1 command config.xml inc.dll inc_64.dll open shell unisign utility.dll"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
@@ -69,9 +72,6 @@
     <ROW File="inc.dll" Component_="inc.dll" FileName="inc.dll" Attributes="0" SourcePath="Compiled\AnyCPU\inc.dll" SelfReg="false" NextFile="utility.dll"/>
     <ROW File="inc_64.dll" Component_="inc_64.dll" FileName="inc_64.dll" Attributes="0" SourcePath="Compiled\AnyCPU\inc_64.dll" SelfReg="false"/>
     <ROW File="utility.dll" Component_="utility.dll" FileName="utility.dll" Attributes="0" SourcePath="Compiled\AnyCPU\utility.dll" SelfReg="false" NextFile="inc_64.dll"/>
-  </COMPONENT>
-  <COMPONENT cid="caphyon.advinst.custcomp.AiIconAliasComponent">
-    <ROW AliasRowId="UniSign_setup_1.1.0_allCPU.exe" AliasRowOperation="1"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="1" PackageFolder="Setup" Languages="en;ru" LangOpt="1" InstallationType="4" CabsLocation="1" CompressCabs="false" PackageType="1" FilesInsideExe="true" ExeIconPath="..\!_Icons\ink(256).ico" ExtractionFolder="[AppDataFolder][|Manufacturer]\[|ProductName] [|ProductVersion]\install" LangsDialog="true" UseLargeSchema="true" ExeName="UniSign_setup_[|ProductVersion]_allCPU" UACExecutionLevel="2"/>
@@ -251,6 +251,10 @@
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
     <ROW Registry="_" Root="0" Key="unisign" Value="URL: unisign Protocol" Component_="_"/>
     <ROW Registry="__1" Root="0" Key="unisign\shell\open\command" Value="&quot;[#UniSign.exe]&quot; &quot;%1&quot;" Component_="__1"/>
+    <ROW Registry="command" Root="0" Key="unisign\shell\open\command" Name="*" Component_="command"/>
+    <ROW Registry="open" Root="0" Key="unisign\shell\open" Name="*" Component_="open"/>
+    <ROW Registry="shell" Root="0" Key="unisign\shell" Name="*" Component_="shell"/>
+    <ROW Registry="unisign" Root="0" Key="unisign" Name="*" Component_="unisign"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
     <ROW Shortcut="UniSign" Directory_="DesktopFolder" Name="UniSign" Component_="UniSign.exe" Target="[#UniSign.exe]" Hotkey="0" Icon_="UniSign.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
