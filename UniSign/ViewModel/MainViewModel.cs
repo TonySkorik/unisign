@@ -383,8 +383,10 @@ namespace UniSign.ViewModel {
 				MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 				SetErrorMessage("Личный конфигурационный файл не найден");
-				
-				return false;
+				bool privateConfigSelected = LoadPrivateConfig();
+				if (!privateConfigSelected) {
+					return false;
+				}
 			} else {
 				//means htere is a config
 				//check it's signature, but first load our certificate
@@ -392,7 +394,10 @@ namespace UniSign.ViewModel {
 					MessageBox.Show("Файл сертификата сервера не найден.\nСкачайте файл сертификата сервера с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 					SetErrorMessage("Файл сертификата сервера не найден");
-					return false;
+					bool serverCertifcateSelected = LoadServerCertificate();
+					if (!serverCertifcateSelected) {
+						return false;
+					}
 				} else {
 					//means certificate && config present
 					//check cert expiration date
@@ -483,7 +488,42 @@ namespace UniSign.ViewModel {
 			return true;
 		}
 		#endregion
-		
+
+		#region [LOAD PRIVATE CONFIG]
+
+		public bool LoadPrivateConfig() {
+			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
+				CheckFileExists = true,
+				Multiselect = false,
+				CheckPathExists = true,
+				Filter = "Файлы конфигурации(*.CBIN;*.cbin)|*.CBIN;*.cbin"
+			};
+			dlgOpenFile.ShowDialog();
+			if (!string.IsNullOrEmpty(dlgOpenFile.FileName)) {
+				SetPrivateConfig(dlgOpenFile.FileName);
+				return true;
+			}
+			return false;
+		}
+		#endregion
+
+		#region [LOAD SERVER CERTIFICATE]
+		public bool LoadServerCertificate() {
+			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
+				CheckFileExists = true,
+				Multiselect = false,
+				CheckPathExists = true,
+				Filter = "Файлы сертификатов(*.CER;*.cer)|*.CER;*.cer"
+			};
+			dlgOpenFile.ShowDialog();
+			if (!string.IsNullOrEmpty(dlgOpenFile.FileName)) {
+				SetCertificate(dlgOpenFile.FileName);
+				return true;
+			}
+			return false;
+		}
+		#endregion
+
 		#region [SIGNING SESSION INIT]
 		public async Task<HttpResponseMessage> GetServerSessionData(string startupArg) {
 
@@ -520,16 +560,19 @@ namespace UniSign.ViewModel {
 		}
 		#endregion
 
-		#region [SIGNING PORCESS]
+		#region [LOAD CERTIFICATES]
 		public void LoadCertificatesFromStore() {
 			int lastSelectedCertItem = CertificateItem;
 			List<X509Certificate2> certs = SignatureProcessor.GetAllCertificatesFromStore(CertificateStore);
 			Certificates.Clear();
-			foreach (X509Certificate2 c in certs.Where((cert)=>cert.HasPrivateKey)) {
+			foreach(X509Certificate2 c in certs.Where((cert) => cert.HasPrivateKey)) {
 				Certificates.Add(c);
 			}
 			CertificateItem = lastSelectedCertItem;
 		}
+		#endregion
+
+		#region [SIGNING PORCESS]
 
 		public string SignWithSelectedCert(X509Certificate2 cert) {
 			//use SignInfo from Session

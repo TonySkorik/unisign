@@ -185,6 +185,9 @@ namespace UniSign {
 			_viewModel.LoadConfig(); // because SelectInteropCertificate() doesn't call LoadConfig upon completion
 		}
 		private void LoadPrivateConfig_OnClick(object sender, RoutedEventArgs e) {
+
+			_viewModel.LoadPrivateConfig();
+			/*
 			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
 				CheckFileExists = true,
 				Multiselect = false,
@@ -194,9 +197,13 @@ namespace UniSign {
 			dlgOpenFile.ShowDialog();
 			_viewModel.SetPrivateConfig(dlgOpenFile.FileName);
 			//_viewModel.LoadConfig();
+			*/
 		}
 
 		private void LoadCertificate_OnClick(object sender, RoutedEventArgs e) {
+
+			_viewModel.LoadServerCertificate();
+			/*
 			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
 				CheckFileExists = true,
 				Multiselect = false,
@@ -206,6 +213,7 @@ namespace UniSign {
 			dlgOpenFile.ShowDialog();
 			_viewModel.SetCertificate(dlgOpenFile.FileName);
 			//_viewModel.LoadConfig();
+			*/
 		}
 
 		private void ReloadConfig_OnClick(object sender, RoutedEventArgs e) {

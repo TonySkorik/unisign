@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -20,7 +21,13 @@ namespace UniSign.CoreModules {
 				return Binding.DoNothing;
 			}
 			if (cert == null) return "Сертификат поврежден";
-			return cert.Subject;
+
+			Regex re = new Regex("CN=(.+),");
+			string cn = re.Match(cert.Subject).Success
+				? re.Match(cert.Subject).Value
+				: cert.Subject;
+			
+			return $"{cn} {cert.NotAfter.ToString("yyyy-MMMM-dd")} <{cert.Thumbprint}>";
 		}
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
 			throw new NotImplementedException();
