@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Web;
@@ -263,6 +264,7 @@ namespace UniSign.ViewModel {
 		}
 
 		public bool SelectInteropCertificate() {
+
 			X509Certificate2 selectedCert = new X509Certificate2();
 			StoreLocation certificateStore = StoreLocation.CurrentUser;
 			if ((selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.CurrentUser)) == null) {
@@ -360,16 +362,22 @@ namespace UniSign.ViewModel {
 
 			string interopCertificateThumb = cfg.Root?.Element("InteropCertificateThumbprint")?.Value;
 			if (string.IsNullOrEmpty(interopCertificateThumb)) {
-				MessageBox.Show(
-					"Не указан сертификат подписи для взаимодействия.\nУкажите сертификат подписи, используя соответствующий пункт меню программы.",
-					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+//				Thread.Sleep(1000);
 				SetErrorMessage("Не указан сертификат подписи для взаимодействия");
-				bool certSelected = SelectInteropCertificate();
-				if (!certSelected) {
-					return false;
-				} else {
-					StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
-				}
+					bool certSelected = SelectInteropCertificate();
+					if (!certSelected) {
+
+						MessageBox.Show(
+							"Не указан сертификат подписи для взаимодействия.\nУкажите сертификат подписи, используя соответствующий пункт меню «Настройка» программы.",
+							"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK,
+							MessageBoxImage.Error);
+
+						return false;
+					} else {
+						StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value,
+												true,
+												out _interopCertificateStoreLocation);
+					}
 			} else {
 				_interopCertificateThumbprint = interopCertificateThumb;
 				StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
@@ -379,11 +387,13 @@ namespace UniSign.ViewModel {
 
 			//signed (and siphered) binary config
 			if(string.IsNullOrEmpty(binConfigPath)) {
-				MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
-								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 				SetErrorMessage("Личный конфигурационный файл не найден");
 				bool privateConfigSelected = LoadPrivateConfig();
 				if (!privateConfigSelected) {
+
+					MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
+									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+
 					return false;
 				}
 			} else {

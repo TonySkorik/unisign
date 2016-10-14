@@ -31,7 +31,8 @@
 		<CommandBinding Command="Open" Executed="SelectInteropCertificate_OnClick"/>
 		<CommandBinding Command="Find" Executed="LoadPrivateConfig_OnClick"/>
 		<CommandBinding Command="Save" Executed="LoadCertificate_OnClick"/>
-		<CommandBinding Command="Refresh" Executed="ReloadConfig_OnClick"/>
+		<CommandBinding Command="Refresh"	Executed="ReloadConfig_OnClick"/>
+		<CommandBinding Command="Close"		Executed="ProgramExit_OnClick"/>
 	</Window.CommandBindings>
 	<Window.InputBindings>
 		<KeyBinding Key="I" Modifiers="Alt" Command="Open"/>
@@ -49,17 +50,20 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Menu FontSize="15">
-			<MenuItem Header="Файл" IsEnabled="{Binding Path=PublicConfigIsGo}">
+			<MenuItem Header="Настройка" IsEnabled="{Binding Path=PublicConfigIsGo}">
 				<MenuItem Header="Загрузить сертификат для взаимодействия" Command="Open" InputGestureText="Alt+I"/>
 				<Separator/>
 				<MenuItem Header="Загрузить личный конфигурационный файл" Command="Find" InputGestureText="Alt+C"/>
 				<MenuItem Header="Загрузить сертификат сервера" Command="Save" InputGestureText="Alt+S"/>
 				<Separator/>
 				<MenuItem Header="Перезагрузить конфигурацию" Command="Refresh" InputGestureText="Alt+R"/>
+<!--
 				<Separator/>
 				<MenuItem Header="Выход" Click="ProgramExit_OnClick" InputGestureText="Alt+F4"/>
+-->				
 			</MenuItem>
-			
+			<Separator/>
+			<MenuItem Header="Выход из программы" Command="Close" InputGestureText="Alt+X" />
 		</Menu>
 		<TabControl
 			Grid.Column="0" 
