@@ -84,8 +84,7 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="utility, Version=1.0.6129.33425, Culture=neutral, PublicKeyToken=10bfded1a0bcd252, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="utility">
       <HintPath>..\utility\bin\Release\utility.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
