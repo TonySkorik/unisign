@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Settings>
+	<InteropCertificateThumbprint></InteropCertificateThumbprint>
+	<InteropCertificateStore></InteropCertificateStore>
+	<CfgBinPath></CfgBinPath>
+	<CertificateFilePath></CertificateFilePath>
+	<CertificateStore></CertificateStore>
+	<CertificateItem></CertificateItem>
+	<WindowWidth></WindowWidth>
+	<WindowHeight></WindowHeight>
+	<WindowLeft></WindowLeft>
+	<WindowTop></WindowTop>
+</Settings>
