@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -43,7 +44,7 @@ namespace UniSign {
 			_viewModel = new MainViewModel();
 			InitializeComponent();
 			MainUI.DataContext = _viewModel;
-			MainUI.Title = $"{MainUI.Title} v{MainViewModel.ProgramVersion}";
+			MainUI.Title = $"{MainUI.Title} v.{MainViewModel.ProgramVersion}.{Assembly.GetExecutingAssembly().GetName().Version.Build}.{Assembly.GetExecutingAssembly().GetName().Version.Revision}";
 			_tmrClose.Elapsed += (o, args) => {
 				Dispatcher.Invoke(Close);
 			};

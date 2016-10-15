@@ -39,7 +39,7 @@ namespace UniSign.ViewModel {
 		public static string ProgramVersion {
 			get {
 				Version ver = Assembly.GetExecutingAssembly().GetName().Version;
-				return $"{ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}";
+				return $"{ver.Major}.{ver.Minor}";
 			}
 		}
 		public SigningSession Session;
@@ -183,8 +183,11 @@ namespace UniSign.ViewModel {
 			LoadCertificatesFromStore();
 
 			if(ConfigIsGo) {
-				//setup our makeshift certificate check procedure
-				System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 |
+
+                HumanRadableDataToSign = "<i>... ожидается загрузка данных с сервера ...</i>";
+
+                //setup our makeshift certificate check procedure
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 |
 																SecurityProtocolType.Tls;
 
 				System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => {

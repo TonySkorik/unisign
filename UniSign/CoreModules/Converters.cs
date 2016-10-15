@@ -40,7 +40,7 @@ namespace UniSign.CoreModules {
 				: cert.Subject;
 			*/
 
-			return $"Субъект: {cn}\nДата выдачи: {cert.NotAfter.ToString("yyyy-MMMM-dd")}\nВыдан: {issuerSubject}\nОтпечаток: {cert.Thumbprint}";
+			return $"Субъект: {cn}\nДата истечения: {cert.NotAfter.ToString("dd MMM yyyy")}\nВыдан: {issuerSubject}\nОтпечаток: {cert.Thumbprint}";
 		}
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
 			throw new NotImplementedException();
