@@ -6,3 +6,5 @@ packages/
 Unisign-cache/
 /!_Installer/Setup/UniSign_setup_1.1.0_allCPU.exe
 /UniSign/Obfuscation/utility.dll
+/!_Installer/Unisign_beta-cache
+/!_Installer/Setup

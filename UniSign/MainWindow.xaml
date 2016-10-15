@@ -7,7 +7,7 @@
 	xmlns:core="clr-namespace:UniSign.CoreModules"
 	xmlns:x509Certificates="clr-namespace:System.Security.Cryptography.X509Certificates;assembly=System"
 	mc:Ignorable="d"
-	Title="UniSign" 
+	Title="UniSign (beta)" 
 	Loaded="MainWindow_OnLoaded"
 	Closing="MainWindow_OnClosing"
 	FontSize="16" 

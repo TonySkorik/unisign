@@ -43,7 +43,7 @@ namespace UniSign {
 			_viewModel = new MainViewModel();
 			InitializeComponent();
 			MainUI.DataContext = _viewModel;
-			MainUI.Title = $"UniSign v{MainViewModel.ProgramVersion}";
+			MainUI.Title = $"{MainUI.Title} v{MainViewModel.ProgramVersion}";
 			_tmrClose.Elapsed += (o, args) => {
 				Dispatcher.Invoke(Close);
 			};

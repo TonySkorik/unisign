@@ -14,10 +14,10 @@
     <ROW Property="ARPPRODUCTICON" Value="UniSign.exe" Type="8"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="CRC"/>
-    <ROW Property="ProductCode" Value="1033:{543AF54A-DFED-4F5D-A678-24178A1183C1} 1049:{8C21AD56-5610-4C9A-BD9A-DA02FD7FAC9D} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{79706875-E0D0-4C10-908A-3685069B753F} 1049:{7D0371C6-7FDB-4713-BF34-DAA9A74A96C3} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="UniSign"/>
-    <ROW Property="ProductVersion" Value="1.1.1" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.1.6132" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{F4D3CF0B-101F-4D99-B907-4F6001349EBC}"/>

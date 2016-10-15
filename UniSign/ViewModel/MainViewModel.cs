@@ -39,7 +39,7 @@ namespace UniSign.ViewModel {
 		public static string ProgramVersion {
 			get {
 				Version ver = Assembly.GetExecutingAssembly().GetName().Version;
-				return $"{ver.Major}.{ver.Minor}";
+				return $"{ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}";
 			}
 		}
 		public SigningSession Session;
