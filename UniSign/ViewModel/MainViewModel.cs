@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Web;
@@ -216,7 +217,6 @@ namespace UniSign.ViewModel {
 		#endregion
 
 		#region [SET CONFIG & CERT]
-
 		private void _setPathToConfig(string element, string path) {
 			if(File.Exists(path)) {
 				string nearExe = Path.Combine(ProgramFolder, Path.GetFileName(path));
@@ -264,6 +264,7 @@ namespace UniSign.ViewModel {
 		}
 
 		public bool SelectInteropCertificate() {
+
 			X509Certificate2 selectedCert = new X509Certificate2();
 			StoreLocation certificateStore = StoreLocation.CurrentUser;
 			if ((selectedCert = SignatureProcessor.SelectCertificateUI(StoreLocation.CurrentUser)) == null) {
@@ -325,7 +326,7 @@ namespace UniSign.ViewModel {
 			if(!string.IsNullOrEmpty(lastHeightStr)) {
 				WindowHeight = Int32.Parse(lastHeightStr);
 			} else {
-				WindowHeight = 600;
+				WindowHeight = 780;
 				SetConfigField("WindowHeight", WindowHeight.ToString());
 			}
 
@@ -361,16 +362,22 @@ namespace UniSign.ViewModel {
 
 			string interopCertificateThumb = cfg.Root?.Element("InteropCertificateThumbprint")?.Value;
 			if (string.IsNullOrEmpty(interopCertificateThumb)) {
-				MessageBox.Show(
-					"Не указан сертификат подписи для взаимодействия.\nУкажите сертификат подписи, используя соответствующий пункт меню программы.",
-					"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+//				Thread.Sleep(1000);
 				SetErrorMessage("Не указан сертификат подписи для взаимодействия");
-				bool certSelected = SelectInteropCertificate();
-				if (!certSelected) {
-					return false;
-				} else {
-					StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
-				}
+					bool certSelected = SelectInteropCertificate();
+					if (!certSelected) {
+
+						MessageBox.Show(
+							"Не указан сертификат подписи для взаимодействия.\nУкажите сертификат подписи, используя соответствующий пункт меню «Настройка» программы.",
+							"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK,
+							MessageBoxImage.Error);
+
+						return false;
+					} else {
+						StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value,
+												true,
+												out _interopCertificateStoreLocation);
+					}
 			} else {
 				_interopCertificateThumbprint = interopCertificateThumb;
 				StoreLocation.TryParse(cfg.Root?.Element("InteropCertificateStore")?.Value, true, out _interopCertificateStoreLocation);
@@ -380,11 +387,15 @@ namespace UniSign.ViewModel {
 
 			//signed (and siphered) binary config
 			if(string.IsNullOrEmpty(binConfigPath)) {
-				MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
-								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 				SetErrorMessage("Личный конфигурационный файл не найден");
-				
-				return false;
+				bool privateConfigSelected = LoadPrivateConfig();
+				if (!privateConfigSelected) {
+
+					MessageBox.Show("Личный конфигурационный файл не найден.\nСкачайте новый личный конфигурационный файл с корпоративного портала.",
+									"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
+
+					return false;
+				}
 			} else {
 				//means htere is a config
 				//check it's signature, but first load our certificate
@@ -392,7 +403,10 @@ namespace UniSign.ViewModel {
 					MessageBox.Show("Файл сертификата сервера не найден.\nСкачайте файл сертификата сервера с корпоративного портала.",
 								"Ошибка загрузки начальной конфигурации.", MessageBoxButton.OK, MessageBoxImage.Error);
 					SetErrorMessage("Файл сертификата сервера не найден");
-					return false;
+					bool serverCertifcateSelected = LoadServerCertificate();
+					if (!serverCertifcateSelected) {
+						return false;
+					}
 				} else {
 					//means certificate && config present
 					//check cert expiration date
@@ -483,7 +497,42 @@ namespace UniSign.ViewModel {
 			return true;
 		}
 		#endregion
-		
+
+		#region [LOAD PRIVATE CONFIG]
+
+		public bool LoadPrivateConfig() {
+			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
+				CheckFileExists = true,
+				Multiselect = false,
+				CheckPathExists = true,
+				Filter = "Файлы конфигурации(*.CBIN;*.cbin)|*.CBIN;*.cbin"
+			};
+			dlgOpenFile.ShowDialog();
+			if (!string.IsNullOrEmpty(dlgOpenFile.FileName)) {
+				SetPrivateConfig(dlgOpenFile.FileName);
+				return true;
+			}
+			return false;
+		}
+		#endregion
+
+		#region [LOAD SERVER CERTIFICATE]
+		public bool LoadServerCertificate() {
+			OpenFileDialog dlgOpenFile = new OpenFileDialog() {
+				CheckFileExists = true,
+				Multiselect = false,
+				CheckPathExists = true,
+				Filter = "Файлы сертификатов(*.CER;*.cer)|*.CER;*.cer"
+			};
+			dlgOpenFile.ShowDialog();
+			if (!string.IsNullOrEmpty(dlgOpenFile.FileName)) {
+				SetCertificate(dlgOpenFile.FileName);
+				return true;
+			}
+			return false;
+		}
+		#endregion
+
 		#region [SIGNING SESSION INIT]
 		public async Task<HttpResponseMessage> GetServerSessionData(string startupArg) {
 
@@ -520,16 +569,19 @@ namespace UniSign.ViewModel {
 		}
 		#endregion
 
-		#region [SIGNING PORCESS]
+		#region [LOAD CERTIFICATES]
 		public void LoadCertificatesFromStore() {
 			int lastSelectedCertItem = CertificateItem;
 			List<X509Certificate2> certs = SignatureProcessor.GetAllCertificatesFromStore(CertificateStore);
 			Certificates.Clear();
-			foreach (X509Certificate2 c in certs.Where((cert)=>cert.HasPrivateKey)) {
+			foreach(X509Certificate2 c in certs.Where((cert) => cert.HasPrivateKey)) {
 				Certificates.Add(c);
 			}
 			CertificateItem = lastSelectedCertItem;
 		}
+		#endregion
+
+		#region [SIGNING PORCESS]
 
 		public string SignWithSelectedCert(X509Certificate2 cert) {
 			//use SignInfo from Session
@@ -584,7 +636,7 @@ namespace UniSign.ViewModel {
 			try {
 				classesRoot = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default);
 				ret = classesRoot.OpenSubKey("unisign") != null;
-			} catch(Exception e) {
+			} catch {
 				//means no rights to open the registry key
 				ret = null; // actualluy no need to do this))
 			}

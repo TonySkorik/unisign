@@ -50,13 +50,13 @@
     <ROW Component="UniSign.exe" ComponentId="{ECC13DCE-B289-4D88-A449-9C77DDBAB559}" Directory_="APPDIR" Attributes="0" KeyPath="UniSign.exe"/>
     <ROW Component="_" ComponentId="{4ED0E284-75A8-411C-A2AF-6310BFDFFF10}" Directory_="APPDIR" Attributes="4" KeyPath="_"/>
     <ROW Component="__1" ComponentId="{62C43AAF-D8B5-420D-8C03-0EA08192106E}" Directory_="APPDIR" Attributes="4" KeyPath="__1"/>
-    <ROW Component="command" ComponentId="{80E031EB-B1F3-428F-BA5E-B5E391D58FAD}" Directory_="APPDIR" Attributes="4" KeyPath="command"/>
+    <ROW Component="command" ComponentId="{DBF66B5E-42F7-4A64-9114-1EE0A88E289E}" Directory_="APPDIR" Attributes="4" KeyPath="command"/>
     <ROW Component="config.xml" ComponentId="{E3604A38-6E58-441B-B0CC-E0F06874B7A6}" Directory_="APPDIR" Attributes="0" KeyPath="config.xml" Type="0"/>
     <ROW Component="inc.dll" ComponentId="{F4B0FC9F-2BBD-4F5B-9F6E-BFBC4CD8E007}" Directory_="APPDIR" Attributes="0" KeyPath="inc.dll"/>
     <ROW Component="inc_64.dll" ComponentId="{AFBCC812-67D9-408B-A32B-0451DE6EEBAF}" Directory_="APPDIR" Attributes="256" KeyPath="inc_64.dll"/>
-    <ROW Component="open" ComponentId="{D21EABFD-A4CE-499B-BCBE-631C072F9520}" Directory_="APPDIR" Attributes="4" KeyPath="open"/>
-    <ROW Component="shell" ComponentId="{4E740D52-290B-446A-BD6A-8B1A6BEFBD38}" Directory_="APPDIR" Attributes="4" KeyPath="shell"/>
-    <ROW Component="unisign" ComponentId="{09E6B521-5E9E-4805-9C4F-057ACA71A78A}" Directory_="APPDIR" Attributes="4" KeyPath="unisign"/>
+    <ROW Component="open" ComponentId="{41B4E24E-9F8F-4D11-AEB3-687530B07051}" Directory_="APPDIR" Attributes="4" KeyPath="open"/>
+    <ROW Component="shell" ComponentId="{1612F8F8-92C0-4E95-85AC-792B1FD24060}" Directory_="APPDIR" Attributes="4" KeyPath="shell"/>
+    <ROW Component="unisign" ComponentId="{D7D88F66-BA31-4EDF-B96B-BC4D8C692C9D}" Directory_="APPDIR" Attributes="4" KeyPath="unisign"/>
     <ROW Component="utility.dll" ComponentId="{439763A6-07A8-451B-A167-93D83811FB38}" Directory_="APPDIR" Attributes="0" KeyPath="utility.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
