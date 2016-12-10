@@ -14,10 +14,10 @@
     <ROW Property="ARPPRODUCTICON" Value="UniSign.exe" Type="8"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="CRC"/>
-    <ROW Property="ProductCode" Value="1033:{79706875-E0D0-4C10-908A-3685069B753F} 1049:{7D0371C6-7FDB-4713-BF34-DAA9A74A96C3} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{E0ADC3BE-2733-47E4-AFA1-F71330873ADC} 1049:{BDF8CDDD-4D10-4587-B3F6-F1899B5B0159} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="UniSign"/>
-    <ROW Property="ProductVersion" Value="1.1.6132" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.1.6188" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{F4D3CF0B-101F-4D99-B907-4F6001349EBC}"/>
@@ -67,7 +67,7 @@
     <ROW File="CryptoPro.Sharpei.Base.dll" Component_="CryptoPro.Sharpei.Base.dll" FileName="CRYPTO~1.DLL|CryptoPro.Sharpei.Base.dll" Attributes="0" SourcePath="Compiled\beta\CryptoPro.Sharpei.Base.dll" SelfReg="false" NextFile="CryptoPro.Sharpei.Xml.dll"/>
     <ROW File="CryptoPro.Sharpei.Xml.dll" Component_="CryptoPro.Sharpei.Xml.dll" FileName="CRYPTO~2.DLL|CryptoPro.Sharpei.Xml.dll" Attributes="0" SourcePath="Compiled\beta\CryptoPro.Sharpei.Xml.dll" SelfReg="false" NextFile="inc.dll"/>
     <ROW File="Newtonsoft.Json.dll" Component_="Newtonsoft.Json.dll" FileName="NEWTON~1.DLL|Newtonsoft.Json.dll" Attributes="0" SourcePath="Compiled\beta\Newtonsoft.Json.dll" SelfReg="false" NextFile="utility.dll"/>
-    <ROW File="UniSign.exe" Component_="UniSign.exe" FileName="UniSign.exe" Attributes="0" SourcePath="Compiled\AnyCPU\UniSign.exe" SelfReg="false" NextFile="config.xml" DigSign="true"/>
+    <ROW File="UniSign.exe" Component_="UniSign.exe" FileName="UniSign.exe" Attributes="0" SourcePath="Compiled\beta\UniSign.exe" SelfReg="false" NextFile="config.xml" DigSign="true"/>
     <ROW File="config.xml" Component_="config.xml" FileName="config.xml" Attributes="0" SourcePath="Compiled\beta\config.xml" SelfReg="false" NextFile="CryptoPro.Sharpei.Base.dll"/>
     <ROW File="inc.dll" Component_="inc.dll" FileName="inc.dll" Attributes="0" SourcePath="Compiled\beta\inc.dll" SelfReg="false" NextFile="inc_64.dll"/>
     <ROW File="inc_64.dll" Component_="inc_64.dll" FileName="inc_64.dll" Attributes="0" SourcePath="Compiled\beta\inc_64.dll" SelfReg="false" NextFile="Newtonsoft.Json.dll"/>
@@ -268,7 +268,7 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.PreReqComponent">
     <ROW PrereqKey="BE1A492345959ED6A4D5ACBD0EC0" DisplayName=".NET Framework 4.5.2" SetupFileUrl="Prerequisites\.NET Framework 4.5.2\NDP452-KB2901907-x86-x64-AllOS-ENU.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2, Windows 10 x86" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2, Windows 10 x64" Operator="1" NoUiComLine="/q /norestart" Options="xmz" TargetName=".NET Framework 4.5.2\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"/>
-    <ROW PrereqKey="CSP" DisplayName="КриптоПро CSP 3.6 R4" VersionMin="3.6.5402.0" SetupFileUrl="Prerequisites\cspsetup_3.6_R4_3.6.7777.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2" Operator="1" Options="mz" TargetName="cspsetup_3.6_R4_3.6.7777.exe"/>
+    <ROW PrereqKey="CSP" DisplayName="КриптоПро CSP 3.6 R4 или 3.9" VersionMin="3.6.5402.0" SetupFileUrl="Prerequisites\cspsetup_3.6_R4_3.6.7777.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2" Operator="1" Options="mz" TargetName="cspsetup_3.6_R4_3.6.7777.exe"/>
     <ROW PrereqKey="NET" DisplayName="КриптоПро .NET 1.0.5913" VersionMin="1.0.5913.0" SetupFileUrl="Prerequisites\NETSetup.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2" Operator="1" Options="mz" TargetName="NETSetup.exe"/>
     <ATTRIBUTE name="PrereqsOrder" value="BE1A492345959ED6A4D5ACBD0EC0 CSP NET"/>
   </COMPONENT>
@@ -276,6 +276,7 @@
     <ROW SearchKey="BE1A492345959ED6A4D5ACBD0EC0Release" Prereq="BE1A492345959ED6A4D5ACBD0EC0" SearchType="9" SearchString="HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Release" RefContent="G379892" Order="1" Property="PreReqSearch_BE1A492345959ED6A4D5ACBD0EC0"/>
     <ROW SearchKey="ProdCode" Prereq="NET" SearchType="3" SearchString="{F2F88A77-F7E6-4C9E-9C67-CB1855C62B45}" VerMin="1.0.5913.0" Order="2" Property="PreReqSearch"/>
     <ROW SearchKey="ProdCode_1" Prereq="CSP" SearchType="3" SearchString="{54A08450-B343-40B0-924E-68F031450996}" VerMin="3.6.5402" Order="2" Property="PreReqSearch_1"/>
+    <ROW SearchKey="UpgradeCode" Prereq="CSP" SearchType="4" SearchString="{E07D0690-BC13-4589-87E7-93AED2DAE558}" Order="2" Property="PreReqSearch_2"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.SynchronizedFolderComponent">
     <ROW Directory_="APPDIR" SourcePath="Compiled\beta" Feature="MainFeature" ExcludePattern="*~|#*#|%*%|._|CVS|.cvsignore|SCCS|vssver.scc|mssccprj.scc|vssver2.scc|.svn|.DS_Store" ExcludeFlags="6"/>

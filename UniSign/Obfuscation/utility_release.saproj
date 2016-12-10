@@ -5,7 +5,7 @@
             <ExceptionReporting Template="res:{SmartExceptions}.1033.dll" />
             <FeatureUsageReporting Template="res:SmartUsageWithUIConsentFirstRun1033.dll" />
             <StringsEncoding Encode="1" UseImprovedEncoding="1" />
-            <StrongNameSigning KeyFileName="..\..\utility\TS.pfx" Password="izIzcFVhc5bq3QEKp/nrg2WuQV77t2ATfh2EGTYUsWE=" Sign="1" />
+            <StrongNameSigning KeyFileName="..\..\utility\signcert.snk" Password="" Sign="1" />
             <OtherOptimizations />
             <Obfuscation FieldsNameMangling="2" NameMangling="3" />
             <OtherProtections SuppressIldasm="1" />
@@ -92,6 +92,17 @@
                         <Exclusion />
                     </Obfuscation>
                 </Merging>
+            </Assembly>
+            <Assembly AssemblyName="utility, Culture=neutral, PublicKeyToken=e5c935b5245f32e6">
+                <Merging>
+                    <ResourcesCompression />
+                    <MemberRefsProxy />
+                    <StringsEncoding />
+                    <Pruning />
+                    <Obfuscation />
+                    <ControlFlow />
+                </Merging>
+                <Embedding />
             </Assembly>
         </Assemblies>
     </Configuration>

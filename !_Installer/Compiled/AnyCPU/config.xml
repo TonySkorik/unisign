@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Settings>
-	<InteropCertificateThumbprint></InteropCertificateThumbprint>
-	<InteropCertificateStore></InteropCertificateStore>
-	<CfgBinPath></CfgBinPath>
-	<CertificateFilePath></CertificateFilePath>
-	<CertificateStore></CertificateStore>
-	<CertificateItem></CertificateItem>
-	<WindowWidth></WindowWidth>
-	<WindowHeight></WindowHeight>
-	<WindowLeft></WindowLeft>
-	<WindowTop></WindowTop>
+  <InteropCertificateThumbprint>F043BB2244AD2E4587AE7CB94D5DBF3D4509C665</InteropCertificateThumbprint>
+  <InteropCertificateStore>CurrentUser</InteropCertificateStore>
+  <CfgBinPath></CfgBinPath>
+  <CertificateFilePath></CertificateFilePath>
+  <CertificateStore>CurrentUser</CertificateStore>
+  <CertificateItem>0</CertificateItem>
+  <WindowWidth>590</WindowWidth>
+  <WindowHeight>750</WindowHeight>
+  <WindowLeft>100</WindowLeft>
+  <WindowTop>20</WindowTop>
 </Settings>
