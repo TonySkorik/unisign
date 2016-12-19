@@ -268,7 +268,7 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.PreReqComponent">
     <ROW PrereqKey="BE1A492345959ED6A4D5ACBD0EC0" DisplayName=".NET Framework 4.5.2" SetupFileUrl="Prerequisites\.NET Framework 4.5.2\NDP452-KB2901907-x86-x64-AllOS-ENU.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2, Windows 10 x86" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2, Windows 10 x64" Operator="1" NoUiComLine="/q /norestart" Options="xmz" TargetName=".NET Framework 4.5.2\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"/>
-    <ROW PrereqKey="CSP" DisplayName="КриптоПро CSP 3.6 R4 или 3.9" VersionMin="3.6.5402.0" SetupFileUrl="Prerequisites\cspsetup_3.6_R4_3.6.7777.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2" Operator="1" Options="mz" TargetName="cspsetup_3.6_R4_3.6.7777.exe"/>
+    <ROW PrereqKey="CSP" DisplayName="КриптоПро CSP 3.6 R4, 3.9 R2, 4.0 R2" VersionMin="3.6.5402.0" SetupFileUrl="Prerequisites\cspsetup_3.6_R4_3.6.7777.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2" Operator="1" Options="mz" TargetName="cspsetup_3.6_R4_3.6.7777.exe"/>
     <ROW PrereqKey="NET" DisplayName="КриптоПро .NET 1.0.5913" VersionMin="1.0.5913.0" SetupFileUrl="Prerequisites\NETSetup.exe" Location="0" ExactSize="0" WinNTVersions="Windows XP x86 Service Pack 3, Windows Server 2003 x86 Service Pack 2" WinNT64Versions="Windows XP x64 Service Pack 2, Windows Server 2003 x64 Service Pack 2" Operator="1" Options="mz" TargetName="NETSetup.exe"/>
     <ATTRIBUTE name="PrereqsOrder" value="BE1A492345959ED6A4D5ACBD0EC0 CSP NET"/>
   </COMPONENT>
@@ -276,6 +276,8 @@
     <ROW SearchKey="BE1A492345959ED6A4D5ACBD0EC0Release" Prereq="BE1A492345959ED6A4D5ACBD0EC0" SearchType="9" SearchString="HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Release" RefContent="G379892" Order="1" Property="PreReqSearch_BE1A492345959ED6A4D5ACBD0EC0"/>
     <ROW SearchKey="ProdCode" Prereq="NET" SearchType="3" SearchString="{F2F88A77-F7E6-4C9E-9C67-CB1855C62B45}" VerMin="1.0.5913.0" Order="2" Property="PreReqSearch"/>
     <ROW SearchKey="ProdCode_1" Prereq="CSP" SearchType="3" SearchString="{54A08450-B343-40B0-924E-68F031450996}" VerMin="3.6.5402" Order="2" Property="PreReqSearch_1"/>
+    <ROW SearchKey="ProdCode_2" Prereq="CSP" SearchType="3" SearchString="{39D25A86-A5E6-42FC-9C8F-EFA4C138B08C}" Order="3" Property="PreReqSearch_3"/>
+    <ROW SearchKey="ProdCode_3" Prereq="CSP" SearchType="3" SearchString="{407E5BA7-6406-40BF-A4DC-3654B8F584C1}" Order="4" Property="PreReqSearch_4"/>
     <ROW SearchKey="UpgradeCode" Prereq="CSP" SearchType="4" SearchString="{E07D0690-BC13-4589-87E7-93AED2DAE558}" Order="2" Property="PreReqSearch_2"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.SynchronizedFolderComponent">
